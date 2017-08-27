@@ -1,0 +1,45 @@
+body, html {
+	margin: 0;
+	padding: 0;
+	max-height: 100vh;
+	overflow: hidden;
+}
+
+header {
+	height: 60px;
+	background-color: #202020;
+}
+
+.icon {
+	background-color: #606060;
+	width: auto;
+	height: 40px;
+	padding: 10px 12px;
+}
+
+#map {
+	background-color: #c8c8c8;
+	height: calc(100vh - 60px);
+}
+
+#search-container {
+	position: absolute;
+	bottom: 5%;
+	left: 50%;
+}
+
+#mobile-menu-icon:hover {
+	background-color: #404040;
+}
+
+#searchbox {
+	background-color: #fafafa;
+	height: 45px;
+	font-size: 1.5em;
+	left: -50%;
+	border: 2px #808080 solid;
+	border-radius: 10px;
+	position: relative;
+	width: 250px;
+	z-index: 2;
+}
