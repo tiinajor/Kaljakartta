@@ -9,6 +9,11 @@ body, html {
 /* efb348 */
 /* 499fee */ 
 
+
+/* KELTASET */
+/* #f9da49 */
+/* #f1bb4b */
+
 header {
 	height: 60px;
 	background-color: #202020;
@@ -17,7 +22,6 @@ header {
 .button {
 	cursor: pointer;
 }
-
 
 .mobile-menu {
     background-color: #303030;
@@ -46,7 +50,7 @@ header {
     color: #f1f1f1;
 }
 
-.mobile-menu input {
+.mobile-menu input, #search-option-sliders  {
 	margin-left: 30px;
 	width: calc(100% - 60px);
 }
@@ -59,8 +63,51 @@ header {
     top: 0;
 }
 
+.logo {
+	height: 42px;
+	float: left;
+	padding-right: 3px;
+}
 
+.title {
+	color: #f9da49;
+	font-family: 'Bebas Neue', sans-serif;
+	font-size: 46px;
+	letter-spacing: 1px;
+	margin: 0;
+	padding: 0;
+}
 
+.slider {
+	margin: 80px 0 10px 0;
+}
+
+.hamburger-icon {
+	height: 35px;
+	padding: 10px;
+}
+
+.noUi-horizontal.noUi-extended {
+	padding-right: 32px;
+}
+.noUi-horizontal.noUi-extended .noUi-handle {
+	left: -1px;
+}
+.noUi-horizontal.noUi-extended .noUi-origin  {
+	right: -32px;
+}
+
+#search-option-sliders label {
+	color: #818181;
+}
+
+#title-container {
+	display: flex;
+	position: fixed;
+	right: 50%;
+	top: 7px;
+	transform: translate(50%);
+}
 
 #hamburger-menu {
 	background-color: transparent;
@@ -71,13 +118,7 @@ header {
 	background-color: #404040;
 }
 
-.hamburger-icon {
-	height: 35px;
-	padding: 10px;
-}
-
 #map {
-	background-color: #c8c8c8;
 	height: calc(100vh - 60px);
 }
 
@@ -98,15 +139,15 @@ header {
 }
 
 #searchbox input {
-	float: left;
-	width: 100%;
-	font-size: 24px;
-	border: 3px solid #404040;
-	padding: 5px;
-	height: 30px;
 	border-radius: 5px;
-	outline: none;
+	border: 3px solid #404040;
 	color: #9DBFAF;
+	float: left;
+	font-size: 24px;
+	height: 30px;
+	outline: none;
+	padding: 5px;
+	width: 100%;
 }
 
 #searchbox input:focus {
@@ -114,15 +155,29 @@ header {
 }
 
 #searchbox button {
+	background: #404040;
+	border-radius: 5px;
+	border: 1px solid #404040;
+	height: 46px;
 	position: absolute;  
 	right: -60px;
 	width: 50px;
-	height: 46px;
-	border: 1px solid #404040;
-	background: #404040;
-	border-radius: 5px;
 }
 
 #searchbox button img {
 	height: 25px;
+}
+
+@font-face {
+	font-family: 'Montserrat';
+	font-style: normal;
+	font-weight: normal;
+	src: local('Montserrat Regular'), url('../fonts/Montserrat-Regular.woff') format('woff');
+}
+
+@font-face {
+	font-family: 'Bebas Neue';
+	font-style: normal;
+	font-weight: normal;
+	src: local('Bebas Neue Bold'), url('../fonts/BEBASNEUE BOLD.woff') format('woff');
 }

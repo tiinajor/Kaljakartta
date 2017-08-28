@@ -4,29 +4,49 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width:device-width, initial-width: 1">
 	<title>Document</title>
-	<link rel="stylesheet" type="text/css" href="css/style.css">
-	<link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
-	<script type="text/javascript" src="js/script.js"></script>
-	<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDuIpE10xbisU_de-Mg_xR4-OpmOVl3BxA&callback=initMap"></script>
+	<link rel="stylesheet" href="css/style.css">
+	<link rel="stylesheet" href="css/nouislider.min.css" >
+	<script src="js/script.js"></script>
+	<script src="js/wNumb.js"></script>
+	<script src="js/nouislider.min.js"></script>
+	<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDuIpE10xbisU_de-Mg_xR4-OpmOVl3BxA&libraries=places&callback=initMap"></script>
 	
 </head>
 <body>
 	<header>
 		<button id="hamburger-menu" onclick="openMenu()"><img class="hamburger-icon button" src="icons/menu.svg"></button>
+		<div id="title-container">
+			<img class="logo" src="icons/beer.svg">
+			<p class="title">Kaljakartta</p>
+		</div>
 	</header>
+	
+	<div id="out-of-focus-area">
+		<div id="mobile-menu" class="mobile-menu">
+			<a href="#" class="closebtn" onclick="closeMenu()">x</a>
+			<a class="active-selection" href="#">Hanat</a>
+			<a href="#">Pullot</a>
+			<div id="search-option-sliders">
+				
+				<div class="slider noUi-extended" id="price-slider"></div>
+				<label for="price-slider">Hinta</label>
+				
+				<div class="slider noUi-extended" id="alcohol-slider"></div>
+				<label for="alcohol-slider-slider">Alkoholipitoisuus</label>
 
-	<div id="mobile-menu" class="mobile-menu">
-		<a href="#" class="closebtn" onclick="closeMenu()">x</a>
-		<a href="#">Hanat</a>
-		<a href="#">Pullot</a>
-		<input type="range" name="price">
+				<div class="slider noUi-extended" id="distance-slider"></div>
+				<label for="alcohol-slider-slider">Etäisyys</label>
+			</div>
+			
+		</div>
+	</div>
+	
+
+
+	<div id="map" onclick="closeMenu()">
 	</div>
 
-
-	<div id="map">
-	</div>
-
-	<div id="search-container">
+	<div id="search-container" onclick="closeMenu()">
 		<div id="searchbox">
 			<input type="text" placeholder="Search...">
 			<button id="search-button"><img class="search-icon button" src="icons/search.svg"></button>
@@ -36,5 +56,7 @@
 			
 
 	</div>
+
+
 </body>
 </html>
