@@ -5,15 +5,21 @@
 	<meta name="viewport" content="width:device-width, initial-width: 1">
 	<title>Document</title>
 	<link rel="stylesheet" type="text/css" href="css/style.css">
-	<script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
+	<link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
 	<script type="text/javascript" src="js/script.js"></script>
 	<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDuIpE10xbisU_de-Mg_xR4-OpmOVl3BxA&callback=initMap"></script>
 	
 </head>
 <body>
 	<header>
-		<img id="mobile-menu-button" class="icon" src="icons/menu.svg">
+		<button id="hamburger-menu" onclick="openMenu()"><img class="hamburger-icon button" src="icons/menu.svg"></button>
 	</header>
+
+	<div id="mobile-menu" class="mobile-menu">
+		<a href="#" class="closebtn" onclick="closeMenu()">x</a>
+		<a href="#">Hanat</a>
+		<a href="#">Pullot</a>
+	</div>
 
 	<div id="mobile-menu">
 		
@@ -23,7 +29,12 @@
 	</div>
 
 	<div id="search-container">
-		<input id="searchbox">
+		<div id="searchbox">
+			<input type="text" placeholder="Search...">
+			<button id="search-button"><img class="search-icon button" src="icons/search.svg"></button>
+			
+		</div>
+		
 			
 
 	</div>

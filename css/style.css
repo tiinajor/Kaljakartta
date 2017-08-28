@@ -1,8 +1,9 @@
 body, html {
 	margin: 0;
-	padding: 0;
 	max-height: 100vh;
 	overflow: hidden;
+	padding: 0;
+	font-family: sans-serif;
 }
 
 header {
@@ -10,11 +11,61 @@ header {
 	background-color: #202020;
 }
 
-.icon {
-	background-color: #606060;
-	width: auto;
-	height: 40px;
-	padding: 10px 12px;
+.button {
+	cursor: pointer;
+}
+
+
+.mobile-menu {
+    background-color: #202020;
+    font-family: 'Montserrat', sans-serif;
+    height: 100%;
+    left: 0;
+    overflow-x: hidden;
+    padding-top: 60px;
+    position: fixed;
+    top: 0;
+    transition: 0.5s;
+    width: 0;
+    z-index: 50;
+}
+
+.mobile-menu a {
+    color: #818181;
+    display: block;
+    font-size: 25px;
+    padding: 8px 8px 8px 32px;
+    text-decoration: none;
+    transition: 0.3s
+}
+
+.mobile-menu a:hover {
+    color: #f1f1f1;
+}
+
+.mobile-menu .closebtn {
+    font-size: 36px;
+    margin-left: 50px;
+    position: absolute;
+    right: 25px;
+    top: 0;
+}
+
+
+
+
+#hamburger-menu {
+	background-color: transparent;
+	border: none;
+}
+
+#hamburger-menu:hover {
+	background-color: #404040;
+}
+
+.hamburger-icon {
+	height: 35px;
+	padding: 10px;
 }
 
 #map {
@@ -22,24 +73,48 @@ header {
 	height: calc(100vh - 60px);
 }
 
-#search-container {
-	position: absolute;
-	bottom: 5%;
-	left: 50%;
-}
-
 #mobile-menu-icon:hover {
 	background-color: #404040;
 }
 
+#search-container {
+	bottom: 5%;
+	left: 50%;
+	position: absolute;
+	transform: translate(-50%);
+}
+
 #searchbox {
-	background-color: #fafafa;
-	height: 45px;
-	font-size: 1.5em;
-	left: -50%;
-	border: 2px #808080 solid;
-	border-radius: 10px;
-	position: relative;
 	width: 250px;
 	z-index: 2;
+}
+
+#searchbox input {
+	float: left;
+	width: 100%;
+	font-size: 24px;
+	border: 3px solid #404040;
+	padding: 5px;
+	height: 30px;
+	border-radius: 5px;
+	outline: none;
+	color: #9DBFAF;
+}
+
+#searchbox input:focus {
+	color: #202020;
+}
+
+#searchbox button {
+	position: absolute;  
+	right: -60px;
+	width: 50px;
+	height: 46px;
+	border: 1px solid #404040;
+	background: #404040;
+	border-radius: 5px;
+}
+
+#searchbox button img {
+	height: 25px;
 }

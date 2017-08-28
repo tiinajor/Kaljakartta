@@ -11,3 +11,11 @@ function initMap() {
   });
   */
 }
+
+function openMenu() {
+    document.getElementById("mobile-menu").style.width = "250px";
+}
+
+function closeMenu() {
+    document.getElementById("mobile-menu").style.width = "0";
+}
