@@ -78,8 +78,16 @@ header {
 	padding: 0;
 }
 
-.slider {
+.slider-container {
 	margin: 80px 0 10px 0;
+}
+
+.slider-container span {
+	color: #818181;
+}
+
+.slider {
+	margin: 10px 0;
 }
 
 .hamburger-icon {
@@ -97,9 +105,7 @@ header {
 	right: -32px;
 }
 
-#search-option-sliders label {
-	color: #818181;
-}
+
 
 #title-container {
 	display: flex;

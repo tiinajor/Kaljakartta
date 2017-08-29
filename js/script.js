@@ -8,7 +8,6 @@ window.onload = function(){
     start: [ 0, 8.5 ],
     connect: true,
     behaviour: 'tap-drag',
-    tooltips: true,
     step: 0.5,
     range: {
       'min': [  0 ],
@@ -24,7 +23,6 @@ window.onload = function(){
     start: [ 0, 4.7 ],
     connect: true,
     behaviour: 'tap-drag',
-    tooltips: true,
     range: {
       'min': [ 0 ],
       'max': [ 12 ]
@@ -39,7 +37,6 @@ window.onload = function(){
     start: 500,
     connect: [true, false],
     behaviour: 'tap-drag',
-    tooltips: true,
     range: {
       'min': [  0, 50 ],
       '50%': [  1000, 500 ],
@@ -51,8 +48,25 @@ window.onload = function(){
     })
   });
 
+  priceSlider.noUiSlider.on('update', function() {
+    let value = priceSlider.noUiSlider.get();
+    document.getElementById("price").innerHTML = value[0] + " - " + value[1];
+  });
+
+  alcoholSlider.noUiSlider.on('update', function() {
+    let value = alcoholSlider.noUiSlider.get();
+    document.getElementById("alcohol").innerHTML = value[0] + " - " + value[1];
+  });
+
+  distanceSlider.noUiSlider.on('update', function() {
+    let value = distanceSlider.noUiSlider.get();
+    document.getElementById("distance").innerHTML = value;
+  });
+
 
 }
+
+
 
 
 /* luo kartan */

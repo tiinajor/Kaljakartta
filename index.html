@@ -10,8 +10,9 @@
 	<script src="js/script.js"></script>
 	<script src="js/wNumb.js"></script>
 	<script src="js/nouislider.min.js"></script>
-	<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDuIpE10xbisU_de-Mg_xR4-OpmOVl3BxA&libraries=places&callback=initMap"></script>
+	<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDuIpE10xbisU_de-Mg_xR4-OpmOVl3BxA&callback=initMap"></script>
 	
+	<!-- https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=-33.8670522,151.1957362&radius=500&type=restaurant&keyword=cruise&key=AIzaSyDuIpE10xbisU_de-Mg_xR4-OpmOVl3BxA -->
 </head>
 <body>
 	<header>
@@ -25,18 +26,28 @@
 	<div id="out-of-focus-area">
 		<div id="mobile-menu" class="mobile-menu">
 			<a href="#" class="closebtn" onclick="closeMenu()">x</a>
-			<a class="active-selection" href="#">Hanat</a>
-			<a href="#">Pullot</a>
+			<button class="selectTapBottle active-selection">Hanat</button>
+			<button class="selectTapBottle">Pullot</button>
 			<div id="search-option-sliders">
 				
-				<div class="slider noUi-extended" id="price-slider"></div>
-				<label for="price-slider">Hinta</label>
+				<div class="slider-container">
+					<span>Hinta</span>
+					<div class="slider noUi-extended" id="price-slider"></div>
+					<span id="price"></span>
+				</div>
 				
-				<div class="slider noUi-extended" id="alcohol-slider"></div>
-				<label for="alcohol-slider-slider">Alkoholipitoisuus</label>
+				<div class="slider-container">
+					<span>Alkoholipitoisuus</span>
+					<div class="slider noUi-extended" id="alcohol-slider"></div>
+					<span id="alcohol"></span>
+				</div>
 
-				<div class="slider noUi-extended" id="distance-slider"></div>
-				<label for="alcohol-slider-slider">Etäisyys</label>
+				<div class="slider-container">
+					<span>Etäisyys</span>
+					<div class="slider noUi-extended" id="distance-slider"></div>
+					<span id="distance"></span>
+				</div>
+
 			</div>
 			
 		</div>
