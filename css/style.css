@@ -19,6 +19,14 @@ header {
 	background-color: #202020;
 }
 
+.centered {
+	margin: 0 auto;
+}
+
+.menu-block {
+	width: calc(100% - 60px);
+}
+
 .button {
 	cursor: pointer;
 }
@@ -37,30 +45,61 @@ header {
     z-index: 50;
 }
 
-.mobile-menu a {
-    color: #818181;
-    display: block;
-    font-size: 25px;
-    padding: 8px 8px 8px 30px;
-    text-decoration: none;
-    transition: 0.3s
-}
-
 .mobile-menu a:hover {
     color: #f1f1f1;
 }
 
-.mobile-menu input, #search-option-sliders  {
-	margin-left: 30px;
-	width: calc(100% - 60px);
+.closebtn {
+    font-size: 36px;
+    position: absolute;
+    right: 15px;
+    top: 0;
+    color: #cdcdcd;
+    display: block;
+    text-decoration: none;
 }
 
-.mobile-menu .closebtn {
-    font-size: 36px;
-    margin-left: 50px;
-    position: absolute;
-    right: 25px;
-    top: 0;
+.slider-container {
+	margin: 30px 0 10px 0;
+}
+
+.slider-container span {
+	color: #ccc;
+}
+
+.slider {
+	margin: 10px 0;
+}
+
+.beer-brand-list {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+
+.beer-brand-list li {
+	border: solid 2px white;
+	color: #ccc;
+	padding: 4px;
+}
+
+.search-option {
+	width: 105px;
+	height: 90px;
+	border-radius: 8px;
+	border: 4px solid #ccc;
+	background-color: #aaa;
+	outline: none;
+	font: 1em 'Montserrat', sans-serif;
+}
+
+.search-option:hover {
+	background-color: #ffffff;
+}
+
+.selected {
+	background-color: #ffffff;
+	border: 4px solid #f9da49;
 }
 
 .logo {
@@ -72,23 +111,13 @@ header {
 .title {
 	color: #f9da49;
 	font-family: 'Bebas Neue', sans-serif;
-	font-size: 46px;
+	font-size: 2.9em;
 	letter-spacing: 1px;
 	margin: 0;
 	padding: 0;
 }
 
-.slider-container {
-	margin: 80px 0 10px 0;
-}
 
-.slider-container span {
-	color: #818181;
-}
-
-.slider {
-	margin: 10px 0;
-}
 
 .hamburger-icon {
 	height: 35px;
@@ -105,7 +134,13 @@ header {
 	right: -32px;
 }
 
-
+#out-of-focus-area {
+	position: absolute;
+	width: 0;
+	height: 100%;
+	z-index: 40;
+	background-color: rgba(0,0,0, 0.5);
+}
 
 #title-container {
 	display: flex;
@@ -128,15 +163,20 @@ header {
 	height: calc(100vh - 60px);
 }
 
-#mobile-menu-icon:hover {
-	background-color: #404040;
-}
-
 #search-container {
 	bottom: 5%;
 	left: 50%;
 	position: absolute;
 	transform: translate(-50%);
+}
+
+#search-option-sliders {
+	margin-bottom: 50px;
+}
+
+#search-option-buttons {
+	display: flex;
+	justify-content: space-between;
 }
 
 #searchbox {

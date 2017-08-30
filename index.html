@@ -13,52 +13,61 @@
 	<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDuIpE10xbisU_de-Mg_xR4-OpmOVl3BxA&callback=initMap"></script>
 	
 	<!-- https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=-33.8670522,151.1957362&radius=500&type=restaurant&keyword=cruise&key=AIzaSyDuIpE10xbisU_de-Mg_xR4-OpmOVl3BxA -->
+
+	<!-- https://maps.googleapis.com/maps/api/place/nearbysearch/output?parameters-->
 </head>
 <body>
+
+	<div id="mobile-menu" class="mobile-menu">
+		<a href="#" class="closebtn" onclick="closeMenu()">x</a>
+		
+		<div id="search-option-buttons" class="centered menu-block">
+			<button id="tapButton" class="search-option button">Hanat</button>
+			<button id="bottleButton" class="search-option button">Pullot</button>
+		</div>
+		
+		<div id="search-option-sliders" class="centered menu-block">
+			<div class="slider-container">
+				<span>Hinta</span>
+				<div class="slider noUi-extended" id="price-slider"></div>
+				<span id="price"></span>
+			</div>
+			
+			<div class="slider-container">
+				<span>Alkoholipitoisuus</span>
+				<div class="slider noUi-extended" id="alcohol-slider"></div>
+				<span id="alcohol"></span>
+			</div>
+
+			<div class="slider-container">
+				<span>Etäisyys</span>
+				<div class="slider noUi-extended" id="distance-slider"></div>
+				<span id="distance"></span>
+			</div>
+		</div>
+		
+
+	</div>
+
+	<div id="out-of-focus-area" onclick="closeMenu()"></div>
+
 	<header>
-		<button id="hamburger-menu" onclick="openMenu()"><img class="hamburger-icon button" src="icons/menu.svg"></button>
+		<button id="hamburger-menu"><img class="hamburger-icon button" src="icons/menu.svg"></button>
 		<div id="title-container">
 			<img class="logo" src="icons/beer.svg">
 			<p class="title">Kaljakartta</p>
 		</div>
 	</header>
 	
-	<div id="out-of-focus-area">
-		<div id="mobile-menu" class="mobile-menu">
-			<a href="#" class="closebtn" onclick="closeMenu()">x</a>
-			<button class="selectTapBottle active-selection">Hanat</button>
-			<button class="selectTapBottle">Pullot</button>
-			<div id="search-option-sliders">
-				
-				<div class="slider-container">
-					<span>Hinta</span>
-					<div class="slider noUi-extended" id="price-slider"></div>
-					<span id="price"></span>
-				</div>
-				
-				<div class="slider-container">
-					<span>Alkoholipitoisuus</span>
-					<div class="slider noUi-extended" id="alcohol-slider"></div>
-					<span id="alcohol"></span>
-				</div>
-
-				<div class="slider-container">
-					<span>Etäisyys</span>
-					<div class="slider noUi-extended" id="distance-slider"></div>
-					<span id="distance"></span>
-				</div>
-
-			</div>
-			
-		</div>
-	</div>
+	
+		
+	
 	
 
 
-	<div id="map" onclick="closeMenu()">
-	</div>
+	<div id="map"></div>
 
-	<div id="search-container" onclick="closeMenu()">
+	<div id="search-container">
 		<div id="searchbox">
 			<input type="text" placeholder="Search...">
 			<button id="search-button"><img class="search-icon button" src="icons/search.svg"></button>
