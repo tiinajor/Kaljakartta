@@ -34,7 +34,7 @@ header {
 .mobile-menu {
     background-color: #303030;
     font-family: 'Montserrat', sans-serif;
-    height: 100%;
+    height: 100vh;
     left: 0;
     overflow-x: hidden;
     padding-top: 60px;
@@ -74,11 +74,16 @@ header {
 .beer-brand-list {
 	list-style-type: none;
 	margin: 0;
+	border: solid 2px white;
+	color: #ccc;
 	padding: 0;
+	height: 30px;
+	overflow: auto;
+	transition: 0.5s;
 }
 
 .beer-brand-list li {
-	border: solid 2px white;
+	border-top: solid 2px #ccc;
 	color: #ccc;
 	padding: 4px;
 }
@@ -137,7 +142,7 @@ header {
 #out-of-focus-area {
 	position: absolute;
 	width: 0;
-	height: 100%;
+	height: 100vh;
 	z-index: 40;
 	background-color: rgba(0,0,0, 0.5);
 }
@@ -165,7 +170,7 @@ header {
 
 #search-container {
 	bottom: 5%;
-	left: 50%;
+	left: calc(50% - 25px);
 	position: absolute;
 	transform: translate(-50%);
 }
