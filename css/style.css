@@ -117,7 +117,12 @@ header {
 	padding: 0;
 }
 
-
+.icon {
+	height: 45px;
+	display: block;
+	padding: 5px;
+	margin: 0 auto;
+}
 
 .hamburger-icon {
 	height: 35px;
@@ -164,8 +169,8 @@ header {
 }
 
 #search-container {
-	bottom: 5%;
-	left: 50%;
+	bottom: 30px;
+	left: calc(50% - 30px);
 	position: absolute;
 	transform: translate(-50%);
 }
@@ -213,6 +218,56 @@ header {
 #searchbox button img {
 	height: 25px;
 }
+
+
+@media only screen and (max-width: 768px) {
+	#search-container {
+		bottom: 20px;
+	}
+}
+
+@media only screen and (max-width: 410px) {
+	#searchbox {
+		width: 175px;
+	}
+
+	#searchbox input {
+		height: 20px;
+		font-size: 20px;
+	}
+
+	#searchbox button {
+		height: 36px;
+		width: 40px;
+		right: -50px;
+	}
+
+	.logo {
+		height: 30px;
+	}
+
+	.title {
+		font-size: 2.2em;
+	}
+
+	.hamburger-icon {
+		height: 25px;
+		padding: 10px;
+	}
+
+	header {
+		height: 45px;
+	}
+
+	#map {
+		height: calc(100vh - 45px);
+	}
+}
+
+
+
+
+
 
 @font-face {
 	font-family: 'Montserrat';
