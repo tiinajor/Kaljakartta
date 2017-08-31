@@ -28,6 +28,9 @@ window.onload = function(){
 		bottleButton.classList.toggle('selected');
 	};
 
+
+	//list.children[0].onclick VAIHDA --------------------------------------
+
 	brandList.onclick = function() {
 		let children = brandList.children;
 		toggleVisible(children[1]);
@@ -108,7 +111,6 @@ window.onload = function(){
 // luo menuun listan kaljamerkeistä
 function createList(brands, parentDiv) {
 	const ul = document.createElement('ul');
-	ul.classList.add('dropdown-list');
 	
 	for (var i = 0; i<brands.length; i++) {
 		let li = document.createElement('li');
