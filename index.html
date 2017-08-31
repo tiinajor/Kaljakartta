@@ -29,53 +29,53 @@
 		<div id="search-option-sliders" class="centered menu-block">
 			<div class="slider-container">
 				<span>Hinta</span>
+				<span id="price" class="right"></span>
 				<div class="slider noUi-extended" id="price-slider"></div>
-				<span id="price"></span>
+				
 			</div>
 			
 			<div class="slider-container">
-				<span>Alkoholipitoisuus</span>
+				<span>Vahvuus</span>
+				<span id="alcohol" class="right"></span>
 				<div class="slider noUi-extended" id="alcohol-slider"></div>
-				<span id="alcohol"></span>
+				
 			</div>
 
 			<div class="slider-container">
 				<span>Etäisyys</span>
+				<span id="distance" class="right"></span>
 				<div class="slider noUi-extended" id="distance-slider"></div>
-				<span id="distance"></span>
+				
 			</div>
 		</div>
 		
+		<div id="brand-list" class="centered menu-block dropdown">
+			<div>Merkit</div>
+		</div>
+
+		<div id="type-list" class="centered menu-block dropdown">
+			<div>Oluttyypit</div>
+		</div>
 
 	</div>
 
 	<div id="out-of-focus-area" onclick="closeMenu()"></div>
 
 	<header>
-		<button id="hamburger-menu"><img class="hamburger-icon button" src="icons/menu.svg"></button>
+		<button id="hamburger-menu"><img class="menu-icon button" src="icons/menu.svg"></button>
 		<div id="title-container">
 			<img class="logo" src="icons/beer.svg">
 			<p class="title">Kaljakartta</p>
 		</div>
 	</header>
-	
-	
-		
-	
-	
-
 
 	<div id="map"></div>
 
 	<div id="search-container">
 		<div id="searchbox">
 			<input type="text" placeholder="Search...">
-			<button id="search-button"><img class="search-icon button" src="icons/search.svg"></button>
-			
+			<button id="search-button"><img class="button" src="icons/search.svg"></button>
 		</div>
-		
-			
-
 	</div>
 
 

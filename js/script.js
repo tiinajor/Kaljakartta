@@ -4,25 +4,42 @@ window.onload = function(){
 	const distanceSlider = document.getElementById('distance-slider');
 	const tapButton = document.getElementById('tapButton');
 	const bottleButton = document.getElementById('bottleButton');
-	const mobileMenu = document.getElementById('mobile-menu');
+	const brandList = document.getElementById('brand-list');
+	const typeList = document.getElementById('type-list');
+
+	let touchEvent = 'ontouchstart' in window ? 'touchstart' : 'click';
 
 
 	let beerBrands = ["karhu", "koff", "karjala", "lapin kulta", "ale cog", "heineken", "pirkka"];
-	createList(beerBrands, mobileMenu);
+	let beerTypes = ["lager", "IPA", "Bock", "Stout", "porter", "pilsner"];
+
+
+	createList(beerBrands, brandList);
+	createList(beerTypes, typeList);
 
 
 	// hanat mukana haussa kyllä/ei
 	tapButton.onclick = function() {
-	tapButton.classList.toggle('selected');
+		tapButton.classList.toggle('selected');
 	};
 
 	// pullot mukana haussa kyllä/ei
 	bottleButton.onclick = function() {
-	bottleButton.classList.toggle('selected');
+		bottleButton.classList.toggle('selected');
 	};
 
+	brandList.onclick = function() {
+		let children = brandList.children;
+		toggleVisible(children[1]);
+	};
+
+	typeList.onclick = function() {
+		let children = typeList.children;
+		toggleVisible(children[1]);
+	}
+
 	// menun avaus mobiilissa
-	document.getElementById('hamburger-menu').addEventListener("click", openMenu);
+	document.getElementById('hamburger-menu').addEventListener(touchEvent, openMenu);
 
 	noUiSlider.create(priceSlider, {
 		start: [ 0, 8.5 ],
@@ -86,16 +103,12 @@ window.onload = function(){
 
 
 
-}
+};
 
 // luo menuun listan kaljamerkeistä
 function createList(brands, parentDiv) {
-	const div = document.createElement('div');
 	const ul = document.createElement('ul');
-	let li = document.createElement('li');
-	let content = document.createTextNode("Merkki:");
-	li.appendChild(content);
-	ul.appendChild(li);
+	ul.classList.add('dropdown-list');
 	
 	for (var i = 0; i<brands.length; i++) {
 		let li = document.createElement('li');
@@ -103,18 +116,15 @@ function createList(brands, parentDiv) {
 		li.appendChild(content);
 		ul.appendChild(li);
 	}
-
-	ul.classList.add('beer-brand-list');
-	div.classList.add('centered');
-	div.classList.add('menu-block');
-	div.appendChild(ul);
-	parentDiv.appendChild(div);
-}
+	parentDiv.appendChild(ul);
+};
 
 // muuttaa ekan kirjaimen isoksi
 function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
-}
+};
+
+
 
 
 /* luo kartan */
@@ -130,21 +140,29 @@ function initMap() {
     	map: map
   	});
   	*/
-}
+};
+
+function toggleVisible(item){
+    if (item.style.display === 'block'){
+        item.style.display = 'none';
+    }else{
+        item.style.display = 'block';
+    }
+};
 
 function toggleActive(id) {
   	document.getElementById(id).classList.toggle('selected');
-}
+};
 
 
 /* blurraa kartan kun menu avataan */
 function openMenu() {
     document.getElementById("mobile-menu").style.width = "300px";
     document.getElementById("out-of-focus-area").style.width = "100%";
-}
+};
 
 /* palauttaa kartan takaisin normaaliksi kun menu suljetaan */
 function closeMenu() {
     document.getElementById("mobile-menu").style.width = "0";
     document.getElementById("out-of-focus-area").style.width = "0";
-}
+};
