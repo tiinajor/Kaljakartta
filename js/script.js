@@ -10,13 +10,11 @@ window.onload = function(){
 	const brandDiv = brandList.children[0];
 	const typeDiv = typeList.children[0];
 
-	let beerBrands = ["karhu", "koff", "karjala", "lapin kulta", "ale cog", "heineken", "pirkka"];
-	let beerTypes = ["lager", "IPA", "Bock", "Stout", "porter", "pilsner"];
-
+	let beerBrands = ["karhu", "koff", "karjala", "lapin kulta", "ale coq", "heineken", "pirkka", "grimbergen", "duvel", "olut"];
+	let beerTypes = ["lager", "IPA", "bock", "stout", "porter", "pilsner", "vehnäolut", "sahti", "dark ale", "märzen"];
 
 	createList(beerBrands, brandList);
 	createList(beerTypes, typeList);
-
 
 	// hanat mukana haussa kyllä/ei
 	tapButton.onclick = function() {
@@ -28,11 +26,8 @@ window.onload = function(){
 		bottleButton.classList.toggle('selected');
 	};
 
-
-
 	// avaa merkit-listan ja sulkee oluttyypit-listan
 	brandDiv.onclick = function() {
-		console.log("brand click");
 		let thisList = brandList.children[1];
 		let thisDiv = brandList.children[0];
 		let icon = thisDiv.children[0];
@@ -44,7 +39,6 @@ window.onload = function(){
 
 	// avaa oluttyypit-listan ja sulkee merkit-listan
 	typeDiv.onclick = function() {
-		console.log("type click");
 		let thisList = typeList.children[1];
 		let otherList = brandList.children[1];
 		let icon = typeDiv.children[0];
@@ -118,17 +112,23 @@ window.onload = function(){
   	});
 
 
-
-
 };
 
+
+
+
 // luo menuun listan kaljamerkeistä
-function createList(brands, parentDiv) {
+function createList(list, parentDiv) {
 	const ul = document.createElement('ul');
+
+	for (var i = 0; i<list.length; i++) {
+		list[i] = capitalizeFirstLetter(list[i]);
+	}
+	list = list.sort();
 	
-	for (var i = 0; i<brands.length; i++) {
+	for (var i = 0; i<list.length; i++) {
 		let li = document.createElement('li');
-		let content = document.createTextNode(capitalizeFirstLetter(brands[i]));
+		let content = document.createTextNode(list[i]);
 		li.appendChild(content);
 		ul.appendChild(li);
 	}
@@ -195,8 +195,18 @@ function openMenu() {
     document.getElementById("out-of-focus-area").style.width = "100%";
 };
 
+function openCard() {
+    document.getElementById("restaurant-card").style.width = "600px";
+    document.getElementById("out-of-focus-area").style.width = "100%";
+};
+
 /* palauttaa kartan takaisin normaaliksi kun menu suljetaan */
 function closeMenu() {
     document.getElementById("mobile-menu").style.width = "0";
     document.getElementById("out-of-focus-area").style.width = "0";
 };
+
+function closeCard() {
+    document.getElementById("restaurant-card").style.width = "0";
+    document.getElementById("out-of-focus-area").style.width = "0";
+}
