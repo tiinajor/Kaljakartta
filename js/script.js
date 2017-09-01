@@ -1,4 +1,5 @@
 window.onload = function(){
+	const menuButton = document.getElementById('hamburger-menu');
 	const priceSlider = document.getElementById('price-slider');
 	const alcoholSlider = document.getElementById('alcohol-slider');
 	const distanceSlider = document.getElementById('distance-slider');
@@ -6,9 +7,8 @@ window.onload = function(){
 	const bottleButton = document.getElementById('bottleButton');
 	const brandList = document.getElementById('brand-list');
 	const typeList = document.getElementById('type-list');
-
-	let touchEvent = 'ontouchstart' in window ? 'touchstart' : 'click';
-
+	const brandDiv = brandList.children[0];
+	const typeDiv = typeList.children[0];
 
 	let beerBrands = ["karhu", "koff", "karjala", "lapin kulta", "ale cog", "heineken", "pirkka"];
 	let beerTypes = ["lager", "IPA", "Bock", "Stout", "porter", "pilsner"];
@@ -29,20 +29,34 @@ window.onload = function(){
 	};
 
 
-	//list.children[0].onclick VAIHDA --------------------------------------
 
-	brandList.onclick = function() {
-		let children = brandList.children;
-		toggleVisible(children[1]);
+	// avaa merkit-listan ja sulkee oluttyypit-listan
+	brandDiv.onclick = function() {
+		console.log("brand click");
+		let thisList = brandList.children[1];
+		let thisDiv = brandList.children[0];
+		let icon = thisDiv.children[0];
+
+		toggleVisible(thisList);
+		closeOtherList(typeList);
+		rotateIcon(icon);
 	};
 
-	typeList.onclick = function() {
-		let children = typeList.children;
-		toggleVisible(children[1]);
-	}
+	// avaa oluttyypit-listan ja sulkee merkit-listan
+	typeDiv.onclick = function() {
+		console.log("type click");
+		let thisList = typeList.children[1];
+		let otherList = brandList.children[1];
+		let icon = typeDiv.children[0];
+		toggleVisible(thisList);
+		closeOtherList(brandList);
+		rotateIcon(icon);
+	};
 
 	// menun avaus mobiilissa
-	document.getElementById('hamburger-menu').addEventListener(touchEvent, openMenu);
+	menuButton.onclick = function() {
+		openMenu();
+	} 
 
 	noUiSlider.create(priceSlider, {
 		start: [ 0, 8.5 ],
@@ -151,6 +165,24 @@ function toggleVisible(item){
         item.style.display = 'block';
     }
 };
+
+function rotateIcon(icon) {
+	if (icon.style.transform === 'rotate(0deg)') {
+		icon.style.transform = 'rotate(90deg)';
+	} else {
+		icon.style.transform = 'rotate(0deg)';
+	};
+};
+
+function closeOtherList(div) {
+	let otherList = div.children[1];
+	let otherDiv = div.children[0];
+	let icon = otherDiv.children[0];
+
+	otherList.style.display = 'none';
+	icon.style.transform = "rotate(90deg)";
+};
+
 
 function toggleActive(id) {
   	document.getElementById(id).classList.toggle('selected');
