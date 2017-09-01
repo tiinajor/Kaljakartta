@@ -14,30 +14,106 @@ body, html {
 /* #f9da49 */
 /* #f1bb4b */
 
-header {
-	height: 60px;
-	background-color: #202020;
-}
 
 .centered {
 	margin: 0 auto;
 }
 
-.menu-block {
-	width: calc(100% - 60px);
+.left {
+	float: left;
+}
+
+.right {
+	float: right;
 }
 
 .button {
 	cursor: pointer;
 }
 
+.icon {
+	height: 45px;
+	display: block;
+	padding: 5px;
+	margin: 0 auto;
+}
+
+
+
+
+/* ----- HEADER ----- */
+header {
+	height: 60px;
+	background-color: #404040;
+}
+
+.logo {
+	height: 36px;
+	padding: 3px 3px 0 0;
+}
+
+.title {
+	color: #f9da49;
+	font-family: 'Bebas Neue', sans-serif;
+	font-size: 2.9em;
+	letter-spacing: 1px;
+	margin: 0;
+	padding: 0;
+}
+
+.menu-icon {
+	height: 35px;
+	padding: 10px;
+}
+
+#title-container {
+	display: flex;
+	position: fixed;
+	right: 50%;
+	top: 0;
+	height: 60px;
+	transform: translate(50%);
+	line-height: 60px;
+}
+
+#hamburger-menu {
+	background-color: transparent;
+	border: none;
+}
+
+#hamburger-menu:hover {
+	background-color: #404040;
+}
+/* ----- HEADER LOPPU ----- */
+
+
+
+/* ----- MENU ----- */
+.menu-block {
+	width: calc(100% - 60px);
+	margin-bottom: 25px;
+}
+
 .mobile-menu {
-    background-color: #303030;
+    background-color: #ececec;
     font-family: 'Montserrat', sans-serif;
     height: 100vh;
     left: 0;
     overflow-x: hidden;
     padding-top: 60px;
+    position: fixed;
+    top: 0;
+    transition: 0.5s;
+    width: 0;
+    z-index: 50;
+}
+
+.restaurant {
+    background-color: #ececec;
+    font-family: 'Montserrat', sans-serif;
+    height: 100%;
+    right: 0;
+    overflow-x: hidden;
     position: fixed;
     top: 0;
     transition: 0.5s;
@@ -59,41 +135,13 @@ header {
     text-decoration: none;
 }
 
-.slider-container {
-	margin: 30px 0 10px 0;
-}
-
-.slider-container span {
-	color: #ccc;
-}
-
-.slider {
-	margin: 10px 0;
-}
-
-.beer-brand-list {
-	list-style-type: none;
-	margin: 0;
-	border: solid 2px white;
-	color: #ccc;
-	padding: 0;
-	height: 30px;
-	overflow: auto;
-	transition: 0.5s;
-}
-
-.beer-brand-list li {
-	border-top: solid 2px #ccc;
-	color: #ccc;
-	padding: 4px;
-}
-
 .search-option {
 	width: 105px;
 	height: 90px;
 	border-radius: 8px;
 	border: 4px solid #ccc;
 	background-color: #aaa;
+	color: #303030;
 	outline: none;
 	font: 1em 'Montserrat', sans-serif;
 }
@@ -102,31 +150,61 @@ header {
 	background-color: #ffffff;
 }
 
-.selected {
-	background-color: #ffffff;
-	border: 4px solid #f9da49;
+
+.slider-container {
+	margin-top: 25px;
 }
 
-.logo {
-	height: 40px;
-	float: left;
-	padding: 3px 3px 0 0;
+.slider-container span {
+	color: #444;
 }
 
-.title {
-	color: #f9da49;
-	font-family: 'Bebas Neue', sans-serif;
-	font-size: 2.9em;
-	letter-spacing: 1px;
-	margin: 0;
+.slider {
+	margin: 10px 0;
+}
+
+.dropdown {
+	overflow: hidden;
+}
+
+.dropdown div {
+	border: 2px solid white;
+	padding: 5px;
+	background-color: #cbcbcb;
+	color: #101010;
+}
+
+.dropdown ul {
+	list-style-type: none;
 	padding: 0;
+	margin: 0;
+	display: none;
+	color: #101010;
+	background-color: #a1a1a1;
+	border-top: none;
+	height: 180px;
+	overflow-y: scroll;
 }
 
+.dropdown ul::-webkit-scrollbar {
+	display: none;
+}
 
+.dropdown li{
+	display: block;
+	padding: 5px 10px;
+	border-bottom: 1px solid #808080;
+}
 
-.hamburger-icon {
-	height: 35px;
-	padding: 10px;
+.dropdown li:hover {
+	background-color: #dedede;
+	color: #101010;
+}
+
+.dropdown-icon {
+	height: 15px;
+	display: inline;
+	transform: rotate(90deg);
 }
 
 .noUi-horizontal.noUi-extended {
@@ -147,34 +225,6 @@ header {
 	background-color: rgba(0,0,0, 0.5);
 }
 
-#title-container {
-	display: flex;
-	position: fixed;
-	right: 50%;
-	top: 7px;
-	transform: translate(50%);
-}
-
-#hamburger-menu {
-	background-color: transparent;
-	border: none;
-}
-
-#hamburger-menu:hover {
-	background-color: #404040;
-}
-
-#map {
-	height: calc(100vh - 60px);
-}
-
-#search-container {
-	bottom: 5%;
-	left: calc(50% - 25px);
-	position: absolute;
-	transform: translate(-50%);
-}
-
 #search-option-sliders {
 	margin-bottom: 50px;
 }
@@ -183,9 +233,48 @@ header {
 	display: flex;
 	justify-content: space-between;
 }
+/* ----- MENU LOPPU ----- */
+
+
+
+/* ----- BAARIN KUVAUS -----*/
+
+.hero-image {
+
+	background-image: url(../boothill.jpg);
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: cover;
+	height: 200px;
+	vertical-align: top;
+}
+
+
+
+
+
+
+/* ----- BAARIN KUVAUS LOPPU -----*/
+
+
+
+/* ----- KARTTA ----- */
+#map {
+	height: calc(100vh - 60px);
+}
+/* ----- KARTTA LOPPU----- */
+
+
+
+/* ----- KARTAN HAKUKENTTÄ ----- */
+#search-container {
+	bottom: 30px;
+	left: calc(50% - 22px);
+	position: absolute;
+	transform: translate(-50%);
+}
 
 #searchbox {
-	width: 250px;
 	z-index: 2;
 }
 
@@ -198,7 +287,7 @@ header {
 	height: 30px;
 	outline: none;
 	padding: 5px;
-	width: 100%;
+	
 }
 
 #searchbox input:focus {
@@ -211,13 +300,71 @@ header {
 	border: 1px solid #404040;
 	height: 46px;
 	position: absolute;  
-	right: -60px;
+	right: -44px;
 	width: 50px;
 }
 
 #searchbox button img {
 	height: 25px;
 }
+/* ----- KARTAN HAKUKENTTÄ LOPPU ----- */
+
+
+.selected {
+	background-color: #ffffff;
+	border: 4px solid #f9da49;
+	color: #101010;
+}
+
+
+@media only screen and (max-width: 768px) {
+	#search-container {
+		bottom: 20px;
+	}
+}
+
+@media only screen and (max-width: 410px) {
+	#searchbox {
+	}
+
+	#searchbox input {
+		height: 20px;
+		font-size: 20px;
+	}
+
+	#searchbox button {
+		height: 36px;
+		width: 40px;
+		right: -36px;
+	}
+
+	.logo {
+		height: 30px;
+	}
+
+	.title {
+		font-size: 2.2em;
+	}
+
+	.menu-icon {
+		height: 25px;
+		padding: 10px;
+	}
+
+	header, #title-container {
+		height: 45px;
+		line-height: 45px;
+	}
+
+	#map {
+		height: calc(100vh - 45px);
+	}
+}
+
+
+
+
+
 
 @font-face {
 	font-family: 'Montserrat';

@@ -1,19 +1,20 @@
 window.onload = function(){
+	const menuButton = document.getElementById('hamburger-menu');
 	const priceSlider = document.getElementById('price-slider');
 	const alcoholSlider = document.getElementById('alcohol-slider');
 	const distanceSlider = document.getElementById('distance-slider');
 	const tapButton = document.getElementById('tapButton');
 	const bottleButton = document.getElementById('bottleButton');
-	const mobileMenu = document.getElementById('mobile-menu');
-	const brandList = document.getElementById('brand');
+	const brandList = document.getElementById('brand-list');
+	const typeList = document.getElementById('type-list');
+	const brandDiv = brandList.children[0];
+	const typeDiv = typeList.children[0];
 
+	let beerBrands = ["karhu", "koff", "karjala", "lapin kulta", "ale coq", "heineken", "pirkka", "grimbergen", "duvel", "olut"];
+	let beerTypes = ["lager", "IPA", "bock", "stout", "porter", "pilsner", "vehnäolut", "sahti", "dark ale", "märzen"];
 
-	let touchEvent = 'ontouchstart' in window ? 'touchstart' : 'click';
-
-
-	let beerBrands = ["karhu", "koff", "karjala", "lapin kulta", "ale cog", "heineken", "pirkka"];
-	createList(beerBrands, mobileMenu);
-
+	createList(beerBrands, brandList);
+	createList(beerTypes, typeList);
 
 	// hanat mukana haussa kyllä/ei
 	tapButton.onclick = function() {
@@ -25,10 +26,31 @@ window.onload = function(){
 		bottleButton.classList.toggle('selected');
 	};
 
-	document.getElementById('brand').addEventListener(touchEvent, openBeerList)
+	// avaa merkit-listan ja sulkee oluttyypit-listan
+	brandDiv.onclick = function() {
+		let thisList = brandList.children[1];
+		let thisDiv = brandList.children[0];
+		let icon = thisDiv.children[0];
+
+		toggleVisible(thisList);
+		closeOtherList(typeList);
+		rotateIcon(icon);
+	};
+
+	// avaa oluttyypit-listan ja sulkee merkit-listan
+	typeDiv.onclick = function() {
+		let thisList = typeList.children[1];
+		let otherList = brandList.children[1];
+		let icon = typeDiv.children[0];
+		toggleVisible(thisList);
+		closeOtherList(brandList);
+		rotateIcon(icon);
+	};
 
 	// menun avaus mobiilissa
-	document.getElementById('hamburger-menu').addEventListener(touchEvent, openMenu);
+	menuButton.onclick = function() {
+		openMenu();
+	} 
 
 	noUiSlider.create(priceSlider, {
 		start: [ 0, 8.5 ],
@@ -90,39 +112,35 @@ window.onload = function(){
   	});
 
 
+};
 
 
-}
+
 
 // luo menuun listan kaljamerkeistä
-function createList(brands, parentDiv) {
-	const div = document.createElement('div');
+function createList(list, parentDiv) {
 	const ul = document.createElement('ul');
-	let li = document.createElement('li');
-	li.id = "brand";
-	let content = document.createTextNode("Merkki:");
-	li.appendChild(content);
-	ul.appendChild(li);
+
+	for (var i = 0; i<list.length; i++) {
+		list[i] = capitalizeFirstLetter(list[i]);
+	}
+	list = list.sort();
 	
-	for (var i = 0; i<brands.length; i++) {
+	for (var i = 0; i<list.length; i++) {
 		let li = document.createElement('li');
-		let content = document.createTextNode(capitalizeFirstLetter(brands[i]));
+		let content = document.createTextNode(list[i]);
 		li.appendChild(content);
 		ul.appendChild(li);
 	}
-
-	ul.classList.add('beer-brand-list');
-	ul.id = "brand-list";
-	div.classList.add('centered');
-	div.classList.add('menu-block');
-	div.appendChild(ul);
-	parentDiv.appendChild(div);
-}
+	parentDiv.appendChild(ul);
+};
 
 // muuttaa ekan kirjaimen isoksi
 function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
-}
+};
+
+
 
 
 /* luo kartan */
@@ -133,48 +151,43 @@ function initMap() {
     zoom: 14,
     center: position
   	});
+  	/*
+  	var marker = new google.maps.Marker({
+   		position: position,
+    	map: map
+  	});
+  	*/
+};
 
-  	var bluedot = {
-	    url: 'http://i.imgur.com/WX8uTQ7.png',
-	    // This marker is 20 pixels wide by 32 pixels high.
-	    size: new google.maps.Size(20,20),
-	    // The origin for this image is (0, 0).
-	    origin: new google.maps.Point(0, 0),
-	    // The anchor for this image is the base of the flagpole at (0, 32).
-	    anchor: new google.maps.Point(10, 10)
-  	};
+function toggleVisible(item){
+    if (item.style.display === 'block'){
+        item.style.display = 'none';
+    }else{
+        item.style.display = 'block';
+    }
+};
 
-  	if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition(function(position) {
-            var pos = {
-              lat: position.coords.latitude,
-              lng: position.coords.longitude
-            };
-          	var marker = new google.maps.Marker({
-		   		position: pos,
-		    	map: map,
-		    	icon: bluedot
-		  	});
-            map.setCenter(pos);
-          }, function() {
-            handleLocationError(true, infoWindow, map.getCenter());
-          });
-        } else {
-          // Browser doesn't support Geolocation
-          handleLocationError(false, infoWindow, map.getCenter());
-        }
-}
+function rotateIcon(icon) {
+	if (icon.style.transform === 'rotate(0deg)') {
+		icon.style.transform = 'rotate(90deg)';
+	} else {
+		icon.style.transform = 'rotate(0deg)';
+	};
+};
 
-function handleLocationError(browserHasGeolocation, infoWindow, pos) {
-	infoWindow.setPosition(pos);
-	infoWindow.setContent(browserHasGeolocation ?
-	'Error: The Geolocation service failed.' : 'Error: Your browser doesn\'t support geolocation.');
-	infoWindow.open(map);
-}
+function closeOtherList(div) {
+	let otherList = div.children[1];
+	let otherDiv = div.children[0];
+	let icon = otherDiv.children[0];
+
+	otherList.style.display = 'none';
+	icon.style.transform = "rotate(90deg)";
+};
+
 
 function toggleActive(id) {
   	document.getElementById(id).classList.toggle('selected');
-}
+};
 
 
 function openBeerList() {
@@ -189,10 +202,20 @@ function openBeerList() {
 function openMenu() {
     document.getElementById("mobile-menu").style.width = "300px";
     document.getElementById("out-of-focus-area").style.width = "100%";
-}
+};
+
+function openCard() {
+    document.getElementById("restaurant-card").style.width = "600px";
+    document.getElementById("out-of-focus-area").style.width = "100%";
+};
 
 /* palauttaa kartan takaisin normaaliksi kun menu suljetaan */
 function closeMenu() {
     document.getElementById("mobile-menu").style.width = "0";
+    document.getElementById("out-of-focus-area").style.width = "0";
+};
+
+function closeCard() {
+    document.getElementById("restaurant-card").style.width = "0";
     document.getElementById("out-of-focus-area").style.width = "0";
 }

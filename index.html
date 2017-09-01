@@ -22,28 +22,80 @@
 		<a href="#" class="closebtn" onclick="closeMenu()">x</a>
 
 		<div id="search-option-buttons" class="centered menu-block">
-			<button id="tapButton" class="search-option button">Hanat</button>
-			<button id="bottleButton" class="search-option button">Pullot</button>
+			<button id="tapButton" class="search-option button"><img class="icon" src="icons/beer-tap.svg">Hanat</button>
+			<button id="bottleButton" class="search-option button"><img class="icon" src="icons/beer-bottle.svg">Pullot</button>
 		</div>
 		
 		<div id="search-option-sliders" class="centered menu-block">
 			<div class="slider-container">
 				<span>Hinta</span>
+				<span id="price" class="right"></span>
 				<div class="slider noUi-extended" id="price-slider"></div>
-				<span id="price"></span>
+				
 			</div>
 			
 			<div class="slider-container">
-				<span>Alkoholipitoisuus</span>
+				<span>Vahvuus</span>
+				<span id="alcohol" class="right"></span>
 				<div class="slider noUi-extended" id="alcohol-slider"></div>
-				<span id="alcohol"></span>
 			</div>
 
 			<div class="slider-container">
 				<span>Etäisyys</span>
+				<span id="distance" class="right"></span>
 				<div class="slider noUi-extended" id="distance-slider"></div>
-				<span id="distance"></span>
+				
 			</div>
+		</div>
+		
+		<div id="brand-list" class="centered menu-block dropdown">
+			<div>Merkit<img class="dropdown-icon right" src="icons/sort-down.svg"></div>
+
+		</div>
+
+		<div id="type-list" class="centered menu-block dropdown">
+			<div>Oluttyypit<img class="dropdown-icon right" src="icons/sort-down.svg"></div>
+		</div>
+
+	</div>
+
+	<div id="restaurant-card" class="restaurant">
+		<a href="#" class="closebtn" onclick="closeCard()">x</a>
+		
+		<div class="hero-image"></div>
+
+		<div style="padding: 0 30px">
+			
+			<div style="float: right" >
+				<img style=" height: 30px" src="icons/beer.svg">
+				<img style=" height: 30px" src="icons/beer.svg">
+				<img style=" height: 30px" src="icons/beer.svg">
+				<img style=" height: 30px" src="icons/beer.svg">
+				<img style=" height: 30px" src="icons/beer-bw.svg">
+			</div>
+			<h2>Boothill</h2>
+			<p>Rock-baari. Kotoisa, live-musiikkia.</p>
+			<hr>
+			<div style="float: left">
+				<h3>Hanat</h3>
+				<ul>
+					<li>Karjala III</li>
+					<li>Lapin Kulta IV</li>
+					<li>Happy Joe</li>
+					<li>Hartwall Gin</li>
+				</ul>
+			</div>
+			
+
+			<div style="float: right">
+			<h3>Pullot</h3>
+			<ul>
+				<li>Olvi I</li>
+				<li>Heineken III</li>
+				<li>Jallu</li>
+				<li>Aura</li>
+			</ul></div>
+			
 		</div>
 		
 
@@ -52,25 +104,19 @@
 	<div id="out-of-focus-area" onclick="closeMenu()"></div>
 
 	<header>
-		<button id="hamburger-menu"><img class="hamburger-icon button" src="icons/menu.svg"></button>
+		<button id="hamburger-menu"><img class="menu-icon button" src="icons/menu.svg"></button>
 		<div id="title-container">
-			<img class="logo" src="icons/beer.svg">
-			<p class="title">Kaljakartta</p>
+			
+			<p class="title" onclick="openCard()"><img class="logo" src="icons/beer.svg">Kaljakartta</p>
 		</div>
 	</header>
-	
-	
-		
-	
-	
-
 
 	<div id="map"></div>
 
 	<div id="search-container">
 		<div id="searchbox">
 			<input type="text" placeholder="Search...">
-			<button id="search-button"><img class="search-icon button" src="icons/search.svg"></button>	
+			<button id="search-button"><img class="button" src="icons/search.svg"></button>
 		</div>
 	</div>
 
