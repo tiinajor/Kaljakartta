@@ -14,6 +14,11 @@ body, html {
 /* #f9da49 */
 /* #f1bb4b */
 
+.test {
+	border: solid 2px red;
+	padding: 0 10px;
+	width: calc(50% - 24px);
+}
 
 .centered {
 	margin: 0 auto;
@@ -38,7 +43,19 @@ body, html {
 	margin: 0 auto;
 }
 
+.closebtn {
+    font-size: 36px;
+    position: absolute;
+    right: 15px;
+    top: 0;
+    color: #303030;
+    display: block;
+    text-decoration: none;
+}
 
+.closebtn:hover {
+	color: #101010;
+}
 
 
 /* ----- HEADER ----- */
@@ -49,7 +66,7 @@ header {
 
 .logo {
 	height: 36px;
-	padding: 3px 3px 0 0;
+	padding-right: 5px;
 }
 
 .title {
@@ -69,10 +86,10 @@ header {
 #title-container {
 	display: flex;
 	position: fixed;
-	right: 50%;
+	left: calc(50% - 33px);
 	top: 0;
 	height: 60px;
-	transform: translate(50%);
+	transform: translate(-50%);
 	line-height: 60px;
 }
 
@@ -94,7 +111,7 @@ header {
 	margin-bottom: 25px;
 }
 
-.mobile-menu {
+#side-menu {
     background-color: #ececec;
     font-family: 'Montserrat', sans-serif;
     height: 100vh;
@@ -108,31 +125,8 @@ header {
     z-index: 50;
 }
 
-.restaurant {
-    background-color: #ececec;
-    font-family: 'Montserrat', sans-serif;
-    height: 100%;
-    right: 0;
-    overflow-x: hidden;
-    position: fixed;
-    top: 0;
-    transition: 0.5s;
-    width: 0;
-    z-index: 50;
-}
-
-.mobile-menu a:hover {
+#side-menu a:hover {
     color: #f1f1f1;
-}
-
-.closebtn {
-    font-size: 36px;
-    position: absolute;
-    right: 15px;
-    top: 0;
-    color: #cdcdcd;
-    display: block;
-    text-decoration: none;
 }
 
 .search-option {
@@ -168,22 +162,22 @@ header {
 }
 
 .dropdown div {
-	border: 2px solid white;
-	padding: 5px;
 	background-color: #cbcbcb;
+	border: 2px solid white;
 	color: #101010;
+	padding: 5px;
 }
 
 .dropdown ul {
-	list-style-type: none;
-	padding: 0;
-	margin: 0;
-	display: none;
-	color: #101010;
 	background-color: #a1a1a1;
 	border-top: none;
-	height: 180px;
+	color: #101010;
+	height: 0px;
+	list-style-type: none;
+	margin: 0;
 	overflow-y: scroll;
+	padding: 0;
+	transition: 0.5s;
 }
 
 .dropdown ul::-webkit-scrollbar {
@@ -207,6 +201,14 @@ header {
 	transform: rotate(90deg);
 }
 
+.out-of-focus-area {
+	background-color: rgba(0,0,0, 0.5);
+	height: 100vh;
+	position: absolute;
+	width: 0;
+	z-index: 40;
+}
+
 .noUi-horizontal.noUi-extended {
 	padding-right: 32px;
 }
@@ -215,14 +217,6 @@ header {
 }
 .noUi-horizontal.noUi-extended .noUi-origin  {
 	right: -32px;
-}
-
-#out-of-focus-area {
-	position: absolute;
-	width: 0;
-	height: 100vh;
-	z-index: 40;
-	background-color: rgba(0,0,0, 0.5);
 }
 
 #search-option-sliders {
@@ -237,10 +231,10 @@ header {
 
 
 
-/* ----- BAARIN KUVAUS -----*/
+/* ----- RESTAURANT CARD -----*/
+
 
 .hero-image {
-
 	background-image: url(../boothill.jpg);
 	background-position: center;
 	background-repeat: no-repeat;
@@ -249,12 +243,46 @@ header {
 	vertical-align: top;
 }
 
+.rating-icon {
+	height: 30px;
+}
+
+#card-content {
+	margin: 0 25px;
+}
+
+#drinks-container {
+	display: flex;
+	justify-content: space-between;
+}
+
+#bar-name {
+	margin-bottom: 0;
+	font-size: 1.8em
+}
+
+#bar-address {
+	padding: 0 0 0 3px;
+	margin: 0;
+	font-size: 0.8em;
+	font-style: italic;
+}
 
 
+#restaurant-card {
+    background-color: #ececec;
+    font-family: 'Montserrat', sans-serif;
+    height: 100%;
+    right: 0;
+    overflow-x: hidden;
+    position: fixed;
+    top: 0;
+    transition: 0.5s;
+    width: 0;
+    z-index: 50;
+}
 
-
-
-/* ----- BAARIN KUVAUS LOPPU -----*/
+/* ----- RESTAURANT CARD LOPPU -----*/
 
 
 
@@ -317,14 +345,15 @@ header {
 }
 
 
-@media only screen and (max-width: 768px) {
+@media only screen and (min-width: 768px) and (max-width: 1280px) {
 	#search-container {
 		bottom: 20px;
 	}
 }
 
-@media only screen and (max-width: 410px) {
-	#searchbox {
+@media only screen and (min-width: 320px) and (max-width: 768px){
+	#search-container {
+		bottom: 20px;
 	}
 
 	#searchbox input {
@@ -335,11 +364,12 @@ header {
 	#searchbox button {
 		height: 36px;
 		width: 40px;
-		right: -36px;
+		right: -34px;
 	}
 
 	.logo {
 		height: 30px;
+		padding-right: 0;
 	}
 
 	.title {
@@ -348,7 +378,7 @@ header {
 
 	.menu-icon {
 		height: 25px;
-		padding: 10px;
+		padding: 10px 0;
 	}
 
 	header, #title-container {

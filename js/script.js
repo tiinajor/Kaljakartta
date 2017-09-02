@@ -1,56 +1,53 @@
 window.onload = function(){
-	const menuButton = document.getElementById('hamburger-menu');
 	const priceSlider = document.getElementById('price-slider');
 	const alcoholSlider = document.getElementById('alcohol-slider');
 	const distanceSlider = document.getElementById('distance-slider');
-	const tapButton = document.getElementById('tapButton');
-	const bottleButton = document.getElementById('bottleButton');
-	const brandList = document.getElementById('brand-list');
-	const typeList = document.getElementById('type-list');
-	const brandDiv = brandList.children[0];
-	const typeDiv = typeList.children[0];
 
 	let beerBrands = ["karhu", "koff", "karjala", "lapin kulta", "ale coq", "heineken", "pirkka", "grimbergen", "duvel", "olut"];
-	let beerTypes = ["lager", "IPA", "bock", "stout", "porter", "pilsner", "vehnäolut", "sahti", "dark ale", "märzen"];
-
-	createList(beerBrands, brandList);
-	createList(beerTypes, typeList);
+	let beerTypes = ["lager", "IPA", "bock", "Stout", "porter", "pilsner", "vehnäolut", "sahti", "dark ale", "märzen"];
+	createList(beerBrands, document.getElementById('brand-list'));
+	createList(beerTypes, document.getElementById('type-list'));
 
 	// hanat mukana haussa kyllä/ei
-	tapButton.onclick = function() {
+	document.getElementById('tapButton').addEventListener('click', function() {
 		tapButton.classList.toggle('selected');
-	};
+	});
 
 	// pullot mukana haussa kyllä/ei
-	bottleButton.onclick = function() {
+	document.getElementById('bottleButton').addEventListener('click', function() {
 		bottleButton.classList.toggle('selected');
-	};
+	});
 
 	// avaa merkit-listan ja sulkee oluttyypit-listan
-	brandDiv.onclick = function() {
-		let thisList = brandList.children[1];
-		let thisDiv = brandList.children[0];
-		let icon = thisDiv.children[0];
-
-		toggleVisible(thisList);
-		closeOtherList(typeList);
+	document.getElementById('brand-list').children[0].addEventListener('click', function() {
+		let ul = document.getElementById('brand-list').children[1];
+		let icon = this.children[0];
+		let typeList = document.getElementById('type-list');
+		toggleVisible(ul);
 		rotateIcon(icon);
-	};
+		closeOtherList(typeList);
+	});
 
 	// avaa oluttyypit-listan ja sulkee merkit-listan
-	typeDiv.onclick = function() {
-		let thisList = typeList.children[1];
-		let otherList = brandList.children[1];
-		let icon = typeDiv.children[0];
-		toggleVisible(thisList);
-		closeOtherList(brandList);
+	document.getElementById('type-list').children[0].addEventListener('click', function() {
+		let ul = document.getElementById('type-list').children[1];
+		let icon = this.children[0];
+		let brandList = document.getElementById('brand-list');
+		toggleVisible(ul);
 		rotateIcon(icon);
-	};
+		closeOtherList(brandList);
+	});
 
 	// menun avaus mobiilissa
-	menuButton.onclick = function() {
-		openMenu();
-	} 
+	document.getElementById('hamburger-menu').addEventListener('click', openMenu);
+
+	// sulkee menun kun sen ulkopuolelle klikataan tai kun yläkulman X klikataan
+	document.getElementById('menu-close-x').addEventListener('click', closeMenu);
+	document.getElementById('menu-oof').addEventListener('click', closeMenu);
+
+	// sulkee "restaurant cardin" kun sen ulkopuolelle klikataan tai kun yläkulman X klikataan
+	document.getElementById('card-close-x').addEventListener('click', closeCard);
+	document.getElementById('card-oof').addEventListener('click', closeCard);
 
 	noUiSlider.create(priceSlider, {
 		start: [ 0, 8.5 ],
@@ -95,7 +92,8 @@ window.onload = function(){
 	      postfix: 'm',
 	    })
   	});
-
+	
+	// slaidereiden liikuttaminen päivittää niihin liittyvät tekstit
   	priceSlider.noUiSlider.on('update', function() {
 	    let value = priceSlider.noUiSlider.get();
 	    document.getElementById("price").innerHTML = value[0] + " - " + value[1];
@@ -115,9 +113,7 @@ window.onload = function(){
 };
 
 
-
-
-// luo menuun listan kaljamerkeistä
+// luo listan divin sisään (aakkosjärjestyksessä ja eka kirjain isolla)
 function createList(list, parentDiv) {
 	const ul = document.createElement('ul');
 
@@ -142,7 +138,6 @@ function capitalizeFirstLetter(string) {
 
 
 
-
 /* luo kartan */
 function initMap() {
 
@@ -160,10 +155,11 @@ function initMap() {
 };
 
 function toggleVisible(item){
-    if (item.style.display === 'block'){
-        item.style.display = 'none';
+	console.log(item.style.height);
+    if (item.style.height === '195px'){
+        item.style.height = '0px';
     }else{
-        item.style.display = 'block';
+        item.style.height = '195px';
     }
 };
 
@@ -180,7 +176,7 @@ function closeOtherList(div) {
 	let otherDiv = div.children[0];
 	let icon = otherDiv.children[0];
 
-	otherList.style.display = 'none';
+	otherList.style.height = '0px';
 	icon.style.transform = "rotate(90deg)";
 };
 
@@ -200,22 +196,24 @@ function openBeerList() {
 
 /* blurraa kartan kun menu avataan */
 function openMenu() {
-    document.getElementById("mobile-menu").style.width = "300px";
-    document.getElementById("out-of-focus-area").style.width = "100%";
-};
-
-function openCard() {
-    document.getElementById("restaurant-card").style.width = "600px";
-    document.getElementById("out-of-focus-area").style.width = "100%";
+    document.getElementById("side-menu").style.width = "300px";
+    document.getElementById("menu-oof").style.width = "100%";
 };
 
 /* palauttaa kartan takaisin normaaliksi kun menu suljetaan */
 function closeMenu() {
-    document.getElementById("mobile-menu").style.width = "0";
-    document.getElementById("out-of-focus-area").style.width = "0";
+    document.getElementById("side-menu").style.width = "0";
+    document.getElementById("menu-oof").style.width = "0";
 };
 
+/* blurraa kartan kun restaurant card avataan */
+function openCard() {
+    document.getElementById("restaurant-card").style.width = "600px";
+    document.getElementById("card-oof").style.width = "100%";
+};
+
+/* palauttaa kartan takaisin normaaliksi kun restaurant card suljetaan */
 function closeCard() {
     document.getElementById("restaurant-card").style.width = "0";
-    document.getElementById("out-of-focus-area").style.width = "0";
+    document.getElementById("card-oof").style.width = "0";
 }
