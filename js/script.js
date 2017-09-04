@@ -8,6 +8,11 @@ window.onload = function(){
 	createList(beerBrands, document.getElementById('brand-list'));
 	createList(beerTypes, document.getElementById('type-list'));
 
+	var bar = { "name":"Boothill", 
+				"address":"Lönnrotinkatu 25", 
+				"description":"Rock-baari. Kotoisa, live-musiikkia"};
+	renderBarInfo(bar);
+
 	// hanat mukana haussa kyllä/ei
 	document.getElementById('tapButton').addEventListener('click', function() {
 		tapButton.classList.toggle('selected');
@@ -154,6 +159,12 @@ function initMap() {
   	*/
 };
 
+function renderBarInfo(bar) {
+	document.getElementById('bar-name').innerHTML = bar.name;
+	document.getElementById('bar-address').innerHTML = bar.address;
+	document.getElementById('bar-desc').innerHTML = bar.description;
+};
+
 function toggleVisible(item){
 	console.log(item.style.height);
     if (item.style.height === '195px'){
@@ -180,19 +191,18 @@ function closeOtherList(div) {
 	icon.style.transform = "rotate(90deg)";
 };
 
-
 function toggleActive(id) {
   	document.getElementById(id).classList.toggle('selected');
 };
 
-
+/*
 function openBeerList() {
 	let list = document.getElementById('brand-list');
 	list.style.height = "150px";
 	list.style.overflowY = "scroll";
 	list.style.paddingRight = list.offsetWidth - list.clientWidth + "px";
 }
-
+*/
 
 /* blurraa kartan kun menu avataan */
 function openMenu() {
