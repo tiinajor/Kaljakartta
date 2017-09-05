@@ -8,11 +8,6 @@ window.onload = function(){
 	createList(beerBrands, document.getElementById('brand-list'));
 	createList(beerTypes, document.getElementById('type-list'));
 
-	var bar = { "name":"Boothill", 
-				"address":"Lönnrotinkatu 25", 
-				"description":"Rock-baari. Kotoisa, live-musiikkia"};
-	renderBarInfo(bar);
-
 	// hanat mukana haussa kyllä/ei
 	document.getElementById('tapButton').addEventListener('click', function() {
 		tapButton.classList.toggle('selected');
@@ -31,7 +26,7 @@ window.onload = function(){
         service.nearbySearch({
           location: hki,
           radius: value,
-          type: ["restaurant"]
+          type: ["bar"]
         }, callback);
 	});
 
@@ -153,10 +148,24 @@ function capitalizeFirstLetter(string) {
 };
 
 
-function renderBarInfo(bar) {
-	document.getElementById('bar-name').innerHTML = bar.name;
-	document.getElementById('bar-address').innerHTML = bar.address;
-	document.getElementById('bar-desc').innerHTML = bar.description;
+function renderBarInfo(name, address, open, rating) {
+	document.getElementById('bar-name').innerHTML = name;
+	document.getElementById('bar-address').innerHTML = address;
+	document.getElementById('bar-desc').innerHTML = open;
+	setRating(rating);
+};
+
+function setRating(rating) {
+	let rounded = Math.round(rating);
+	let html = '';
+	for(var i=1;i<=5;i++) {
+		if(i<=rating) {
+			html += "<img class=\"rating-icon\" src=\"icons/pint-rating.svg\">"
+		} else {
+			html += "<img class=\"rating-icon\" src=\"icons/pint-rating-bw.svg\">"
+		}
+	}
+	document.getElementById('rating').innerHTML = html;
 };
 
 function toggleVisible(item){

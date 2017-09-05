@@ -92,9 +92,8 @@ function createMarker(place) {
 		if (place.opening_hours.open_now) {
 			open = "Avoinna nyt";
 		}
-		document.getElementById('bar-name').innerHTML = place.name;
-		document.getElementById('bar-address').innerHTML = place.vicinity;
-		document.getElementById('bar-desc').innerHTML = "Vittusaatana tää toimii";
+
+		renderBarInfo(place.name, place.vicinity, open, place.rating);
 		/*
 		infoWindow.setContent(place.name + " " + place.vicinity + " " + open);
 		infoWindow.open(map, this);
