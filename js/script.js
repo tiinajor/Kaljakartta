@@ -23,6 +23,18 @@ window.onload = function(){
 		bottleButton.classList.toggle('selected');
 	});
 
+
+	document.getElementById('search-button').addEventListener('click', function() {
+		var value = distanceSlider.noUiSlider.get();
+		console.log(value);
+		var service = new google.maps.places.PlacesService(map);
+        service.nearbySearch({
+          location: hki,
+          radius: value,
+          type: ["restaurant"]
+        }, callback);
+	});
+
 	// avaa merkit-listan ja sulkee oluttyypit-listan
 	document.getElementById('brand-list').children[0].addEventListener('click', function() {
 		let ul = document.getElementById('brand-list').children[1];
@@ -94,7 +106,6 @@ window.onload = function(){
 	    },
 	    format: wNumb({
 	      decimals: 0,
-	      postfix: 'm',
 	    })
   	});
 	
@@ -111,7 +122,7 @@ window.onload = function(){
 
   	distanceSlider.noUiSlider.on('update', function() {
 	    let value = distanceSlider.noUiSlider.get();
-	    document.getElementById("distance").innerHTML = "< " + value;
+	    document.getElementById("distance").innerHTML = "< " + value + "m";
   	});
 
 
@@ -141,23 +152,6 @@ function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 };
 
-
-
-/* luo kartan */
-function initMap() {
-
-  	var position = {lat: 60.162786, lng: 24.932607};
-  	var map = new google.maps.Map(document.getElementById('map'), {
-    zoom: 14,
-    center: position
-  	});
-  	/*
-  	var marker = new google.maps.Marker({
-   		position: position,
-    	map: map
-  	});
-  	*/
-};
 
 function renderBarInfo(bar) {
 	document.getElementById('bar-name').innerHTML = bar.name;
