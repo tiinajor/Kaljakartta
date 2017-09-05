@@ -16,8 +16,6 @@ body, html {
 
 .test {
 	border: solid 2px red;
-	padding: 0 10px;
-	width: calc(50% - 24px);
 }
 
 .centered {
@@ -247,6 +245,16 @@ header {
 	height: 30px;
 }
 
+.column {
+	padding: 0 10px;
+	width: calc(50% - 20px);
+}
+
+#openHours p {
+	margin: 0;
+	padding: 0;
+}
+
 #card-content {
 	margin: 0 25px;
 }
@@ -268,10 +276,18 @@ header {
 	font-style: italic;
 }
 
+/*
+#rating {
+	background-color: #707070;
+	padding: 6px;
+	border-radius: 10px;
+}
+*/
 
 #restaurant-card {
     background-color: #ececec;
     font-family: 'Montserrat', sans-serif;
+    color: #252525;
     height: 100%;
     right: 0;
     overflow-x: hidden;
