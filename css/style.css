@@ -44,12 +44,11 @@ body, html {
 /* ----- HEADER ----- */
 header {
 	height: 60px;
-	background-color: #202020;
+	background-color: #404040;
 }
 
 .logo {
-	height: 40px;
-	float: left;
+	height: 36px;
 	padding: 3px 3px 0 0;
 }
 
@@ -71,8 +70,10 @@ header {
 	display: flex;
 	position: fixed;
 	right: 50%;
-	top: 7px;
+	top: 0;
+	height: 60px;
 	transform: translate(50%);
+	line-height: 60px;
 }
 
 #hamburger-menu {
@@ -94,12 +95,25 @@ header {
 }
 
 .mobile-menu {
-    background-color: #303030;
+    background-color: #ececec;
     font-family: 'Montserrat', sans-serif;
-    height: 100%;
+    height: 100vh;
     left: 0;
     overflow-x: hidden;
     padding-top: 60px;
+    position: fixed;
+    top: 0;
+    transition: 0.5s;
+    width: 0;
+    z-index: 50;
+}
+
+.restaurant {
+    background-color: #ececec;
+    font-family: 'Montserrat', sans-serif;
+    height: 100%;
+    right: 0;
+    overflow-x: hidden;
     position: fixed;
     top: 0;
     transition: 0.5s;
@@ -142,11 +156,15 @@ header {
 }
 
 .slider-container span {
-	color: #ccc;
+	color: #444;
 }
 
 .slider {
 	margin: 10px 0;
+}
+
+.dropdown {
+	overflow: hidden;
 }
 
 .dropdown div {
@@ -156,24 +174,29 @@ header {
 	color: #101010;
 }
 
-.dropdown ul, .dropdown ul {
+.dropdown ul {
 	list-style-type: none;
 	padding: 0;
 	margin: 0;
 	display: none;
 	color: #101010;
 	background-color: #a1a1a1;
-	border: 2px solid 808080;
 	border-top: none;
+	height: 180px;
+	overflow-y: scroll;
 }
 
-.dropdown li, .dropdown li {
+.dropdown ul::-webkit-scrollbar {
+	display: none;
+}
+
+.dropdown li{
 	display: block;
-	padding: 5px 15px;
+	padding: 5px 10px;
 	border-bottom: 1px solid #808080;
 }
 
-.dropdown li:hover, .dropdown li:hover {
+.dropdown li:hover {
 	background-color: #dedede;
 	color: #101010;
 }
@@ -197,7 +220,7 @@ header {
 #out-of-focus-area {
 	position: absolute;
 	width: 0;
-	height: 100%;
+	height: 100vh;
 	z-index: 40;
 	background-color: rgba(0,0,0, 0.5);
 }
@@ -214,6 +237,27 @@ header {
 
 
 
+/* ----- BAARIN KUVAUS -----*/
+
+.hero-image {
+
+	background-image: url(../boothill.jpg);
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: cover;
+	height: 200px;
+	vertical-align: top;
+}
+
+
+
+
+
+
+/* ----- BAARIN KUVAUS LOPPU -----*/
+
+
+
 /* ----- KARTTA ----- */
 #map {
 	height: calc(100vh - 60px);
@@ -225,13 +269,12 @@ header {
 /* ----- KARTAN HAKUKENTTÄ ----- */
 #search-container {
 	bottom: 30px;
-	left: calc(50% - 30px);
+	left: calc(50% - 22px);
 	position: absolute;
 	transform: translate(-50%);
 }
 
 #searchbox {
-	width: 250px;
 	z-index: 2;
 }
 
@@ -244,7 +287,7 @@ header {
 	height: 30px;
 	outline: none;
 	padding: 5px;
-	width: 100%;
+	
 }
 
 #searchbox input:focus {
@@ -257,7 +300,7 @@ header {
 	border: 1px solid #404040;
 	height: 46px;
 	position: absolute;  
-	right: -60px;
+	right: -44px;
 	width: 50px;
 }
 
@@ -282,7 +325,6 @@ header {
 
 @media only screen and (max-width: 410px) {
 	#searchbox {
-		width: 175px;
 	}
 
 	#searchbox input {
@@ -293,7 +335,7 @@ header {
 	#searchbox button {
 		height: 36px;
 		width: 40px;
-		right: -50px;
+		right: -36px;
 	}
 
 	.logo {
@@ -304,13 +346,14 @@ header {
 		font-size: 2.2em;
 	}
 
-	.hamburger-icon {
+	.menu-icon {
 		height: 25px;
 		padding: 10px;
 	}
 
-	header {
+	header, #title-container {
 		height: 45px;
+		line-height: 45px;
 	}
 
 	#map {
