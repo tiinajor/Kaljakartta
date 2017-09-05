@@ -84,7 +84,7 @@ header {
 #title-container {
 	display: flex;
 	position: fixed;
-	left: calc(50% - 33px);
+	left: 50%;
 	top: 0;
 	height: 60px;
 	transform: translate(-50%);

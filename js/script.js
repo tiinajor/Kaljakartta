@@ -1,7 +1,13 @@
+var hki = {lat: 60.162786, lng: 24.932607};
+var map;
+var pos;
+var infoWindow;
+
 window.onload = function(){
 	const priceSlider = document.getElementById('price-slider');
 	const alcoholSlider = document.getElementById('alcohol-slider');
 	const distanceSlider = document.getElementById('distance-slider');
+
 
 	let beerBrands = ["karhu", "koff", "karjala", "lapin kulta", "ale coq", "heineken", "pirkka", "grimbergen", "duvel", "olut"];
 	let beerTypes = ["lager", "IPA", "bock", "Stout", "porter", "pilsner", "vehnäolut", "sahti", "dark ale", "märzen"];
@@ -18,16 +24,32 @@ window.onload = function(){
 		bottleButton.classList.toggle('selected');
 	});
 
-
+	// suurennuslasi etsii hakukriteereiden mukaan baarit
 	document.getElementById('search-button').addEventListener('click', function() {
 		var value = distanceSlider.noUiSlider.get();
 		console.log(value);
+		if (navigator.geolocation) {
+      		navigator.geolocation.getCurrentPosition(function(position) {
+		        pos = {
+		          	lat: position.coords.latitude,
+		          	lng: position.coords.longitude
+		        };
+	        	map.setCenter(pos);
+ 		 	}, function() {
+        		handleLocationError(true, infoWindow, map.getCenter());
+        		pos = hki;
+      		});
+    	} else {
+			// Browser doesn't support Geolocation
+			handleLocationError(false, infoWindow, map.getCenter());
+			pos = hki;
+		}
 		var service = new google.maps.places.PlacesService(map);
         service.nearbySearch({
-          location: hki,
+          location: pos,
           radius: value,
           type: ["bar"]
-        }, callback);
+        }, processResults);
 	});
 
 	// avaa merkit-listan ja sulkee oluttyypit-listan
@@ -50,7 +72,7 @@ window.onload = function(){
 		closeOtherList(brandList);
 	});
 
-	// menun avaus mobiilissa
+	// menun avaus
 	document.getElementById('hamburger-menu').addEventListener('click', openMenu);
 
 	// sulkee menun kun sen ulkopuolelle klikataan tai kun yläkulman X klikataan
@@ -147,27 +169,7 @@ function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 };
 
-
-function renderBarInfo(name, address, open, rating) {
-	document.getElementById('bar-name').innerHTML = name;
-	document.getElementById('bar-address').innerHTML = address;
-	document.getElementById('bar-desc').innerHTML = open;
-	setRating(rating);
-};
-
-function setRating(rating) {
-	let rounded = Math.round(rating);
-	let html = '';
-	for(var i=1;i<=5;i++) {
-		if(i<=rating) {
-			html += "<img class=\"rating-icon\" src=\"icons/pint-rating.svg\">"
-		} else {
-			html += "<img class=\"rating-icon\" src=\"icons/pint-rating-bw.svg\">"
-		}
-	}
-	document.getElementById('rating').innerHTML = html;
-};
-
+// avaa menun merkki- ja laatulistat niitä painettaessa
 function toggleVisible(item){
 	console.log(item.style.height);
     if (item.style.height === '195px'){
@@ -177,6 +179,7 @@ function toggleVisible(item){
     }
 };
 
+// kääntää menun listojen "kolmio-iconit" kun lista avataan/suljetaan
 function rotateIcon(icon) {
 	if (icon.style.transform === 'rotate(0deg)') {
 		icon.style.transform = 'rotate(90deg)';
@@ -185,6 +188,7 @@ function rotateIcon(icon) {
 	};
 };
 
+// sulkee toisen menun listan kun toinen avataan
 function closeOtherList(div) {
 	let otherList = div.children[1];
 	let otherDiv = div.children[0];
@@ -193,19 +197,6 @@ function closeOtherList(div) {
 	otherList.style.height = '0px';
 	icon.style.transform = "rotate(90deg)";
 };
-
-function toggleActive(id) {
-  	document.getElementById(id).classList.toggle('selected');
-};
-
-/*
-function openBeerList() {
-	let list = document.getElementById('brand-list');
-	list.style.height = "150px";
-	list.style.overflowY = "scroll";
-	list.style.paddingRight = list.offsetWidth - list.clientWidth + "px";
-}
-*/
 
 /* blurraa kartan kun menu avataan */
 function openMenu() {
@@ -229,4 +220,137 @@ function openCard() {
 function closeCard() {
     document.getElementById("restaurant-card").style.width = "0";
     document.getElementById("card-oof").style.width = "0";
+}
+
+
+// luo kartan 
+function initMap() {
+    map = new google.maps.Map(document.getElementById('map'), {
+      center: hki,
+      zoom: 14,
+      styles: [
+		  {
+		    "featureType": "poi",
+		    "elementType": "labels.text",
+		    "stylers": [
+		      {
+		        "visibility": "off"
+		      }
+		    ]
+		  },
+		  {
+		    "featureType": "poi.business",
+		    "stylers": [
+		      {
+		        "visibility": "off"
+		      }
+		    ]
+		  },
+		  {
+		    "featureType": "road",
+		    "elementType": "labels.icon",
+		    "stylers": [
+		      {
+		        "visibility": "off"
+		      }
+		    ]
+		  },
+		  {
+		    "featureType": "transit",
+		    "stylers": [
+		      {
+		        "visibility": "off"
+		      }
+		    ]
+		  }
+	]
+    });
+    
+    infoWindow = new google.maps.InfoWindow;
+
+    // kokeile paikannusta, jos ei onnistu täi käyttäjä ei anna lupaa -> käyttää helsingin koordinaatteja
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(function(position) {
+        pos = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude
+        };
+
+        map.setCenter(pos);
+      }, function() {
+        handleLocationError(true, infoWindow, map.getCenter());
+      });
+    } else {
+      // Browser doesn't support Geolocation
+      handleLocationError(false, infoWindow, map.getCenter());
+      pos = hki;
+    }
+}
+
+// etsii max 60 paikkaa ja lisää markerit niiden kohdille karttaan
+function processResults(results, status, pagination) {
+    if (status === google.maps.places.PlacesServiceStatus.OK) {
+    	console.log(results);
+    	if (pagination.hasNextPage) {
+			pagination.nextPage();
+		}
+		for (var i = 0; i < results.length; i++) {
+			createMarker(results[i]);
+		}
+
+    }
+};
+
+// luo markerin ja sitä klikatessa avaa restaurant cardin kyseisen baarin tiedoilla
+function createMarker(place) {
+	var placeLoc = place.geometry.location;
+	var marker = new google.maps.Marker({
+		map: map,
+		position: place.geometry.location
+	});
+
+	google.maps.event.addListener(marker, 'click', function() {
+		if(place.opening_hours.open_now == undefined) {
+			renderBarInfo(place.name, place.vicinity, "Ei tiedossa", place.rating);
+			openCard();
+		}
+		renderBarInfo(place.name, place.vicinity, place.opening_hours.open_now, place.rating);
+		openCard();
+});
+
+// lisää restaurant cardiin baarin tiedot
+function renderBarInfo(name, address, open, rating) {
+	var openText = "Suljettu";
+	if (open) {
+		openText = "Avoinna nyt";
+	}
+	document.getElementById('bar-name').innerHTML = name;
+	document.getElementById('bar-address').innerHTML = address;
+	document.getElementById('bar-desc').innerHTML = openText;
+	setRating(rating);
+};
+
+// asettaa baarin ratinging tuopin kuvina
+function setRating(rating) {
+	let rounded = Math.round(rating);
+	let html = '';
+	for(var i=1;i<=5;i++) {
+		if(i<=rating) {
+			html += "<img class=\"rating-icon\" src=\"icons/pint-rating.svg\">"
+		} else {
+			html += "<img class=\"rating-icon\" src=\"icons/pint-rating-bw.svg\">"
+		}
+	}
+	document.getElementById('rating').innerHTML = html;
+};
+
+// googlen oma error funktio
+function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+	infoWindow.setPosition(pos);
+	infoWindow.setContent(browserHasGeolocation ?
+	                      'Error: The Geolocation service failed.' :
+	                      'Error: Your browser doesn\'t support geolocation.');
+	infoWindow.open(map);
+};
+
 }
