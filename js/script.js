@@ -20,11 +20,13 @@ window.onload = function(){
 	// hanat mukana haussa kyllä/ei
 	document.getElementById('tapButton').addEventListener('click', function() {
 		tapButton.classList.toggle('selected');
+		tapButton.classList.toggle('selected-border');
 	});
 
 	// pullot mukana haussa kyllä/ei
 	document.getElementById('bottleButton').addEventListener('click', function() {
 		bottleButton.classList.toggle('selected');
+		bottleButton.classList.toggle('selected-border');
 	});
 
 	// suurennuslasi etsii osoitteen mukaan baarit
@@ -60,6 +62,16 @@ window.onload = function(){
 		rotateIcon(icon);
 		closeOtherList(brandList);
 	});
+
+	// menun listojen valitseminen
+	let menuListItems = document.querySelectorAll('.dropdown ul li');
+	console.log(menuListItems);
+	for(var i=0;i<menuListItems.length;i++) {
+		menuListItems[i].addEventListener('click', function() {
+			this.classList.toggle('selected');
+	})
+	}
+	
 
 	// menun avaus
 	document.getElementById('hamburger-menu').addEventListener('click', openMenu);
@@ -138,7 +150,6 @@ function createList(list, parentDiv) {
 		list[i] = capitalizeFirstLetter(list[i]);
 	}
 	list = list.sort();
-	
 	for (var i = 0; i<list.length; i++) {
 		let li = document.createElement('li');
 		let content = document.createTextNode(list[i]);
@@ -204,7 +215,7 @@ function openCard() {
 function closeCard() {
     document.getElementById("restaurant-card").style.width = "0";
     document.getElementById("card-oof").style.width = "0";
-}
+};
 
 
 // luo kartan 
@@ -249,7 +260,7 @@ function initMap() {
 		  }
 	]
     });
-}
+};
 
 // paikantaa käyttäjän ja hakee lähimmät baarit jos paikannus onnistuu/sallittu
 function locateUser(distance) {
@@ -279,8 +290,9 @@ function locateUser(distance) {
 		// Browser doesn't support Geolocation
 		handleLocationError(false, infoWindow, map.getCenter());
 	}
-}
+};
 
+// käyttäjän tekemä osoitehaku hakukentässä
 function geocodeAddress(geocoder, map, distance) {
 	let userPos;
 	let address = document.getElementById('searchbox').value;
@@ -303,11 +315,10 @@ function geocodeAddress(geocoder, map, distance) {
 		} else {
 			alert('Geocode was not successful for the following reason: ' + status);
 		}
-	
 	})
-}
+};
 
-// hakee max 60 baaria annetun sijainnin läheltä, if ei toteudu jos sijaintia ei ole
+// hakee max 60 baaria annetun sijainnin läheltä
 function searchNearby(loc, distance) {
 	clearMarkers();
 	let service = new google.maps.places.PlacesService(map);
@@ -316,7 +327,7 @@ function searchNearby(loc, distance) {
       	radius: distance,
       	type: ["bar"]
     }, processResults);	
-}
+};
 
 // käsittelee hakutulokset ja lisää markerit niiden kohdille karttaan
 function processResults(results, status, pagination) {
@@ -342,14 +353,14 @@ function createMarker(place) {
 		renderBarInfo(place.name, place.vicinity, place.opening_hours, place.rating);
 		openCard();
 	});
-}
+};
 
 // poistaa kaikki markerit kartalta
 function clearMarkers() {
     for (var i = 0; i < markers.length; i++) {
       markers[i].setMap(null);
     }
-}
+};
 
 // lisää restaurant cardiin baarin tiedot
 function renderBarInfo(name, address, openHours, rating) {
