@@ -37,6 +37,7 @@ window.onload = function(){
 		e.preventDefault();
 		if(e.keyCode == 13){ 
 			geocodeAddress(geocoder, map, distanceSlider.noUiSlider.get());
+			this.value = '';
 		}
 	})
 
