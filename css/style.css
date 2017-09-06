@@ -319,10 +319,6 @@ header {
 }
 
 #searchbox {
-	z-index: 2;
-}
-
-#searchbox input {
 	border-radius: 5px;
 	border: 3px solid #404040;
 	color: #9DBFAF;
@@ -331,14 +327,14 @@ header {
 	height: 30px;
 	outline: none;
 	padding: 5px;
-	
+	z-index: 2;	
 }
 
-#searchbox input:focus {
+#searchbox:focus {
 	color: #202020;
 }
 
-#searchbox button {
+#search-container button {
 	background: #404040;
 	border-radius: 5px;
 	border: 1px solid #404040;
@@ -348,7 +344,7 @@ header {
 	width: 50px;
 }
 
-#searchbox button img {
+#search-container button img {
 	height: 25px;
 }
 /* ----- KARTAN HAKUKENTTÄ LOPPU ----- */
