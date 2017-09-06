@@ -284,7 +284,11 @@ function locateUser(distance) {
 function geocodeAddress(geocoder, map, distance) {
 	let userPos;
 	let address = document.getElementById('searchbox').value;
-	geocoder.geocode({'address': address}, function(results, status) {
+	geocoder.geocode(
+		{'address': address,
+		componentRestrictions: {
+			country: 'FI'
+		}}, function(results, status) {
 		if (status == 'OK') {
 			userPos = results[0].geometry.location;
 			map.setCenter(userPos);
