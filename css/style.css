@@ -1,9 +1,10 @@
 body, html {
+	font-family: sans-serif;
 	margin: 0;
 	max-height: 100vh;
+	min-width: 350px;
 	overflow: hidden;
 	padding: 0;
-	font-family: sans-serif;
 }
 
 /* efb348 */
@@ -35,20 +36,20 @@ body, html {
 }
 
 .icon {
-	height: 45px;
 	display: block;
-	padding: 5px;
+	height: 45px;
 	margin: 0 auto;
+	padding: 5px;
 }
 
 .closebtn {
+    color: #303030;
+    display: block;
     font-size: 36px;
     position: absolute;
     right: 15px;
-    top: 0;
-    color: #303030;
-    display: block;
     text-decoration: none;
+    top: 0;
 }
 
 .closebtn:hover {
@@ -83,12 +84,13 @@ header {
 
 #title-container {
 	display: flex;
-	position: fixed;
-	left: 50%;
-	top: 0;
 	height: 60px;
-	transform: translate(-50%);
+	left: 50%;
 	line-height: 60px;
+	min-width: 190px;
+	position: fixed;
+	top: 0;
+	transform: translate(-50%);
 }
 
 #hamburger-menu {
@@ -128,14 +130,14 @@ header {
 }
 
 .search-option {
-	width: 105px;
-	height: 90px;
+	background-color: #aaa;
 	border-radius: 8px;
 	border: 4px solid #ccc;
-	background-color: #aaa;
 	color: #303030;
-	outline: none;
 	font: 1em 'Montserrat', sans-serif;
+	height: 90px;
+	outline: none;
+	width: 105px;
 }
 
 .search-option:hover {
@@ -183,9 +185,9 @@ header {
 }
 
 .dropdown li{
+	border-bottom: 1px solid #808080;
 	display: block;
 	padding: 5px 10px;
-	border-bottom: 1px solid #808080;
 }
 
 .dropdown li:hover {
@@ -194,8 +196,8 @@ header {
 }
 
 .dropdown-icon {
-	height: 15px;
 	display: inline;
+	height: 15px;
 	transform: rotate(90deg);
 }
 
@@ -270,10 +272,10 @@ header {
 }
 
 #bar-address {
-	padding: 0 0 0 3px;
-	margin: 0;
 	font-size: 0.8em;
 	font-style: italic;
+	margin: 0;
+	padding: 0 0 0 3px;
 }
 
 /*
@@ -286,12 +288,12 @@ header {
 
 #restaurant-card {
     background-color: #ececec;
-    font-family: 'Montserrat', sans-serif;
     color: #252525;
+    font-family: 'Montserrat', sans-serif;
     height: 100%;
-    right: 0;
     overflow-x: hidden;
     position: fixed;
+    right: 0;
     top: 0;
     transition: 0.5s;
     width: 0;
@@ -312,7 +314,7 @@ header {
 
 /* ----- KARTAN HAKUKENTTÄ ----- */
 #search-container {
-	bottom: 30px;
+	bottom: 3vh;
 	left: calc(50% - 22px);
 	position: absolute;
 	transform: translate(-50%);
@@ -364,22 +366,27 @@ header {
 	#search-container {
 		bottom: 20px;
 	}
+
+	#searchbox {
+		width: 230px;
+	}
 }
 
-@media only screen and (min-width: 320px) and (max-width: 768px){
+@media only screen and (min-width: 300px) and (max-width: 768px){
 	#search-container {
 		bottom: 20px;
 	}
 
-	#searchbox input {
-		height: 20px;
+	#searchbox{
 		font-size: 20px;
+		height: 20px;
+		width: 175px;
 	}
 
-	#searchbox button {
+	#search-container button {
 		height: 36px;
-		width: 40px;
 		right: -34px;
+		width: 40px;
 	}
 
 	.logo {
@@ -389,11 +396,12 @@ header {
 
 	.title {
 		font-size: 2.2em;
+		padding-top: 3px;
 	}
 
 	.menu-icon {
 		height: 25px;
-		padding: 10px 0;
+		padding: 9px 5px;
 	}
 
 	header, #title-container {

@@ -32,6 +32,7 @@ window.onload = function(){
 	// suurennuslasi etsii osoitteen mukaan baarit
 	document.getElementById('search-button').addEventListener('click', function() {
 		geocodeAddress(geocoder, map, distanceSlider.noUiSlider.get());
+		document.getElementById('searchbox').value = '';
 	});
 
 	// hakukentässä enterin painaminen käynnistää haun myös
@@ -63,16 +64,6 @@ window.onload = function(){
 		closeOtherList(brandList);
 	});
 
-	// menun listojen valitseminen
-	let menuListItems = document.querySelectorAll('.dropdown ul li');
-	console.log(menuListItems);
-	for(var i=0;i<menuListItems.length;i++) {
-		menuListItems[i].addEventListener('click', function() {
-			this.classList.toggle('selected');
-	})
-	}
-	
-
 	// menun avaus
 	document.getElementById('hamburger-menu').addEventListener('click', openMenu);
 
@@ -84,6 +75,8 @@ window.onload = function(){
 	document.getElementById('card-close-x').addEventListener('click', closeCard);
 	document.getElementById('card-oof').addEventListener('click', closeCard);
 
+
+	//slaiderien luonti
 	noUiSlider.create(priceSlider, {
 		start: [ 0, 8.5 ],
 		connect: true,
@@ -142,10 +135,9 @@ window.onload = function(){
 }
 
 
-// luo listan divin sisään (aakkosjärjestyksessä ja eka kirjain isolla)
+// luo listan divin sisään (aakkosjärjestyksessä ja eka kirjain isolla) ja lisää jokaiseen list itemiin click listenerin
 function createList(list, parentDiv) {
 	const ul = document.createElement('ul');
-
 	for (var i = 0; i<list.length; i++) {
 		list[i] = capitalizeFirstLetter(list[i]);
 	}
@@ -153,9 +145,13 @@ function createList(list, parentDiv) {
 	for (var i = 0; i<list.length; i++) {
 		let li = document.createElement('li');
 		let content = document.createTextNode(list[i]);
+		li.addEventListener('click', function() {
+			this.classList.toggle('selected');
+		});
 		li.appendChild(content);
 		ul.appendChild(li);
 	}
+
 	parentDiv.appendChild(ul);
 };
 
@@ -207,8 +203,13 @@ function closeMenu() {
 
 /* blurraa kartan kun restaurant card avataan */
 function openCard() {
-    document.getElementById("restaurant-card").style.width = "600px";
-    document.getElementById("card-oof").style.width = "100%";
+	if(window.innerWidth <= 600) {
+		document.getElementById("restaurant-card").style.width = "100%";
+	} else {
+		document.getElementById("restaurant-card").style.width = "600px";
+    	document.getElementById("card-oof").style.width = "100%";
+	}
+    
 };
 
 /* palauttaa kartan takaisin normaaliksi kun restaurant card suljetaan */
@@ -223,6 +224,7 @@ function initMap() {
     map = new google.maps.Map(document.getElementById('map'), {
       center: {lat: 60.162786, lng: 24.932607},
       zoom: 14,
+      gestureHandling: 'greedy',
       styles: [
 		  {
 		    "featureType": "poi",
