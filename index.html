@@ -7,12 +7,15 @@
 	<link rel="stylesheet" href="css/style.css">
 	<link rel="stylesheet" href="css/nouislider.min.css">
 	<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32x32.png">
+	<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDuIpE10xbisU_de-Mg_xR4-OpmOVl3BxA&libraries=places&callback=initMap"></script>
 	<script src="js/script.js"></script>
 	<script src="js/wNumb.js"></script>
 	<script src="js/nouislider.min.js"></script>
-	<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDuIpE10xbisU_de-Mg_xR4-OpmOVl3BxA&callback=initMap"></script>
 	
-	<!-- https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=-33.8670522,151.1957362&radius=500&type=bar&key=AIzaSyDuIpE10xbisU_de-Mg_xR4-OpmOVl3BxA -->
+	
+	<!-- https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=-33.8670522,151.1957362&radius=500&type=bar&key=AIzaSyDuIpE10xbisU_de-Mg_xR4-OpmOVl3BxA 
+
+	https://maps.googleapis.com/maps/api/js?key=AIzaSyDuIpE10xbisU_de-Mg_xR4-OpmOVl3BxA&callback=initMap-->
 
 	<!-- https://maps.googleapis.com/maps/api/place/nearbysearch/output?parameters-->
 </head>
@@ -67,14 +70,14 @@
 		<div id="card-content">
 			
 			<div id="rating" class="right" >
-				<img class="rating-icon" src="icons/beer.svg">
-				<img class="rating-icon" src="icons/beer.svg">
-				<img class="rating-icon" src="icons/beer.svg">
-				<img class="rating-icon" src="icons/beer.svg">
-				<img class="rating-icon" src="icons/beer-bw.png">
+				<img class="rating-icon" src="icons/pint-rating.svg">
+				<img class="rating-icon" src="icons/pint-rating.svg">
+				<img class="rating-icon" src="icons/pint-rating.svg">
+				<img class="rating-icon" src="icons/pint-rating.svg">
+				<img class="rating-icon" src="icons/pint-rating-bw.svg">
 			</div>
 			
-			<div>
+			<div id="bar-info">
 				<h2 id="bar-name"></h2>
 				<p id="bar-address"></p>
 				<p id="bar-desc"></p>
@@ -83,7 +86,7 @@
 			<hr>
 
 			<div id="drinks-container">
-				<div id="tap-selection" class="test">
+				<div id="tap-selection" class="column">
 					<h3>Hanat</h3>
 					<ul>
 						<li>Karjala III</li>
@@ -93,7 +96,7 @@
 					</ul>
 				</div>
 				
-				<div id="bottle-selection" class="test">
+				<div id="bottle-selection" class="column">
 					<h3>Pullot</h3>
 					<ul>
 						<li>Olvi I</li>
@@ -112,7 +115,7 @@
 	<header>
 		<button id="hamburger-menu"><img class="menu-icon button" src="icons/menu.svg"></button>
 		<div id="title-container">
-			<p class="title" onclick="openCard()">
+			<p class="title">
 				<img class="logo" src="icons/beer.svg">Kaljakartta
 			</p>
 		</div>
@@ -121,10 +124,8 @@
 	<div id="map"></div>
 
 	<div id="search-container">
-		<div id="searchbox">
-			<input type="text" placeholder="Search...">
-			<button id="search-button"><img class="button" src="icons/search.svg"></button>
-		</div>
+		<input id="searchbox" type="text" placeholder="Search...">
+		<button id="search-button"><img class="button" src="icons/search.svg"></button>
 	</div>
 
 
