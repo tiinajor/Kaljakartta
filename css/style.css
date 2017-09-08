@@ -293,10 +293,10 @@ header {
     height: 100%;
     overflow-x: hidden;
     position: fixed;
-    right: 0;
+    right: -600px;
     top: 0;
     transition: 0.5s;
-    width: 0;
+    width: 600px;
     z-index: 50;
 }
 
@@ -372,7 +372,7 @@ header {
 	}
 }
 
-@media only screen and (min-width: 300px) and (max-width: 768px){
+@media only screen and (min-width: 300px) and (max-width: 767px){
 	#search-container {
 		bottom: 20px;
 	}
@@ -387,6 +387,11 @@ header {
 		height: 36px;
 		right: -34px;
 		width: 40px;
+	}
+
+	#restaurant-card {
+		width: 100%;
+		max-width: 600px;
 	}
 
 	.logo {

@@ -203,19 +203,19 @@ function closeMenu() {
 
 /* blurraa kartan kun restaurant card avataan */
 function openCard() {
-	if(window.innerWidth <= 600) {
-		document.getElementById("restaurant-card").style.width = "100%";
-	} else {
-		document.getElementById("restaurant-card").style.width = "600px";
-    	document.getElementById("card-oof").style.width = "100%";
-	}
-    
+		document.getElementById("restaurant-card").style.right = "0";
+		document.getElementById("card-oof").style.width = "100%";    
 };
 
 /* palauttaa kartan takaisin normaaliksi kun restaurant card suljetaan */
 function closeCard() {
-    document.getElementById("restaurant-card").style.width = "0";
-    document.getElementById("card-oof").style.width = "0";
+	if(window.innerWidth <= 600) {
+		document.getElementById("restaurant-card").style.right = "-100%";
+	} else {
+		document.getElementById("restaurant-card").style.right = "-600px";
+    	document.getElementById("card-oof").style.width = "0";
+	}
+    
 };
 
 
