@@ -211,6 +211,7 @@ function openCard() {
 function closeCard() {
 	if(window.innerWidth <= 600) {
 		document.getElementById("restaurant-card").style.right = "-100%";
+		document.getElementById("card-oof").style.width = "0";
 	} else {
 		document.getElementById("restaurant-card").style.right = "-600px";
     	document.getElementById("card-oof").style.width = "0";
