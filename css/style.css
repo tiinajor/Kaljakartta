@@ -1,3 +1,12 @@
+:root {
+	--primary: #ffcb20;
+	--secondary: ;
+	--bg-light: #ececec;
+	--bg-neutral: #bababa;
+	--bg-dark: #404040;
+	--bg-darker: #303030;
+}
+
 body, html {
 	font-family: sans-serif;
 	margin: 0;
@@ -7,13 +16,7 @@ body, html {
 	padding: 0;
 }
 
-/* efb348 */
-/* 499fee */ 
-
-
-/* KELTASET */
 /* #f9da49 */
-/* #f1bb4b */
 
 .test {
 	border: solid 2px red;
@@ -43,7 +46,7 @@ body, html {
 }
 
 .closebtn {
-    color: #303030;
+    color: var(--bg-darker);
     display: block;
     font-size: 36px;
     position: absolute;
@@ -60,7 +63,7 @@ body, html {
 /* ----- HEADER ----- */
 header {
 	height: 60px;
-	background-color: #404040;
+	background-color: var(--bg-dark);
 }
 
 .logo {
@@ -69,7 +72,7 @@ header {
 }
 
 .title {
-	color: #f9da49;
+	color: var(--primary);
 	font-family: 'Bebas Neue', sans-serif;
 	font-size: 2.9em;
 	letter-spacing: 1px;
@@ -99,7 +102,7 @@ header {
 }
 
 #hamburger-menu:hover {
-	background-color: #404040;
+	background-color: var(--bg-darker);
 }
 /* ----- HEADER LOPPU ----- */
 
@@ -112,7 +115,7 @@ header {
 }
 
 #side-menu {
-    background-color: #ececec;
+    background-color: var(--bg-light);
     font-family: 'Montserrat', sans-serif;
     height: 100vh;
     left: 0;
@@ -130,10 +133,10 @@ header {
 }
 
 .search-option {
-	background-color: #aaa;
+	background-color: var(--bg-neutral);
 	border-radius: 8px;
 	border: 4px solid #ccc;
-	color: #303030;
+	color: var(--bg-darker);
 	font: 1em 'Montserrat', sans-serif;
 	height: 90px;
 	outline: none;
@@ -162,7 +165,7 @@ header {
 }
 
 .dropdown div {
-	background-color: #cbcbcb;
+	background-color: var(--bg-neutral);
 	border: 2px solid #bbb;
 	color: #101010;
 	padding: 5px;
@@ -192,7 +195,6 @@ header {
 
 .dropdown li:hover {
 	background-color: #dedede;
-	color: #101010;
 }
 
 .dropdown-icon {
@@ -287,7 +289,7 @@ header {
 */
 
 #restaurant-card {
-    background-color: #ececec;
+    background-color: var(--bg-light);
     color: #252525;
     font-family: 'Montserrat', sans-serif;
     height: 100%;
@@ -322,7 +324,7 @@ header {
 
 #searchbox {
 	border-radius: 5px;
-	border: 3px solid #404040;
+	border: 3px solid var(--bg-dark);
 	color: #9DBFAF;
 	float: left;
 	font-size: 24px;
@@ -337,9 +339,9 @@ header {
 }
 
 #search-container button {
-	background: #404040;
+	background: var(--bg-dark);
 	border-radius: 5px;
-	border: 1px solid #404040;
+	border: 1px solid var(--bg-dark);
 	height: 46px;
 	position: absolute;  
 	right: -44px;
@@ -358,7 +360,7 @@ header {
 }
 
 .selected-border {
-	border: solid 4px orange;
+	border: solid 4px var(--primary)
 }
 
 
