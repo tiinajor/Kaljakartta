@@ -83,6 +83,11 @@ header {
 	padding: 0;
 }
 
+.title a {
+	text-decoration: none;
+	color: inherit;
+}
+
 .menu-icon {
 	height: 35px;
 	padding: 10px;
@@ -386,14 +391,15 @@ header {
 }
 
 @media only screen and (min-width: 300px) and (max-width: 767px){
-	#search-container {
-		bottom: 20px;
-	}
-
 	#searchbox{
 		font-size: 20px;
 		height: 20px;
 		width: 175px;
+	}
+
+	#search-container {
+		bottom: 20px;
+		left: calc(50% - 17px);
 	}
 
 	#search-container button {

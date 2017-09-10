@@ -3,6 +3,7 @@ let map;
 let pos;
 let infoWindow;
 let markers;
+
 window.onload = function(){
 	const priceSlider = document.getElementById('price-slider');
 	const alcoholSlider = document.getElementById('alcohol-slider');
@@ -10,7 +11,6 @@ window.onload = function(){
 	let geocoder = new google.maps.Geocoder();
 	infoWindow = new google.maps.InfoWindow();
 	markers = [];
-
 
 	let beerBrands = ["karhu", "koff", "karjala", "lapin kulta", "ale coq", "heineken", "pirkka", "grimbergen", "duvel", "olut"];
 	let beerTypes = ["lager", "tumma lager", "vahva lager", "IPA", "bock", "Stout", "porter", "pils", "vehnäolut", "sahti", "bitter", "dobbelbock", "dry stout", "dunkel", "luostariolut", "imperial stout", "imperial porter", "mead", "trappist"];
@@ -203,8 +203,8 @@ function closeMenu() {
 
 /* blurraa kartan kun restaurant card avataan */
 function openCard() {
-		document.getElementById("restaurant-card").style.right = "0";
-		document.getElementById("card-oof").style.width = "100%";    
+	document.getElementById("restaurant-card").style.right = "0";
+	document.getElementById("card-oof").style.width = "100%";    
 };
 
 /* palauttaa kartan takaisin normaaliksi kun restaurant card suljetaan */
@@ -307,13 +307,11 @@ function geocodeAddress(geocoder, map, distance) {
 		if (status == 'OK') {
 			userPos = results[0].geometry.location;
 			map.setCenter(userPos);
-			/*
 			let marker = new google.maps.Marker({
 				map: map,
 				position: userPos,
 			});
 			markers.push(marker);
-			*/
 			searchNearby(userPos, distance);
 		} else {
 			alert('Geocode was not successful for the following reason: ' + status);
@@ -335,7 +333,6 @@ function searchNearby(loc, distance) {
 // käsittelee hakutulokset ja lisää markerit niiden kohdille karttaan
 function processResults(results, status, pagination) {
     if (status === google.maps.places.PlacesServiceStatus.OK) {
-    	console.log(results);
     	if (pagination.hasNextPage) {
 			pagination.nextPage();
 		}
@@ -353,7 +350,7 @@ function createMarker(place) {
 	});
 	markers.push(marker);
 	google.maps.event.addListener(marker, 'click', function() {
-		renderBarInfo(place.name, place.vicinity, place.opening_hours, place.rating);
+		renderBarInfo(place);
 		openCard();
 	});
 };
@@ -366,20 +363,20 @@ function clearMarkers() {
 };
 
 // lisää restaurant cardiin baarin tiedot
-function renderBarInfo(name, address, openHours, rating) {
+function renderBarInfo(place) {
 	var openText = "Aukioloajat ei tiedossa";
-	if (openHours != null) {
-		if(open.open_now) {
+	if (place.opening_hours != null) {
+		if(place.opening_hours.open_now) {
 			openText = "Avoinna nyt";
 		} else {
 			openText = "Suljettu";
 		}
 	}
-	console.log(open);
-	document.getElementById('bar-name').innerHTML = name;
-	document.getElementById('bar-address').innerHTML = address;
+	console.log(place);
+	document.getElementById('bar-name').innerHTML = place.name;
+	document.getElementById('bar-address').innerHTML = place.vicinity;
 	document.getElementById('bar-desc').innerHTML = openText;
-	setRating(rating);
+	setRating(place.rating);
 };
 
 // asettaa baarin ratinging tuopin kuvina
