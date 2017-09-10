@@ -13,7 +13,7 @@ window.onload = function(){
 
 
 	let beerBrands = ["karhu", "koff", "karjala", "lapin kulta", "ale coq", "heineken", "pirkka", "grimbergen", "duvel", "olut"];
-	let beerTypes = ["lager", "IPA", "bock", "Stout", "porter", "pilsner", "vehnäolut", "sahti", "dark ale", "märzen"];
+	let beerTypes = ["lager", "tumma lager", "vahva lager", "IPA", "bock", "Stout", "porter", "pils", "vehnäolut", "sahti", "bitter", "dobbelbock", "dry stout", "dunkel", "luostariolut", "imperial stout", "imperial porter", "mead", "trappist"];
 	createList(beerBrands, document.getElementById('brand-list'));
 	createList(beerTypes, document.getElementById('type-list'));
 

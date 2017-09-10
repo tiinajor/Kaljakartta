@@ -2,7 +2,7 @@
 	--primary: #ffcb20;
 	--secondary: ;
 	--bg-light: #ececec;
-	--bg-neutral: #bababa;
+	--bg-neutral: #a4a9ad;
 	--bg-dark: #404040;
 	--bg-darker: #303030;
 }
@@ -47,12 +47,15 @@ body, html {
 
 .closebtn {
     color: var(--bg-darker);
-    display: block;
-    font-size: 36px;
+    font-size: 1.5em;
     position: absolute;
     right: 15px;
     text-decoration: none;
-    top: 0;
+    top: 1vh;
+    padding: 0 10px 5px 10px;
+    border-radius: 50%;
+    background-color: #eee;
+    opacity: 0.75;
 }
 
 .closebtn:hover {
@@ -247,6 +250,7 @@ header {
 
 .rating-icon {
 	height: 30px;
+	padding-left: 2px;
 }
 
 .column {
@@ -268,8 +272,12 @@ header {
 	justify-content: space-between;
 }
 
+#bar-info {
+	flex: 1;
+}
+
 #bar-name {
-	margin-bottom: 0;
+	margin: 0;
 	font-size: 1.8em
 }
 
@@ -277,16 +285,19 @@ header {
 	font-size: 0.8em;
 	font-style: italic;
 	margin: 0;
-	padding: 0 0 0 3px;
+	padding-left: 3px;
 }
 
-/*
-#rating {
-	background-color: #707070;
-	padding: 6px;
-	border-radius: 10px;
+#card-top-container {
+	margin-top: 20px;
+	display: flex;
+	justify-content: space-between;
 }
-*/
+
+#rating {
+	
+}
+
 
 #restaurant-card {
     background-color: var(--bg-light);
@@ -355,12 +366,12 @@ header {
 
 
 .selected {
-	background-color: #ffffff;
+	background-color: #a9a9a9;
 	color: #101010;
 }
 
 .selected-border {
-	border: solid 4px var(--primary)
+	border: solid 4px var(--primary);
 }
 
 
