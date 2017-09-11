@@ -118,13 +118,13 @@ header {
     background-color: var(--bg-light);
     font-family: 'Montserrat', sans-serif;
     height: 100vh;
-    left: 0;
+    left: -300px;
     overflow-x: hidden;
     padding-top: 60px;
     position: fixed;
     top: 0;
     transition: 0.5s;
-    width: 0;
+    width: 300px;
     z-index: 50;
 }
 

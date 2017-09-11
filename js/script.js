@@ -191,13 +191,13 @@ function closeOtherList(div) {
 
 /* blurraa kartan kun menu avataan */
 function openMenu() {
-    document.getElementById("side-menu").style.width = "300px";
+    document.getElementById("side-menu").style.left = "0px";
     document.getElementById("menu-oof").style.width = "100%";
 };
 
 /* palauttaa kartan takaisin normaaliksi kun menu suljetaan */
 function closeMenu() {
-    document.getElementById("side-menu").style.width = "0";
+    document.getElementById("side-menu").style.left = "-300px";
     document.getElementById("menu-oof").style.width = "0";
 };
 
@@ -211,15 +211,45 @@ function openCard() {
 function closeCard() {
 	if(window.innerWidth <= 600) {
 		document.getElementById("restaurant-card").style.right = "-100%";
-		document.getElementById("card-oof").style.width = "0";
 	} else {
 		document.getElementById("restaurant-card").style.right = "-600px";
-    	document.getElementById("card-oof").style.width = "0";
 	}
+	document.getElementById("card-oof").style.width = "0";
     
 };
 
+// lisää restaurant cardiin baarin tiedot
+function renderBarInfo(place) {
+	var openText = "Aukioloajat ei tiedossa";
+	if (place.opening_hours != null) {
+		if(place.opening_hours.open_now) {
+			openText = "Avoinna nyt";
+		} else {
+			openText = "Suljettu";
+		}
+	}
+	console.log(place);
+	document.getElementById('bar-name').innerHTML = place.name;
+	document.getElementById('bar-address').innerHTML = place.vicinity;
+	document.getElementById('bar-desc').innerHTML = openText;
+	setRating(place.rating);
+};
 
+// asettaa baarin ratinging tuopin kuvina
+function setRating(rating) {
+	let rounded = Math.round(rating);
+	let html = '';
+	for(var i=1;i<=5;i++) {
+		if(i<=rating) {
+			html += "<img class=\"rating-icon\" src=\"icons/pint-rating.svg\">"
+		} else {
+			html += "<img class=\"rating-icon\" src=\"icons/pint-rating-bw.svg\">"
+		}
+	}
+	document.getElementById('rating').innerHTML = html;
+};
+
+// ----- TÄSTÄ ALASPÄIN VAIN KARTTAAN LIITTYVIÄ FUNKTIOITA ----
 // luo kartan 
 function initMap() {
     map = new google.maps.Map(document.getElementById('map'), {
@@ -363,37 +393,6 @@ function clearMarkers() {
     for (var i = 0; i < markers.length; i++) {
       markers[i].setMap(null);
     }
-};
-
-// lisää restaurant cardiin baarin tiedot
-function renderBarInfo(name, address, openHours, rating) {
-	var openText = "Aukioloajat ei tiedossa";
-	if (openHours != null) {
-		if(open.open_now) {
-			openText = "Avoinna nyt";
-		} else {
-			openText = "Suljettu";
-		}
-	}
-	console.log(open);
-	document.getElementById('bar-name').innerHTML = name;
-	document.getElementById('bar-address').innerHTML = address;
-	document.getElementById('bar-desc').innerHTML = openText;
-	setRating(rating);
-};
-
-// asettaa baarin ratinging tuopin kuvina
-function setRating(rating) {
-	let rounded = Math.round(rating);
-	let html = '';
-	for(var i=1;i<=5;i++) {
-		if(i<=rating) {
-			html += "<img class=\"rating-icon\" src=\"icons/pint-rating.svg\">"
-		} else {
-			html += "<img class=\"rating-icon\" src=\"icons/pint-rating-bw.svg\">"
-		}
-	}
-	document.getElementById('rating').innerHTML = html;
 };
 
 // googlen oma error funktio
