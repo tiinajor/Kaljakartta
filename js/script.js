@@ -3,6 +3,7 @@ let map;
 let pos;
 let infoWindow;
 let markers;
+
 window.onload = function(){
 	const priceSlider = document.getElementById('price-slider');
 	const alcoholSlider = document.getElementById('alcohol-slider');
@@ -11,9 +12,8 @@ window.onload = function(){
 	infoWindow = new google.maps.InfoWindow();
 	markers = [];
 
-
 	let beerBrands = ["karhu", "koff", "karjala", "lapin kulta", "ale coq", "heineken", "pirkka", "grimbergen", "duvel", "olut"];
-	let beerTypes = ["lager", "IPA", "bock", "Stout", "porter", "pilsner", "vehnäolut", "sahti", "dark ale", "märzen"];
+	let beerTypes = ["lager", "tumma lager", "vahva lager", "IPA", "bock", "Stout", "porter", "pils", "vehnäolut", "sahti", "bitter", "dobbelbock", "dry stout", "dunkel", "luostariolut", "imperial stout", "imperial porter", "mead", "trappist"];
 	createList(beerBrands, document.getElementById('brand-list'));
 	createList(beerTypes, document.getElementById('type-list'));
 
@@ -203,8 +203,8 @@ function closeMenu() {
 
 /* blurraa kartan kun restaurant card avataan */
 function openCard() {
-		document.getElementById("restaurant-card").style.right = "0";
-		document.getElementById("card-oof").style.width = "100%";    
+	document.getElementById("restaurant-card").style.right = "0";
+	document.getElementById("card-oof").style.width = "100%";    
 };
 
 /* palauttaa kartan takaisin normaaliksi kun restaurant card suljetaan */
@@ -337,13 +337,11 @@ function geocodeAddress(geocoder, map, distance) {
 		if (status == 'OK') {
 			userPos = results[0].geometry.location;
 			map.setCenter(userPos);
-			/*
 			let marker = new google.maps.Marker({
 				map: map,
 				position: userPos,
 			});
 			markers.push(marker);
-			*/
 			searchNearby(userPos, distance);
 		} else {
 			alert('Geocode was not successful for the following reason: ' + status);
@@ -365,7 +363,6 @@ function searchNearby(loc, distance) {
 // käsittelee hakutulokset ja lisää markerit niiden kohdille karttaan
 function processResults(results, status, pagination) {
     if (status === google.maps.places.PlacesServiceStatus.OK) {
-    	console.log(results);
     	if (pagination.hasNextPage) {
 			pagination.nextPage();
 		}
@@ -383,7 +380,7 @@ function createMarker(place) {
 	});
 	markers.push(marker);
 	google.maps.event.addListener(marker, 'click', function() {
-		renderBarInfo(place.name, place.vicinity, place.opening_hours, place.rating);
+		renderBarInfo(place);
 		openCard();
 	});
 };
