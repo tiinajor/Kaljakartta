@@ -206,6 +206,7 @@ function createList(list, parentDiv, id) {
 			toggleInSearch(li, id);
 		});
 		ul.appendChild(li);
+		
 	}
 	parentDiv.appendChild(ul);
 };
