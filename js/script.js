@@ -3,6 +3,21 @@ let map;
 let pos;
 let infoWindow;
 let markers;
+let searchVars = {
+		tap : false,
+		bottle : false,
+		price : {
+			min : 0.0,
+			max : 5.0
+		},
+		alcohol : {
+			min : 2.8,
+			max : 5.6
+		},
+		distance : 500,
+		brands : [],
+		types : []
+	}
 
 window.onload = function(){
 	const priceSlider = document.getElementById('price-slider');
@@ -13,34 +28,50 @@ window.onload = function(){
 	markers = [];
 
 	REST("https://jsonplaceholder.typicode.com/users");
+	console.log(searchVars);
 
 	let beerBrands = ["karhu", "koff", "karjala", "lapin kulta", "ale coq", "heineken", "pirkka", "grimbergen", "duvel", "olut"];
 	let beerTypes = ["lager", "tumma lager", "vahva lager", "IPA", "bock", "Stout", "porter", "pils", "vehnäolut", "sahti", "bitter", "dobbelbock", "dry stout", "dunkel", "luostariolut", "imperial stout", "imperial porter", "mead", "trappist"];
-	createList(beerBrands, document.getElementById('brand-list'));
-	createList(beerTypes, document.getElementById('type-list'));
+	createList(beerBrands, document.getElementById('brand-list'), "brands");
+	createList(beerTypes, document.getElementById('type-list'), "types");
 
 	// hanat mukana haussa kyllä/ei
 	document.getElementById('tapButton').addEventListener('click', function() {
-		tapButton.classList.toggle('selected');
-		tapButton.classList.toggle('selected-border');
+		this.classList.toggle('selected');
+		this.classList.toggle('selected-border');
+		if(searchVars.tap === true) {
+			searchVars.tap = false;
+		} else {
+			searchVars.tap = true;
+		}
+		console.log(searchVars);
 	});
 
 	// pullot mukana haussa kyllä/ei
 	document.getElementById('bottleButton').addEventListener('click', function() {
-		bottleButton.classList.toggle('selected');
-		bottleButton.classList.toggle('selected-border');
+		this.classList.toggle('selected');
+		this.classList.toggle('selected-border');
+		if(searchVars.bottle === true) {
+			searchVars.bottle = false;
+		} else {
+			searchVars.bottle = true;
+		}
+		console.log(searchVars);
 	});
 
-	// suurennuslasi etsii osoitteen mukaan baarit
+	// suurennuslasi etsii osoitteen mukaan baarit jos osoite ei ole tyhjä
 	document.getElementById('search-button').addEventListener('click', function() {
-		geocodeAddress(geocoder, map, distanceSlider.noUiSlider.get());
-		document.getElementById('searchbox').value = '';
+		if(document.getElementById('searchbox').value != '') {
+			geocodeAddress(geocoder, map, distanceSlider.noUiSlider.get());
+			document.getElementById('searchbox').value = '';
+		}
+		
 	});
 
 	// hakukentässä enterin painaminen käynnistää haun myös
 	document.getElementById('searchbox').addEventListener('keyup', function(e) {
 		e.preventDefault();
-		if(e.keyCode == 13){ 
+		if(e.keyCode == 13 && document.getElementById('searchbox').value != ''){ 
 			geocodeAddress(geocoder, map, distanceSlider.noUiSlider.get());
 			this.value = '';
 		}
@@ -149,7 +180,7 @@ function REST(url) {
 	  	if (xhr.readyState === 4) {
 	    	if (xhr.status === 200) {
 	    		const response = JSON.parse(xhr.responseText);
-	 	 		console.log(response[1].address.street); // 'This is the returned text.'
+	 	 		console.log(response); // 'This is the returned text.'
 	        } else {
 	          	console.log('Error: ' + xhr.status); // An error occurred during the request.
 	        }
@@ -158,9 +189,10 @@ function REST(url) {
 }
 
 
-// luo listan divin sisään (aakkosjärjestyksessä ja eka kirjain isolla) ja lisää jokaiseen list itemiin click listenerin
-function createList(list, parentDiv) {
+// luo listan divin sisään (aakkosjärjestyksessä ja eka kirjain isolla)
+function createList(list, parentDiv, id) {
 	const ul = document.createElement('ul');
+	ul.id = id;
 	for (var i = 0; i<list.length; i++) {
 		list[i] = capitalizeFirstLetter(list[i]);
 	}
@@ -168,15 +200,34 @@ function createList(list, parentDiv) {
 	for (var i = 0; i<list.length; i++) {
 		let li = document.createElement('li');
 		let content = document.createTextNode(list[i]);
+		li.appendChild(content);
 		li.addEventListener('click', function() {
 			this.classList.toggle('selected');
+			toggleInSearch(li, id);
 		});
-		li.appendChild(content);
 		ul.appendChild(li);
 	}
-
 	parentDiv.appendChild(ul);
 };
+
+// lisää/poistaa käyttäjän valitsemat olutmerkit ja -tyypit hakukriteereihin
+function toggleInSearch(li, parentID) {
+	let text = li.textContent || li.innerText;
+	if(parentID == "brands") {
+		if (searchVars.brands.indexOf(text) >= 0) {
+			searchVars.brands.splice(searchVars.brands.indexOf(text), 1);	
+		} else {
+			searchVars.brands.push(text);
+		}
+	} else if(parentID == "types") {
+		if (searchVars.types.indexOf(text) >= 0) {
+			searchVars.types.splice(searchVars.types.indexOf(text), 1);
+		} else {
+			searchVars.types.push(text);
+		}
+	}
+	console.log(searchVars);
+}
 
 // muuttaa ekan kirjaimen isoksi
 function capitalizeFirstLetter(string) {
