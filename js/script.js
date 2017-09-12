@@ -12,6 +12,8 @@ window.onload = function(){
 	infoWindow = new google.maps.InfoWindow();
 	markers = [];
 
+	REST("https://jsonplaceholder.typicode.com/users");
+
 	let beerBrands = ["karhu", "koff", "karjala", "lapin kulta", "ale coq", "heineken", "pirkka", "grimbergen", "duvel", "olut"];
 	let beerTypes = ["lager", "tumma lager", "vahva lager", "IPA", "bock", "Stout", "porter", "pils", "vehnäolut", "sahti", "bitter", "dobbelbock", "dry stout", "dunkel", "luostariolut", "imperial stout", "imperial porter", "mead", "trappist"];
 	createList(beerBrands, document.getElementById('brand-list'));
@@ -90,6 +92,8 @@ window.onload = function(){
 		})
 	});
 
+
+
   	noUiSlider.create(alcoholSlider, {
 	    start: [ 2.8, 5.6 ],
 	    connect: true,
@@ -132,6 +136,25 @@ window.onload = function(){
   	});
 
     locateUser(distanceSlider.noUiSlider.get());
+}
+
+// hakee URLista JSON datan
+function REST(url) {
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", url, true);
+    xhr.setRequestHeader("Content-type", "application/json");
+    xhr.send();
+
+	xhr.onreadystatechange = function () {
+	  	if (xhr.readyState === 4) {
+	    	if (xhr.status === 200) {
+	    		const response = JSON.parse(xhr.responseText);
+	 	 		console.log(response[1].address.street); // 'This is the returned text.'
+	        } else {
+	          	console.log('Error: ' + xhr.status); // An error occurred during the request.
+	        }
+	  	}
+	}
 }
 
 
