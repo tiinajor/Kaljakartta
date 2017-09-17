@@ -205,7 +205,7 @@ header {
 .dropdown-icon {
 	display: inline;
 	height: 15px;
-	transform: rotate(90deg);
+	transform: rotate(-90deg);
 }
 
 .out-of-focus-area {

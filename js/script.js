@@ -4,20 +4,20 @@ let pos;
 let infoWindow;
 let markers;
 let searchVars = {
-		tap : false,
-		bottle : false,
-		price : {
-			min : 0.0,
-			max : 5.0
-		},
-		alcohol : {
-			min : 2.8,
-			max : 5.6
-		},
-		distance : 500,
-		brands : [],
-		types : []
-	}
+	tap : false,
+	bottle : false,
+	price : {
+		min : 0.0,
+		max : 8.5
+	},
+	alcohol : {
+		min : 2.8,
+		max : 5.6
+	},
+	brands : [],
+	types : [],
+	barTypes : []
+}
 
 window.onload = function(){
 	const priceSlider = document.getElementById('price-slider');
@@ -32,8 +32,10 @@ window.onload = function(){
 
 	let beerBrands = ["karhu", "koff", "karjala", "lapin kulta", "ale coq", "heineken", "pirkka", "grimbergen", "duvel", "olut"];
 	let beerTypes = ["lager", "tumma lager", "vahva lager", "IPA", "bock", "Stout", "porter", "pils", "vehnäolut", "sahti", "bitter", "dobbelbock", "dry stout", "dunkel", "luostariolut", "imperial stout", "imperial porter", "mead", "trappist"];
+	let barTypes = ["pubi", "urheilubaari", "yökerho", "räkälä", "karaokebaari", "viinibaari", "olutravintola"];
 	createList(beerBrands, document.getElementById('brand-list'), "brands");
 	createList(beerTypes, document.getElementById('type-list'), "types");
+	createList(barTypes, document.getElementById('barType-list'), "barTypes");
 
 	// hanat mukana haussa kyllä/ei
 	document.getElementById('tapButton').addEventListener('click', function() {
@@ -77,24 +79,34 @@ window.onload = function(){
 		}
 	})
 
-	// avaa merkit-listan ja sulkee oluttyypit-listan
+	// avaa baarityypit-listan ja sulkee muut-listat
+	document.getElementById('barType-list').children[0].addEventListener('click', function() {
+		let ul = document.getElementById('barType-list').children[1];
+		let icon = this.children[0];
+		toggleVisible(ul);
+		rotateIcon(icon);
+		closeList(document.getElementById('type-list'));
+		closeList(document.getElementById('brand-list'));
+	});
+
+	// avaa merkit-listan ja sulkee muut-listat
 	document.getElementById('brand-list').children[0].addEventListener('click', function() {
 		let ul = document.getElementById('brand-list').children[1];
 		let icon = this.children[0];
-		let typeList = document.getElementById('type-list');
 		toggleVisible(ul);
 		rotateIcon(icon);
-		closeOtherList(typeList);
+		closeList(document.getElementById('barType-list'));
+		closeList(document.getElementById('type-list'));
 	});
 
-	// avaa oluttyypit-listan ja sulkee merkit-listan
+	// avaa oluttyypit-listan ja sulkee muut-listat
 	document.getElementById('type-list').children[0].addEventListener('click', function() {
 		let ul = document.getElementById('type-list').children[1];
 		let icon = this.children[0];
-		let brandList = document.getElementById('brand-list');
 		toggleVisible(ul);
 		rotateIcon(icon);
-		closeOtherList(brandList);
+		closeList(document.getElementById('brand-list'));
+		closeList(document.getElementById('barType-list'));
 	});
 
 	// menun avaus
@@ -123,8 +135,6 @@ window.onload = function(){
 		})
 	});
 
-
-
   	noUiSlider.create(alcoholSlider, {
 	    start: [ 2.8, 5.6 ],
 	    connect: true,
@@ -152,19 +162,42 @@ window.onload = function(){
 	
 	// slaidereiden liikuttaminen päivittää niihin liittyvät tekstit
   	priceSlider.noUiSlider.on('update', function() {
-	    let value = priceSlider.noUiSlider.get();
+	    const value = priceSlider.noUiSlider.get();
 	    document.getElementById("price").innerHTML = value[0] + " - " + value[1] + "€";
   	});
 
   	alcoholSlider.noUiSlider.on('update', function() {
-	    let value = alcoholSlider.noUiSlider.get();
+	    const value = alcoholSlider.noUiSlider.get();
 	    document.getElementById("alcohol").innerHTML = value[0] + " - " + value[1] + "%";
   	});
 
   	distanceSlider.noUiSlider.on('update', function() {
-	    let value = distanceSlider.noUiSlider.get();
+	    const value = distanceSlider.noUiSlider.get();
 	    document.getElementById("distance").innerHTML = "< " + value + "m";
   	});
+
+	// slaidereiden siirtäminen päivittää hakukriteerit
+  	priceSlider.noUiSlider.on('change', function() {
+	    const value = priceSlider.noUiSlider.get();
+	    searchVars.price.min = value[0];
+	    searchVars.price.max = value[1];
+	    console.log(searchVars);
+  	});
+
+  	alcoholSlider.noUiSlider.on('change', function() {
+	    const value = alcoholSlider.noUiSlider.get();
+	    searchVars.alcohol.min = value[0];
+	    searchVars.alcohol.max = value[1];
+	    console.log(searchVars);
+  	});
+
+/*
+  	distanceSlider.noUiSlider.on('change', function() {
+	    const value = distanceSlider.noUiSlider.get();
+	    searchVars.distance = value;
+	    console.log(searchVars);
+  	});
+  	*/
 
     locateUser(distanceSlider.noUiSlider.get());
 }
@@ -180,12 +213,24 @@ function REST(url) {
 	  	if (xhr.readyState === 4) {
 	    	if (xhr.status === 200) {
 	    		const response = JSON.parse(xhr.responseText);
-	 	 		console.log(response); // 'This is the returned text.'
+	 	 		console.log(response[2]); 
+	 	 		//barData(response[2]);
 	        } else {
-	          	console.log('Error: ' + xhr.status); // An error occurred during the request.
+	          	console.log('Error: ' + xhr.status);
 	        }
 	  	}
 	}
+}
+
+// ylimääränen JSONia varten
+function barData(data) {
+	const name = data.company.name;
+	const address = data.address.street + " " + data.address.suite;
+	const desc = data.company.catchPhrase;
+
+	console.log(name);
+	console.log(address);
+	console.log(desc);
 }
 
 
@@ -211,7 +256,17 @@ function createList(list, parentDiv, id) {
 	parentDiv.appendChild(ul);
 };
 
-// lisää/poistaa käyttäjän valitsemat olutmerkit ja -tyypit hakukriteereihin
+// sulkee menun listan
+function closeList(div) {
+	let otherList = div.children[1];
+	let otherDiv = div.children[0];
+	let icon = otherDiv.children[0];
+
+	otherList.style.height = '0px';
+	icon.style.transform = "rotate(-90deg)";
+};
+
+// lisää/poistaa käyttäjän valitsemat olutmerkit ja -tyypit sekä baarityypit hakukriteereihin
 function toggleInSearch(li, parentID) {
 	let text = li.textContent || li.innerText;
 	if(parentID == "brands") {
@@ -226,6 +281,12 @@ function toggleInSearch(li, parentID) {
 		} else {
 			searchVars.types.push(text);
 		}
+	} else if(parentID == "barTypes") {
+		if (searchVars.barTypes.indexOf(text) >= 0) {
+			searchVars.barTypes.splice(searchVars.barTypes.indexOf(text), 1);
+		} else {
+			searchVars.barTypes.push(text);
+		}
 	}
 	console.log(searchVars);
 }
@@ -237,7 +298,7 @@ function capitalizeFirstLetter(string) {
 
 // avaa menun merkki- ja laatulistat niitä painettaessa
 function toggleVisible(item){
-	console.log(item.style.height);
+	//console.log(item.style.height);
     if (item.style.height === '195px'){
         item.style.height = '0px';
     }else{
@@ -248,20 +309,10 @@ function toggleVisible(item){
 // kääntää menun listojen "kolmio-iconit" kun lista avataan/suljetaan
 function rotateIcon(icon) {
 	if (icon.style.transform === 'rotate(0deg)') {
-		icon.style.transform = 'rotate(90deg)';
+		icon.style.transform = 'rotate(-90deg)';
 	} else {
 		icon.style.transform = 'rotate(0deg)';
 	};
-};
-
-// sulkee toisen menun listan kun toinen avataan
-function closeOtherList(div) {
-	let otherList = div.children[1];
-	let otherDiv = div.children[0];
-	let icon = otherDiv.children[0];
-
-	otherList.style.height = '0px';
-	icon.style.transform = "rotate(90deg)";
 };
 
 /* blurraa kartan kun menu avataan */
