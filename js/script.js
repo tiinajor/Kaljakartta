@@ -480,7 +480,7 @@ function searchNearby(loc, distance) {
 	clearMarkers();
 	let service = new google.maps.places.PlacesService(map);
     service.nearbySearch({
-      	location: loc,
+      	location: loc, 
       	radius: distance,
       	type: ["bar"]
     }, processResults);	
