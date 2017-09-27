@@ -3,17 +3,12 @@ let map;
 let pos;
 let infoWindow;
 let markers;
+let serving = '';
 let searchVars = {
-	tap : false,
-	bottle : false,
-	price : {
-		min : 0.0,
-		max : 8.5
-	},
-	alcohol : {
-		min : 2.8,
-		max : 5.6
-	},
+	serving : serving,
+	price : 8.5,
+	abvMin : 2.8,
+	abvMax : 5.6,
 	brands : [],
 	types : [],
 	barTypes : []
@@ -41,10 +36,11 @@ window.onload = function(){
 	document.getElementById('tapButton').addEventListener('click', function() {
 		this.classList.toggle('selected');
 		this.classList.toggle('selected-border');
-		if(searchVars.tap === true) {
-			searchVars.tap = false;
+		console.log(searchVars.serving);
+		if(searchVars.serving == '' || searchVars.serving == 'bottle') {
+			searchVars.serving = 'tap';
 		} else {
-			searchVars.tap = true;
+			searchVars.serving = '';
 		}
 		console.log(searchVars);
 	});
@@ -53,10 +49,11 @@ window.onload = function(){
 	document.getElementById('bottleButton').addEventListener('click', function() {
 		this.classList.toggle('selected');
 		this.classList.toggle('selected-border');
-		if(searchVars.bottle === true) {
-			searchVars.bottle = false;
+		console.log(searchVars.serving);
+		if(searchVars.serving == '' || searchVars.serving == 'tap') {
+			searchVars.serving = 'bottle';
 		} else {
-			searchVars.bottle = true;
+			searchVars.serving = '';
 		}
 		console.log(searchVars);
 	});
@@ -123,8 +120,8 @@ window.onload = function(){
 
 	//slaiderien luonti
 	noUiSlider.create(priceSlider, {
-		start: [ 0, 8.5 ],
-		connect: true,
+		start: 8.5,
+		connect: [true, false],
 		step: 0.5,
 		range: {
 		  'min': [  0 ],
@@ -163,7 +160,7 @@ window.onload = function(){
 	// slaidereiden liikuttaminen päivittää niihin liittyvät tekstit
   	priceSlider.noUiSlider.on('update', function() {
 	    const value = priceSlider.noUiSlider.get();
-	    document.getElementById("price").innerHTML = value[0] + " - " + value[1] + "€";
+	    document.getElementById("price").innerHTML = "0 - " + value + "€";
   	});
 
   	alcoholSlider.noUiSlider.on('update', function() {
@@ -179,8 +176,7 @@ window.onload = function(){
 	// slaidereiden siirtäminen päivittää hakukriteerit
   	priceSlider.noUiSlider.on('change', function() {
 	    const value = priceSlider.noUiSlider.get();
-	    searchVars.price.min = value[0];
-	    searchVars.price.max = value[1];
+	    searchVars.price = value[1];
 	    console.log(searchVars);
   	});
 
@@ -263,6 +259,7 @@ function closeList(div) {
 	let icon = otherDiv.children[0];
 
 	otherList.style.height = '0px';
+	let closed = true;
 	icon.style.transform = "rotate(-90deg)";
 };
 
