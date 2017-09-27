@@ -2,7 +2,7 @@ let hki = {lat: 60.162786, lng: 24.932607};
 let map;
 let pos;
 let infoWindow;
-let markers;
+let markers; 
 window.onload = function(){
 	const priceSlider = document.getElementById('price-slider');
 	const alcoholSlider = document.getElementById('alcohol-slider');
