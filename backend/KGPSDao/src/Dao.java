@@ -235,34 +235,34 @@ public class Dao {
 
 	}
 
-	public static void main(String[] args) {
-
-		Dao dao = new Dao("remote:188.166.162.144:2424/KaljakarttaDB", "root", "juuriPassu");
-
-
-
-		HashMap criteria = new HashMap();
-
-		criteria.put("price", 10);
-		criteria.put("abvMin", 3.0);
-		criteria.put("abvMax", 7);
-		criteria.put("type", "Lager");
-
-
-		HashMap<String, Double[]> restaurants = filterRestaurants(criteria);
-
-		Set keys = restaurants.keySet();
-		System.out.println(keys);
-
-		System.out.println("LAT: " + restaurants.get(keys.iterator().next())[0] + " LON: "
-				+ restaurants.get(keys.iterator().next())[1]);
-
-		System.out.println(getRestaurant("Boothill"));
-
-		System.out.println(getBeerTypes());
-
-		System.out.println(getBrands());
-
-	}
+//	public static void main(String[] args) {
+//
+//		Dao dao = new Dao("remote:188.166.162.144:2424/KaljakarttaDB", "root", "juuriPassu");
+//
+//
+//
+//		HashMap criteria = new HashMap();
+//
+//		criteria.put("price", 10);
+//		criteria.put("abvMin", 3.0);
+//		criteria.put("abvMax", 7);
+//		criteria.put("type", "Lager");
+//
+//
+//		HashMap<String, Double[]> restaurants = filterRestaurants(criteria);
+//
+//		Set keys = restaurants.keySet();
+//		System.out.println(keys);
+//
+//		System.out.println("LAT: " + restaurants.get(keys.iterator().next())[0] + " LON: "
+//				+ restaurants.get(keys.iterator().next())[1]);
+//
+//		System.out.println(getRestaurant("Boothill"));
+//
+//		System.out.println(getBeerTypes());
+//
+//		System.out.println(getBrands());
+//
+//	}
 
 }
