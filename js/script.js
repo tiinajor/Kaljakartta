@@ -186,7 +186,7 @@ window.onload = function(){
 }
 
 // hakee URLista JSON datan
-function REST(url) {
+function getJSON(url) {
     var xhr = new XMLHttpRequest();
     xhr.open("GET", url, true);
     xhr.setRequestHeader("Content-type", "application/json");
@@ -272,8 +272,7 @@ function toggleInSearch(li, parentID) {
 			searchVars.barTypes.push(text);
 		}
 	}
-	
-}
+};
 
 // muuttaa ekan kirjaimen isoksi
 function capitalizeFirstLetter(string) {
