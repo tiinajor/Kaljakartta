@@ -23,6 +23,11 @@
 
 	<div id="side-menu">
 		<a id="menu-close-x" class="closebtn button">x</a>
+
+		<div class="menu-search-container menu-block centered">
+			<input class="search menu-search" type="text" placeholder="Etsi...">
+			<button><img class="button" src="icons/search.svg"></button>
+		</div>
 	
 		<div id="search-option-buttons" class="centered menu-block">
 			<button id="tapButton" class="search-option button">
@@ -52,35 +57,36 @@
 				<div class="slider noUi-extended" id="distance-slider"></div>
 			</div>
 		</div>
-		
-		<div id="brand-list" class="centered menu-block dropdown">
-			<div>Merkit<img class="dropdown-icon right" src="icons/sort-down.svg"></div>
-		</div>
+		<div class="lists-container">			
+			<div id="brand-list" class="centered menu-block dropdown button">
+				<div>Olutmerkki<img class="dropdown-icon right" src="icons/sort-down.svg"></div>
+			</div>
 
-		<div id="type-list" class="centered menu-block dropdown">
-			<div>Oluttyypit<img class="dropdown-icon right" src="icons/sort-down.svg"></div>
+			<div id="type-list" class="centered menu-block dropdown button">
+				<div>Oluttyyppi<img class="dropdown-icon right" src="icons/sort-down.svg"></div>
+			</div>
+		</div>
+		
+
+		<div class="button-container menu-block centered">
+			<button class="button menu-button button-cancel">Tyhjennä</button>
+			<button class=" button menu-button button-submit">Hae</button>
 		</div>
 	</div>
 
 	<div id="restaurant-card">
 		<a id="card-close-x" class="closebtn button">x</a>
 		
-		<div class="hero-image"></div>
+		<div id="bar-photo" class="hero-image"></div>
 
 		<div id="card-content">
-			
-			<div id="rating" class="right" >
-				<img class="rating-icon" src="icons/pint-rating.svg">
-				<img class="rating-icon" src="icons/pint-rating.svg">
-				<img class="rating-icon" src="icons/pint-rating.svg">
-				<img class="rating-icon" src="icons/pint-rating.svg">
-				<img class="rating-icon" src="icons/pint-rating-bw.svg">
-			</div>
-			
-			<div id="bar-info">
-				<h2 id="bar-name"></h2>
-				<p id="bar-address"></p>
-				<p id="bar-desc"></p>
+			<div id="card-top-container">
+				<div id="bar-info">
+					<h2 id="bar-name"></h2>
+					<p id="bar-address"></p>
+					<p id="bar-desc"></p>
+				</div>
+				<div id="rating"></div>
 			</div>
 			
 			<hr>
@@ -116,7 +122,7 @@
 		<button id="hamburger-menu"><img class="menu-icon button" src="icons/menu.svg"></button>
 		<div id="title-container">
 			<p class="title">
-				<img class="logo" src="icons/beer.svg">Kaljakartta
+				<a href="index.html"><img class="logo" src="icons/beer.svg">Kaljakartta</a>
 			</p>
 		</div>
 	</header>
@@ -124,7 +130,7 @@
 	<div id="map"></div>
 
 	<div id="search-container">
-		<input id="searchbox" type="text" placeholder="Search...">
+		<input id="searchbox" class="search" type="text" placeholder="Search...">
 		<button id="search-button"><img class="button" src="icons/search.svg"></button>
 	</div>
 
