@@ -11,7 +11,6 @@ let searchVars = {
 	abvMax : 5.6,
 	brands : [],
 	types : [],
-	barTypes : []
 }
 
 window.onload = function(){
@@ -22,15 +21,10 @@ window.onload = function(){
 	infoWindow = new google.maps.InfoWindow();
 	markers = [];
 
-	REST("https://jsonplaceholder.typicode.com/users");
-	console.log(searchVars);
-
 	let beerBrands = ["karhu", "koff", "karjala", "lapin kulta", "ale coq", "heineken", "pirkka", "grimbergen", "duvel", "olut"];
 	let beerTypes = ["lager", "tumma lager", "vahva lager", "IPA", "bock", "Stout", "porter", "pils", "vehnäolut", "sahti", "bitter", "dobbelbock", "dry stout", "dunkel", "luostariolut", "imperial stout", "imperial porter", "mead", "trappist"];
-	let barTypes = ["pubi", "urheilubaari", "yökerho", "räkälä", "karaokebaari", "viinibaari", "olutravintola"];
 	createList(beerBrands, document.getElementById('brand-list'), "brands");
 	createList(beerTypes, document.getElementById('type-list'), "types");
-	createList(barTypes, document.getElementById('barType-list'), "barTypes");
 
 	// hanat mukana haussa kyllä/ei
 	document.getElementById('tapButton').addEventListener('click', function() {
@@ -42,7 +36,6 @@ window.onload = function(){
 		} else {
 			searchVars.serving = '';
 		}
-		console.log(searchVars);
 	});
 
 	// pullot mukana haussa kyllä/ei
@@ -55,7 +48,7 @@ window.onload = function(){
 		} else {
 			searchVars.serving = '';
 		}
-		console.log(searchVars);
+		
 	});
 
 	// suurennuslasi etsii osoitteen mukaan baarit jos osoite ei ole tyhjä
@@ -76,6 +69,7 @@ window.onload = function(){
 		}
 	})
 
+/*
 	// avaa baarityypit-listan ja sulkee muut-listat
 	document.getElementById('barType-list').children[0].addEventListener('click', function() {
 		let ul = document.getElementById('barType-list').children[1];
@@ -85,6 +79,7 @@ window.onload = function(){
 		closeList(document.getElementById('type-list'));
 		closeList(document.getElementById('brand-list'));
 	});
+*/
 
 	// avaa merkit-listan ja sulkee muut-listat
 	document.getElementById('brand-list').children[0].addEventListener('click', function() {
@@ -92,7 +87,7 @@ window.onload = function(){
 		let icon = this.children[0];
 		toggleVisible(ul);
 		rotateIcon(icon);
-		closeList(document.getElementById('barType-list'));
+		//closeList(document.getElementById('barType-list'));
 		closeList(document.getElementById('type-list'));
 	});
 
@@ -103,7 +98,7 @@ window.onload = function(){
 		toggleVisible(ul);
 		rotateIcon(icon);
 		closeList(document.getElementById('brand-list'));
-		closeList(document.getElementById('barType-list'));
+		//closeList(document.getElementById('barType-list'));
 	});
 
 	// menun avaus
@@ -177,29 +172,21 @@ window.onload = function(){
   	priceSlider.noUiSlider.on('change', function() {
 	    const value = priceSlider.noUiSlider.get();
 	    searchVars.price = value[1];
-	    console.log(searchVars);
+	    
   	});
 
   	alcoholSlider.noUiSlider.on('change', function() {
 	    const value = alcoholSlider.noUiSlider.get();
 	    searchVars.alcohol.min = value[0];
 	    searchVars.alcohol.max = value[1];
-	    console.log(searchVars);
+	    
   	});
-
-/*
-  	distanceSlider.noUiSlider.on('change', function() {
-	    const value = distanceSlider.noUiSlider.get();
-	    searchVars.distance = value;
-	    console.log(searchVars);
-  	});
-  	*/
 
     locateUser(distanceSlider.noUiSlider.get());
 }
 
 // hakee URLista JSON datan
-function REST(url) {
+function getJSON(url) {
     var xhr = new XMLHttpRequest();
     xhr.open("GET", url, true);
     xhr.setRequestHeader("Content-type", "application/json");
@@ -209,8 +196,8 @@ function REST(url) {
 	  	if (xhr.readyState === 4) {
 	    	if (xhr.status === 200) {
 	    		const response = JSON.parse(xhr.responseText);
-	 	 		console.log(response[2]); 
-	 	 		//barData(response[2]);
+	 	 		console.log(response); 
+	 	 		return response;
 	        } else {
 	          	console.log('Error: ' + xhr.status);
 	        }
@@ -285,7 +272,7 @@ function toggleInSearch(li, parentID) {
 			searchVars.barTypes.push(text);
 		}
 	}
-	console.log(searchVars);
+	
 }
 
 // muuttaa ekan kirjaimen isoksi
@@ -352,11 +339,35 @@ function renderBarInfo(place) {
 		}
 	}
 	console.log(place);
+	const details = getDetails(`https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/details/json?reference=${place.reference}&key=AIzaSyDuIpE10xbisU_de-Mg_xR4-OpmOVl3BxA`);
+
 	document.getElementById('bar-name').innerHTML = place.name;
 	document.getElementById('bar-address').innerHTML = place.vicinity;
 	document.getElementById('bar-desc').innerHTML = openText;
 	setRating(place.rating);
 };
+
+function getDetails(url){
+    let xhr = new XMLHttpRequest();
+    xhr.open("GET", url, true);
+    xhr.setRequestHeader("Content-type", "application/json");
+    xhr.send();
+
+	xhr.onreadystatechange = function () {
+	  	if (xhr.readyState === 4) {
+	    	if (xhr.status === 200) {
+	    		const response = JSON.parse(xhr.responseText);
+	 	 		console.log(response); 
+	 	 		const photoref = response.result.photos[0].photo_reference;
+	 	 		const maxheight = "400"; 
+	 	 		document.getElementById('bar-photo').style.backgroundImage = `url(https://maps.googleapis.com/maps/api/place/photo?maxheight=${maxheight}&photoreference=${photoref}&key=AIzaSyDuIpE10xbisU_de-Mg_xR4-OpmOVl3BxA)`;
+	 	 		return response.result;
+	        } else {
+	          	console.log('Error: ' + xhr.status);
+	        }
+	  	}
+	}
+}
 
 // asettaa baarin ratinging tuopin kuvina
 function setRating(rating) {
