@@ -10,8 +10,8 @@ let searchVars = {
 	abvMin : 2.8,
 	abvMax : 5.6,
 	brands : [],
-	types : [],
-}
+	types : []
+};
 
 window.onload = function(){
 	const priceSlider = document.getElementById('price-slider');
@@ -67,7 +67,7 @@ window.onload = function(){
 			geocodeAddress(geocoder, map, distanceSlider.noUiSlider.get());
 			this.value = '';
 		}
-	})
+	});
 
 /*
 	// avaa baarityypit-listan ja sulkee muut-listat
@@ -183,7 +183,7 @@ window.onload = function(){
   	});
 
     locateUser(distanceSlider.noUiSlider.get());
-}
+};
 
 // hakee URLista JSON datan
 function getJSON(url) {
@@ -203,7 +203,7 @@ function getJSON(url) {
 	        }
 	  	}
 	}
-}
+};
 
 // ylimääränen JSONia varten
 function barData(data) {
@@ -214,7 +214,7 @@ function barData(data) {
 	console.log(name);
 	console.log(address);
 	console.log(desc);
-}
+};
 
 
 // luo listan divin sisään (aakkosjärjestyksessä ja eka kirjain isolla)
