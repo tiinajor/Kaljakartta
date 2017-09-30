@@ -186,7 +186,7 @@ window.onload = function(){
 }
 
 // hakee URLista JSON datan
-function getJSON(url) {
+function REST(url) {
     var xhr = new XMLHttpRequest();
     xhr.open("GET", url, true);
     xhr.setRequestHeader("Content-type", "application/json");
@@ -357,7 +357,7 @@ function getDetails(url){
 	  	if (xhr.readyState === 4) {
 	    	if (xhr.status === 200) {
 	    		const response = JSON.parse(xhr.responseText);
-	 	 		console.log(response); 
+	 	 		console.log(response.result); 
 	 	 		const photoref = response.result.photos[0].photo_reference;
 	 	 		const maxheight = "400"; 
 	 	 		document.getElementById('bar-photo').style.backgroundImage = `url(https://maps.googleapis.com/maps/api/place/photo?maxheight=${maxheight}&photoreference=${photoref}&key=AIzaSyDuIpE10xbisU_de-Mg_xR4-OpmOVl3BxA)`;
