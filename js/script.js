@@ -374,9 +374,9 @@ function setRating(rating) {
 	let html = '';
 	for(var i=1;i<=5;i++) {
 		if(i<=rating) {
-			html += "<img class=\"rating-icon\" src=\"icons/pint-rating.svg\">"
+			html += "<img class=\"rating-icon\" src=\"kgps_icons/pint-rating.svg\">"
 		} else {
-			html += "<img class=\"rating-icon\" src=\"icons/pint-rating-bw.svg\">"
+			html += "<img class=\"rating-icon\" src=\"kgps_icons/pint-rating-bw.svg\">"
 		}
 	}
 	document.getElementById('rating').innerHTML = html;
