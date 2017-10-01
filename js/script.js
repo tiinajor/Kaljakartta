@@ -13,6 +13,51 @@ let searchVars = {
 	types : []
 };
 
+// luo kartan 
+function initMap() {
+    map = new google.maps.Map(document.getElementById('map'), {
+      center: {lat: 60.162786, lng: 24.932607},
+      zoom: 14,
+      gestureHandling: 'greedy',
+      styles: [
+		  {
+		    "featureType": "poi",
+		    "elementType": "labels.text",
+		    "stylers": [
+		      {
+		        "visibility": "off"
+		      }
+		    ]
+		  },
+		  {
+		    "featureType": "poi.business",
+		    "stylers": [
+		      {
+		        "visibility": "off"
+		      }
+		    ]
+		  },
+		  {
+		    "featureType": "road",
+		    "elementType": "labels.icon",
+		    "stylers": [
+		      {
+		        "visibility": "off"
+		      }
+		    ]
+		  },
+		  {
+		    "featureType": "transit",
+		    "stylers": [
+		      {
+		        "visibility": "off"
+		      }
+		    ]
+		  }
+	]
+    });
+};
+
 window.onload = function(){
 	const priceSlider = document.getElementById('price-slider');
 	const alcoholSlider = document.getElementById('alcohol-slider');
@@ -383,50 +428,6 @@ function setRating(rating) {
 };
 
 // ----- TÄSTÄ ALASPÄIN VAIN KARTTAAN LIITTYVIÄ FUNKTIOITA ----
-// luo kartan 
-function initMap() {
-    map = new google.maps.Map(document.getElementById('map'), {
-      center: {lat: 60.162786, lng: 24.932607},
-      zoom: 14,
-      gestureHandling: 'greedy',
-      styles: [
-		  {
-		    "featureType": "poi",
-		    "elementType": "labels.text",
-		    "stylers": [
-		      {
-		        "visibility": "off"
-		      }
-		    ]
-		  },
-		  {
-		    "featureType": "poi.business",
-		    "stylers": [
-		      {
-		        "visibility": "off"
-		      }
-		    ]
-		  },
-		  {
-		    "featureType": "road",
-		    "elementType": "labels.icon",
-		    "stylers": [
-		      {
-		        "visibility": "off"
-		      }
-		    ]
-		  },
-		  {
-		    "featureType": "transit",
-		    "stylers": [
-		      {
-		        "visibility": "off"
-		      }
-		    ]
-		  }
-	]
-    });
-};
 
 // paikantaa käyttäjän ja hakee lähimmät baarit jos paikannus onnistuu/sallittu
 function locateUser(distance) {
