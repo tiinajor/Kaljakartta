@@ -10,8 +10,53 @@ let searchVars = {
 	abvMin : 2.8,
 	abvMax : 5.6,
 	brands : [],
-	types : [],
-}
+	types : []
+};
+
+// luo kartan 
+function initMap() {
+    map = new google.maps.Map(document.getElementById('map'), {
+      center: {lat: 60.162786, lng: 24.932607},
+      zoom: 14,
+      gestureHandling: 'greedy',
+      styles: [
+		  {
+		    "featureType": "poi",
+		    "elementType": "labels.text",
+		    "stylers": [
+		      {
+		        "visibility": "off"
+		      }
+		    ]
+		  },
+		  {
+		    "featureType": "poi.business",
+		    "stylers": [
+		      {
+		        "visibility": "off"
+		      }
+		    ]
+		  },
+		  {
+		    "featureType": "road",
+		    "elementType": "labels.icon",
+		    "stylers": [
+		      {
+		        "visibility": "off"
+		      }
+		    ]
+		  },
+		  {
+		    "featureType": "transit",
+		    "stylers": [
+		      {
+		        "visibility": "off"
+		      }
+		    ]
+		  }
+	]
+    });
+};
 
 window.onload = function(){
 	const priceSlider = document.getElementById('price-slider');
@@ -205,7 +250,7 @@ window.onload = function(){
   	});
 
     locateUser(distanceSlider.noUiSlider.get());
-}
+};
 
 // hakee URLista JSON datan
 function getJSON(url) {
@@ -225,7 +270,7 @@ function getJSON(url) {
 	        }
 	  	}
 	}
-}
+};
 
 // ylimääränen JSONia varten
 function barData(data) {
@@ -236,7 +281,7 @@ function barData(data) {
 	console.log(name);
 	console.log(address);
 	console.log(desc);
-}
+};
 
 
 // luo listan divin sisään (aakkosjärjestyksessä ja eka kirjain isolla)
@@ -405,50 +450,6 @@ function setRating(rating) {
 };
 
 // ----- TÄSTÄ ALASPÄIN VAIN KARTTAAN LIITTYVIÄ FUNKTIOITA ----
-// luo kartan 
-function initMap() {
-    map = new google.maps.Map(document.getElementById('map'), {
-      center: {lat: 60.162786, lng: 24.932607},
-      zoom: 14,
-      gestureHandling: 'greedy',
-      styles: [
-		  {
-		    "featureType": "poi",
-		    "elementType": "labels.text",
-		    "stylers": [
-		      {
-		        "visibility": "off"
-		      }
-		    ]
-		  },
-		  {
-		    "featureType": "poi.business",
-		    "stylers": [
-		      {
-		        "visibility": "off"
-		      }
-		    ]
-		  },
-		  {
-		    "featureType": "road",
-		    "elementType": "labels.icon",
-		    "stylers": [
-		      {
-		        "visibility": "off"
-		      }
-		    ]
-		  },
-		  {
-		    "featureType": "transit",
-		    "stylers": [
-		      {
-		        "visibility": "off"
-		      }
-		    ]
-		  }
-	]
-    });
-};
 
 // paikantaa käyttäjän ja hakee lähimmät baarit jos paikannus onnistuu/sallittu
 function locateUser(distance) {
