@@ -66,6 +66,8 @@ window.onload = function(){
 	infoWindow = new google.maps.InfoWindow();
 	markers = [];
 
+	getJSON("https://jsonplaceholder.typicode.com/posts").then(data => console.log(data));;
+
 	let beerBrands = ["karhu", "koff", "karjala", "lapin kulta", "ale coq", "heineken", "pirkka", "grimbergen", "duvel", "olut"];
 	let beerTypes = ["lager", "tumma lager", "vahva lager", "IPA", "bock", "Stout", "porter", "pils", "vehnäolut", "sahti", "bitter", "dobbelbock", "dry stout", "dunkel", "luostariolut", "imperial stout", "imperial porter", "mead", "trappist"];
 	createList(beerBrands, document.getElementById('brand-list'), "brands");
@@ -135,18 +137,6 @@ window.onload = function(){
 			this.value = '';
 		}
 	});
-
-/*
-	// avaa baarityypit-listan ja sulkee muut-listat
-	document.getElementById('barType-list').children[0].addEventListener('click', function() {
-		let ul = document.getElementById('barType-list').children[1];
-		let icon = this.children[0];
-		toggleVisible(ul);
-		rotateIcon(icon);
-		closeList(document.getElementById('type-list'));
-		closeList(document.getElementById('brand-list'));
-	});
-*/
 
 	// avaa merkit-listan ja sulkee muut-listat
 	document.getElementById('brand-list').children[0].addEventListener('click', function() {
@@ -254,35 +244,8 @@ window.onload = function(){
 
 // hakee URLista JSON datan
 function getJSON(url) {
-    var xhr = new XMLHttpRequest();
-    xhr.open("GET", url, true);
-    xhr.setRequestHeader("Content-type", "application/json");
-    xhr.send();
-
-	xhr.onreadystatechange = function () {
-	  	if (xhr.readyState === 4) {
-	    	if (xhr.status === 200) {
-	    		const response = JSON.parse(xhr.responseText);
-	 	 		console.log(response); 
-	 	 		return response;
-	        } else {
-	          	console.log('Error: ' + xhr.status);
-	        }
-	  	}
-	}
+	return fetch(url).then(response => response.json());
 };
-
-// ylimääränen JSONia varten
-function barData(data) {
-	const name = data.company.name;
-	const address = data.address.street + " " + data.address.suite;
-	const desc = data.company.catchPhrase;
-
-	console.log(name);
-	console.log(address);
-	console.log(desc);
-};
-
 
 // luo listan divin sisään (aakkosjärjestyksessä ja eka kirjain isolla)
 function createList(list, parentDiv, id) {
@@ -381,6 +344,8 @@ function closeMenu() {
 function openCard() {
 	document.getElementById("restaurant-card").style.right = "0";
 	document.getElementById("card-oof").style.width = "100%";    
+	document.getElementById("bar-photo").style.backgroundImage = "url('kgps_icons/beer-load.gif')";
+	document.getElementById("bar-photo").style.backgroundSize = "150px";
 };
 
 /* palauttaa kartan takaisin normaaliksi kun restaurant card suljetaan */
@@ -405,35 +370,20 @@ function renderBarInfo(place) {
 		}
 	}
 	console.log(place);
-	const details = getDetails(`https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/details/json?reference=${place.reference}&key=AIzaSyDuIpE10xbisU_de-Mg_xR4-OpmOVl3BxA`);
+	getJSON(`https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/details/json?reference=${place.reference}&key=AIzaSyDuIpE10xbisU_de-Mg_xR4-OpmOVl3BxA`)
+		.then(data => {
+			console.log("data" + data);
+			const photoref = data.result.photos[0].photo_reference;
+ 	 		const maxwidth = "600"; 
+ 	 		document.getElementById("bar-photo").style.backgroundSize = "cover";
+ 	 		document.getElementById('bar-photo').style.backgroundImage = `url(https://maps.googleapis.com/maps/api/place/photo?maxwidth=${maxwidth}&photoreference=${photoref}&key=AIzaSyDuIpE10xbisU_de-Mg_xR4-OpmOVl3BxA)`;
+		});
 
 	document.getElementById('bar-name').innerHTML = place.name;
 	document.getElementById('bar-address').innerHTML = place.vicinity;
 	document.getElementById('bar-desc').innerHTML = openText;
 	setRating(place.rating);
 };
-
-function getDetails(url){
-    let xhr = new XMLHttpRequest();
-    xhr.open("GET", url, true);
-    xhr.setRequestHeader("Content-type", "application/json");
-    xhr.send();
-
-	xhr.onreadystatechange = function () {
-	  	if (xhr.readyState === 4) {
-	    	if (xhr.status === 200) {
-	    		const response = JSON.parse(xhr.responseText);
-	 	 		console.log(response.result); 
-	 	 		const photoref = response.result.photos[0].photo_reference;
-	 	 		const maxheight = "400"; 
-	 	 		document.getElementById('bar-photo').style.backgroundImage = `url(https://maps.googleapis.com/maps/api/place/photo?maxheight=${maxheight}&photoreference=${photoref}&key=AIzaSyDuIpE10xbisU_de-Mg_xR4-OpmOVl3BxA)`;
-	 	 		return response.result;
-	        } else {
-	          	console.log('Error: ' + xhr.status);
-	        }
-	  	}
-	}
-}
 
 // asettaa baarin ratinging tuopin kuvina
 function setRating(rating) {
