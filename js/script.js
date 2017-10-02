@@ -96,11 +96,12 @@ window.onload = function(){
 		
 	});
 
-	// suurennuslasi etsii osoitteen mukaan baarit jos osoite ei ole tyhjä
+	// kartan päällä olevan hakukentän suurennuslasi etsii osoitteen mukaan baarit jos osoite ei ole tyhjä
 	document.getElementById('search-button').addEventListener('click', function() {
-		if(document.getElementById('searchbox').value != '') {
-			geocodeAddress(geocoder, map, distanceSlider.noUiSlider.get());
-			document.getElementById('searchbox').value = '';
+		const input = document.getElementById('searchbox');
+		if(input.value != '') {
+			geocodeAddress(geocoder, map, input.value, distanceSlider.noUiSlider.get());
+			input.value = '';
 		}
 		
 	});
@@ -108,8 +109,29 @@ window.onload = function(){
 	// hakukentässä enterin painaminen käynnistää haun myös
 	document.getElementById('searchbox').addEventListener('keyup', function(e) {
 		e.preventDefault();
-		if(e.keyCode == 13 && document.getElementById('searchbox').value != ''){ 
-			geocodeAddress(geocoder, map, distanceSlider.noUiSlider.get());
+		const input = document.getElementById('searchbox');
+		if(e.keyCode == 13 && input.value != ''){ 
+			geocodeAddress(geocoder, map, input.value, distanceSlider.noUiSlider.get());
+			this.value = '';
+		}
+	});
+
+	// menun suurennuslasi etsii osoitteen mukaan baarit jos osoite ei ole tyhjä
+	document.getElementById('menu-search-button').addEventListener('click', function() {
+		const input = document.getElementById('menu-searchbox');
+		if(input.value != '') {
+			geocodeAddress(geocoder, map, input.value, distanceSlider.noUiSlider.get());
+			input.value = '';
+		}
+		
+	});
+
+	// menun hakukentässä enterin painaminen käynnistää haun myös
+	document.getElementById('menu-searchbox').addEventListener('keyup', function(e) {
+		e.preventDefault();
+		const input = document.getElementById('menu-searchbox');
+		if(e.keyCode == 13 && input.value != ''){ 
+			geocodeAddress(geocoder, map, input.value, distanceSlider.noUiSlider.get());
 			this.value = '';
 		}
 	});
@@ -419,9 +441,9 @@ function setRating(rating) {
 	let html = '';
 	for(var i=1;i<=5;i++) {
 		if(i<=rating) {
-			html += "<img class=\"rating-icon\" src=\"icons/pint-rating.svg\">"
+			html += "<img class=\"rating-icon\" src=\"kgps_icons/pint-rating.svg\">"
 		} else {
-			html += "<img class=\"rating-icon\" src=\"icons/pint-rating-bw.svg\">"
+			html += "<img class=\"rating-icon\" src=\"kgps_icons/pint-rating-bw.svg\">"
 		}
 	}
 	document.getElementById('rating').innerHTML = html;
@@ -460,9 +482,8 @@ function locateUser(distance) {
 };
 
 // käyttäjän tekemä osoitehaku hakukentässä
-function geocodeAddress(geocoder, map, distance) {
+function geocodeAddress(geocoder, map, address, distance) {
 	let userPos;
-	let address = document.getElementById('searchbox').value;
 	geocoder.geocode(
 		{'address': address,
 		componentRestrictions: {
