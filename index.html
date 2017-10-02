@@ -7,17 +7,17 @@
 	<link rel="stylesheet" href="css/style.css">
 	<link rel="stylesheet" href="css/nouislider.min.css">
 	<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32x32.png">
-	<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDuIpE10xbisU_de-Mg_xR4-OpmOVl3BxA&libraries=places&callback=initMap"></script>
 	<script src="js/script.js"></script>
 	<script src="js/wNumb.js"></script>
 	<script src="js/nouislider.min.js"></script>
+	<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDuIpE10xbisU_de-Mg_xR4-OpmOVl3BxA&libraries=places&callback=initMap"></script>
 	
 	
 	<!-- https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=-33.8670522,151.1957362&radius=500&type=bar&key=AIzaSyDuIpE10xbisU_de-Mg_xR4-OpmOVl3BxA 
 
-	https://maps.googleapis.com/maps/api/js?key=AIzaSyDuIpE10xbisU_de-Mg_xR4-OpmOVl3BxA&callback=initMap-->
+	https://maps.googleapis.com/maps/api/js?key=AIzaSyDuIpE10xbisU_de-Mg_xR4-OpmOVl3BxA&callback=initMap
 
-	<!-- https://maps.googleapis.com/maps/api/place/nearbysearch/output?parameters-->
+	https://maps.googleapis.com/maps/api/place/nearbysearch/output?parameters-->
 </head>
 <body>
 
@@ -25,8 +25,8 @@
 		<a id="menu-close-x" class="closebtn button">x</a>
 
 		<div class="menu-search-container menu-block centered">
-			<input class="search menu-search" type="text" placeholder="Etsi...">
-			<button><img class="button" src="kgps_icons/search.svg"></button>
+			<input id="menu-searchbox" class="search" type="text" placeholder="Etsi...">
+			<button id="menu-search-button"><img class="button" src="kgps_icons/search.svg"></button>
 		</div>
 	
 		<div id="search-option-buttons" class="centered menu-block">
