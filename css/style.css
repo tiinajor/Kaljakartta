@@ -497,6 +497,10 @@ header {
 		max-width: 600px;
 	}
 
+	#side-menu {
+		height: calc(100vh - 45px);
+	}
+
 	.logo {
 		height: 30px;
 		padding-right: 0;
@@ -517,7 +521,7 @@ header {
 	}
 
 	#map {
-		height: calc(100vh - 45px);
+		height: calc(100vh - 100px);
 	}
 }
 
