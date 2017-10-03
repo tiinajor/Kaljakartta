@@ -13,51 +13,6 @@ let searchVars = {
 	types : []
 };
 
-// luo kartan 
-function initMap() {
-    map = new google.maps.Map(document.getElementById('map'), {
-      center: {lat: 60.162786, lng: 24.932607},
-      zoom: 14,
-      gestureHandling: 'greedy',
-      styles: [
-		  {
-		    "featureType": "poi",
-		    "elementType": "labels.text",
-		    "stylers": [
-		      {
-		        "visibility": "off"
-		      }
-		    ]
-		  },
-		  {
-		    "featureType": "poi.business",
-		    "stylers": [
-		      {
-		        "visibility": "off"
-		      }
-		    ]
-		  },
-		  {
-		    "featureType": "road",
-		    "elementType": "labels.icon",
-		    "stylers": [
-		      {
-		        "visibility": "off"
-		      }
-		    ]
-		  },
-		  {
-		    "featureType": "transit",
-		    "stylers": [
-		      {
-		        "visibility": "off"
-		      }
-		    ]
-		  }
-	]
-    });
-};
-
 window.onload = function(){
 	const priceSlider = document.getElementById('price-slider');
 	const alcoholSlider = document.getElementById('alcohol-slider');
@@ -95,7 +50,6 @@ window.onload = function(){
 		} else {
 			searchVars.serving = '';
 		}
-		
 	});
 
 	// kartan päällä olevan hakukentän suurennuslasi etsii osoitteen mukaan baarit jos osoite ei ole tyhjä
@@ -160,6 +114,8 @@ window.onload = function(){
 
 	// menun avaus
 	document.getElementById('hamburger-menu').addEventListener('click', openMenu);
+
+	document.getElementById('locate').addEventListener('click', () => locateUser(distanceSlider.noUiSlider.get()));
 
 	// sulkee menun kun sen ulkopuolelle klikataan tai kun yläkulman X klikataan
 	document.getElementById('menu-close-x').addEventListener('click', closeMenu);
@@ -239,7 +195,6 @@ window.onload = function(){
 	    
   	});
 
-    locateUser(distanceSlider.noUiSlider.get());
 };
 
 // hakee URLista JSON datan
@@ -295,12 +250,6 @@ function toggleInSearch(li, parentID) {
 		} else {
 			searchVars.types.push(text);
 		}
-	} else if(parentID == "barTypes") {
-		if (searchVars.barTypes.indexOf(text) >= 0) {
-			searchVars.barTypes.splice(searchVars.barTypes.indexOf(text), 1);
-		} else {
-			searchVars.barTypes.push(text);
-		}
 	}
 };
 
@@ -311,7 +260,6 @@ function capitalizeFirstLetter(string) {
 
 // avaa menun merkki- ja laatulistat niitä painettaessa
 function toggleVisible(item){
-	//console.log(item.style.height);
     if (item.style.height === '195px'){
         item.style.height = '0px';
     }else{
@@ -340,7 +288,7 @@ function closeMenu() {
     document.getElementById("menu-oof").style.width = "0";
 };
 
-/* blurraa kartan kun restaurant card avataan */
+/* blurraa kartan kun restaurant card avataan ja baarin kuvaksi loading icon*/
 function openCard() {
 	document.getElementById("restaurant-card").style.right = "0";
 	document.getElementById("card-oof").style.width = "100%";    
@@ -399,7 +347,53 @@ function setRating(rating) {
 	document.getElementById('rating').innerHTML = html;
 };
 
+
 // ----- TÄSTÄ ALASPÄIN VAIN KARTTAAN LIITTYVIÄ FUNKTIOITA ----
+
+// luo kartan 
+function initMap() {
+    map = new google.maps.Map(document.getElementById('map'), {
+      center: {lat: 60.162786, lng: 24.932607},
+      zoom: 14,
+      gestureHandling: 'greedy',
+      styles: [
+		  {
+		    "featureType": "poi",
+		    "elementType": "labels.text",
+		    "stylers": [
+		      {
+		        "visibility": "off"
+		      }
+		    ]
+		  },
+		  {
+		    "featureType": "poi.business",
+		    "stylers": [
+		      {
+		        "visibility": "off"
+		      }
+		    ]
+		  },
+		  {
+		    "featureType": "road",
+		    "elementType": "labels.icon",
+		    "stylers": [
+		      {
+		        "visibility": "off"
+		      }
+		    ]
+		  },
+		  {
+		    "featureType": "transit",
+		    "stylers": [
+		      {
+		        "visibility": "off"
+		      }
+		    ]
+		  }
+	]
+    });
+};
 
 // paikantaa käyttäjän ja hakee lähimmät baarit jos paikannus onnistuu/sallittu
 function locateUser(distance) {
