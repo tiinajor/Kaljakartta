@@ -22,62 +22,70 @@
 <body>
 
 	<div id="side-menu">
-		<a id="menu-close-x" class="closebtn button">x</a>
-
-		<div class="menu-search-container menu-block centered">
-			<input id="menu-searchbox" class="search" type="text" placeholder="Etsi...">
-			<button id="menu-search-button"><img class="button" src="kgps_icons/search.svg"></button>
-		</div>
-	
-		<div id="search-option-buttons" class="centered menu-block">
-			<button id="tapButton" class="search-option button">
-				<img class="icon" src="kgps_icons/beer-tap.svg">Hanat
-			</button>
-			<button id="bottleButton" class="search-option button">
-				<img class="icon" src="kgps_icons/beer-bottle.svg">Pullot
-			</button>
-		</div>
-		
-		<div id="search-option-sliders" class="centered menu-block">
-			<div class="slider-container">
-				<span>Hinta</span>
-				<span id="price" class="right"></span>
-				<div class="slider noUi-extended" id="price-slider"></div>
+		<div class="menu-main-section">
+			<div class="menu-close-container menu-block">
+				<a id="menu-close-x" class="closebtn button">x</a>
 			</div>
 			
-			<div class="slider-container">
-				<span>Vahvuus</span>
-				<span id="alcohol" class="right"></span>
-				<div class="slider noUi-extended" id="alcohol-slider"></div>
-			</div>
 
-			<div class="slider-container">
-				<span>Etäisyys</span>
-				<span id="distance" class="right"></span>
-				<div class="slider noUi-extended" id="distance-slider"></div>
+			<div class="menu-search-container menu-block centered">
+				<input id="menu-searchbox" class="search" type="text" placeholder="Etsi...">
+				<button id="menu-search-button"><img class="button" src="kgps_icons/search.svg"></button>
+			</div>
+		
+			<div id="search-option-buttons" class="centered menu-block">
+				<button id="tapButton" class="search-option button">
+					<img class="icon" src="kgps_icons/beer-tap.svg">Hanat
+				</button>
+				<button id="bottleButton" class="search-option button">
+					<img class="icon" src="kgps_icons/beer-bottle.svg">Pullot
+				</button>
+			</div>
+			
+			<div id="search-option-sliders" class="centered menu-block">
+				<div class="slider-container">
+					<span>Hinta</span>
+					<span id="price" class="right"></span>
+					<div class="slider noUi-extended" id="price-slider"></div>
+				</div>
+				
+				<div class="slider-container">
+					<span>Vahvuus</span>
+					<span id="alcohol" class="right"></span>
+					<div class="slider noUi-extended" id="alcohol-slider"></div>
+				</div>
+
+				<div class="slider-container">
+					<span>Etäisyys</span>
+					<span id="distance" class="right"></span>
+					<div class="slider noUi-extended" id="distance-slider"></div>
+				</div>
+			</div>
+			<div class="lists-container menu-block centered">			
+				<div id="brand-list" class="dropdown button">
+					<div>Olutmerkki<img class="dropdown-icon right" src="kgps_icons/sort-down.svg"></div>
+				</div>
+
+				<div id="type-list" class="dropdown button">
+					<div>Oluttyyppi<img class="dropdown-icon right" src="kgps_icons/sort-down.svg"></div>
+				</div>
 			</div>
 		</div>
-		<div class="lists-container">			
-			<div id="brand-list" class="centered menu-block dropdown button">
-				<div>Olutmerkki<img class="dropdown-icon right" src="kgps_icons/sort-down.svg"></div>
-			</div>
 
-			<div id="type-list" class="centered menu-block dropdown button">
-				<div>Oluttyyppi<img class="dropdown-icon right" src="kgps_icons/sort-down.svg"></div>
+		<div class="menu-buttons">
+			<div class="button-container menu-block centered">
+				<button class="button menu-button button-cancel">Tyhjennä</button>
+				<button class=" button menu-button button-submit">Hae</button>
 			</div>
 		</div>
 		
-
-		<div class="button-container menu-block centered">
-			<button class="button menu-button button-cancel">Tyhjennä</button>
-			<button class=" button menu-button button-submit">Hae</button>
-		</div>
 	</div>
 
 	<div id="restaurant-card">
-		<a id="card-close-x" class="closebtn button">x</a>
+		<a id="card-close-x" class="closebtn button absolute">x</a>
 		
-		<div id="bar-photo" class="hero-image"></div>
+		<div id="bar-photo" class="hero-image">
+		</div>
 
 		<div id="card-content">
 			<div id="card-top-container">
@@ -119,12 +127,13 @@
 	<div id="card-oof" class="out-of-focus-area"></div>
 
 	<header>
-		<button id="hamburger-menu"><img class="menu-icon button" src="kgps_icons/menu.svg"></button>
+		<button id="hamburger-menu" class="header-button"><img class="menu-icon button" src="kgps_icons/menu.svg"></button>
 		<div id="title-container">
 			<p class="title">
 				<a href="index.html"><img class="logo" src="kgps_icons/beer.svg">Kaljakartta</a>
 			</p>
 		</div>
+		<button id="locate" class="header-button"><img class="menu-icon button" src="kgps_icons/user-location.svg"></button>
 	</header>
 
 	<div id="map"></div>

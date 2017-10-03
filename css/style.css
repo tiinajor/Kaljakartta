@@ -46,28 +46,33 @@ body, html {
 }
 
 .closebtn {
+    background-color: #eee;
+    border-radius: 50%;
     color: var(--bg-darker);
     font-size: 1.5em;
-    position: absolute;
+    opacity: 0.75;
+    padding: 0 10px 5px 10px;
     right: 15px;
     text-decoration: none;
     top: 1vh;
-    padding: 0 10px 5px 10px;
-    border-radius: 50%;
-    background-color: #eee;
-    opacity: 0.75;
 }
 
 .closebtn:hover {
-	color: #101010;
 	background-color: var(--bg-neutral);
+	color: #101010;
+}
+
+.absolute {
+    position: absolute;
 }
 
 
 /* ----- HEADER ----- */
 header {
-	height: 60px;
 	background-color: var(--bg-dark);
+	display: flex;
+	height: 60px;
+	justify-content: space-between;
 }
 
 .logo {
@@ -85,8 +90,8 @@ header {
 }
 
 .title a {
-	text-decoration: none;
 	color: inherit;
+	text-decoration: none;
 }
 
 .menu-icon {
@@ -94,23 +99,23 @@ header {
 	padding: 10px;
 }
 
+.header-icon {
+	height: 35px;
+}
+
 #title-container {
 	display: flex;
 	height: 60px;
-	left: 50%;
 	line-height: 60px;
 	min-width: 190px;
-	position: fixed;
-	top: 0;
-	transform: translate(-50%);
 }
 
-#hamburger-menu {
+.header-button {
 	background-color: transparent;
 	border: none;
 }
 
-#hamburger-menu:hover {
+.header-button:hover {
 	background-color: var(--bg-darker);
 }
 /* ----- HEADER LOPPU ----- */
@@ -119,8 +124,8 @@ header {
 
 /* ----- MENU ----- */
 .menu-block {
+	margin: 10px auto;
 	width: calc(100% - 60px);
-	margin-bottom: 10px;
 }
 
 .menu-search-container {
@@ -128,59 +133,28 @@ header {
 }
 
 .menu-search-container input {
-	box-sizing: border-box;
-	height: 30px;
-	padding-left: 5px;
-	color: #202020;
-	flex: 10;
 	border-bottom-left-radius: 5px;
+	border-right:none;
 	border-top-left-radius: 5px;
 	border: 3px solid var(--bg-dark);
-	border-right:none;
+	box-sizing: border-box;
+	color: #202020;
+	flex: 10;
+	height: 30px;
 	outline: none;
+	padding-left: 5px;
 }
 
 .menu-search-container button {
-	flex: 1;
 	background: var(--bg-dark);
-	border-top-right-radius: 5px;
 	border-bottom-right-radius: 5px;
+	border-top-right-radius: 5px;
 	border: 1px solid var(--bg-dark);
+	flex: 1;
 }
 
 .menu-search-container img {
 	height: 20px;
-}
-
-/*
-#search-container button {
-	background: var(--bg-dark);
-	border-radius: 5px;
-	border: 1px solid var(--bg-dark);
-	height: 46px;
-	position: absolute;  
-	right: -44px;
-	width: 50px;
-}
-
-#search-container button img {
-	height: 25px;
-}*/
-
-#side-menu {
-    background-color: var(--bg-light);
-    display: flex;
-    flex-direction: column;
-    font-family: 'Montserrat', sans-serif;
-    height: 100vh;
-    left: -300px;
-    overflow-x: hidden;
-    padding-top: 45px;
-    position: fixed;
-    top: 0;
-    transition: 0.5s;
-    width: 300px;
-    z-index: 50;
 }
 
 .search-option {
@@ -191,9 +165,9 @@ header {
 	color: var(--bg-darker);
 	font: 1em 'Montserrat', sans-serif;
 	height: 85px;
-	top: 1px;
-	position: relative;
 	outline: none;
+	position: relative;
+	top: 1px;
 	width: 100px;
 }
 
@@ -203,6 +177,14 @@ header {
 	top: 0;
 }
 
+.menu-close-container {
+	display: flex;
+	justify-content: flex-end;
+}
+
+.lists-container > div {
+	margin-bottom: 10px;
+}
 
 .slider-container {
 	margin-top: 14px;
@@ -221,18 +203,17 @@ header {
 }
 
 .lists-container {
-	flex: 4;
 }
 
 .button-container {
-	flex: 1.2;
 	display: flex;
+	margin: 20px auto;
 	justify-content: space-around;
 }
 
 .button-cancel {
-	border: 2px solid var(--secondary);
 	background-color: transparent;
+	border: 2px solid var(--secondary);
 }
 
 .button-submit {
@@ -245,11 +226,11 @@ header {
 }
 
 .menu-button {
-	width: 100px;
-	height: 45px;
 	border-radius: 8px;
-	font: 0.9em 'Montserrat', sans-serif;
 	color: var(--bg-darker);
+	font: 0.9em 'Montserrat', sans-serif;
+	height: 45px;
+	width: 100px;
 }
 
 .dropdown {
@@ -319,14 +300,28 @@ header {
 	right: -32px;
 }
 
+#side-menu {
+    background-color: var(--bg-light);
+    display: flex;
+    flex-direction: column;
+    font-family: 'Montserrat', sans-serif;
+    height: 100vh;
+    justify-content: space-between;
+    left: -300px;
+    overflow-x: hidden;
+    position: fixed;
+    top: 0;
+    transition: 0.5s;
+    width: 300px;
+    z-index: 50;
+}
+
 #search-option-sliders {
-	margin: 5px auto 15px auto;
-	flex: 2;
+	margin: 10px auto 20px auto;
 }
 
 #search-option-buttons {
 	display: flex;
-	flex: 1;
 	justify-content: space-between;
 }
 /* ----- MENU LOPPU ----- */
@@ -374,8 +369,8 @@ header {
 }
 
 #bar-name {
-	margin: 0;
 	font-size: 1.8em
+	margin: 0;
 }
 
 #bar-address {
@@ -386,9 +381,9 @@ header {
 }
 
 #card-top-container {
-	margin-top: 20px;
 	display: flex;
 	justify-content: space-between;
+	margin-top: 20px;
 }
 
 #restaurant-card {
@@ -426,15 +421,15 @@ header {
 }
 
 #searchbox {
-	float: left;
-	font-size: 24px;
-	height: 30px;
-	padding: 5px;
-	z-index: 2;	
 	border-radius: 5px;
 	border: 3px solid var(--bg-dark);
 	color: #9DBFAF;
+	float: left;
+	font-size: 24px;
+	height: 30px;
 	outline: none;
+	padding: 5px;
+	z-index: 2;	
 }
 
 #searchbox:focus {
@@ -465,6 +460,8 @@ header {
 .selected-border {
 	border: solid 4px var(--primary)
 }
+
+
 
 
 @media only screen and (min-width: 768px) and (max-width: 1280px) {
