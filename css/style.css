@@ -85,6 +85,7 @@ header {
 	font-family: 'Bebas Neue', sans-serif;
 	font-size: 2.9em;
 	letter-spacing: 1px;
+	line-height: 60px;
 	margin: 0;
 	padding: 0;
 }
@@ -106,7 +107,6 @@ header {
 #title-container {
 	display: flex;
 	height: 60px;
-	line-height: 60px;
 	min-width: 190px;
 }
 
@@ -504,6 +504,7 @@ header {
 
 	.title {
 		font-size: 2.2em;
+		line-height: 55px;
 	}
 
 	.menu-icon {
@@ -513,7 +514,6 @@ header {
 
 	header, #title-container {
 		height: 45px;
-		line-height: 45px;
 	}
 
 	#map {
