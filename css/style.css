@@ -507,9 +507,18 @@ header {
 		max-width: 600px;
 	}
 
+	#card-content {
+		margin: 0 10px;
+	}
+/*
 	#side-menu {
 		height: calc(100vh - 45px);
 	}
+
+	#map {
+		height: calc(100vh -100px);
+	}
+*/
 
 	.logo {
 		height: 30px;
@@ -529,12 +538,15 @@ header {
 	header, #title-container {
 		height: 45px;
 	}
-
-	#map {
-		height: calc(100vh - 100px);
-	}
 }
 
+/*
+@media only screen and (-webkit-min-device-pixel-ratio:0) {
+	#map {
+		height: calc(100vh -100px);
+	}
+}
+*/
 
 
 

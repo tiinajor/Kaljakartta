@@ -22,7 +22,7 @@ window.onload = function(){
 	markers = [];
 
 	//localhost:xxxx/getRestaurant
-	getJSON("https://jsonplaceholder.typicode.com/posts").then(data => console.log(data));;
+	//getJSON("https://jsonplaceholder.typicode.com/posts").then(data => console.log(data));;
 
 	let beerBrands = ["karhu", "koff", "karjala", "lapin kulta", "ale coq", "heineken", "pirkka", "grimbergen", "duvel", "olut"];
 	let beerTypes = ["lager", "tumma lager", "vahva lager", "IPA", "bock", "Stout", "porter", "pils", "vehnäolut", "sahti", "bitter", "dobbelbock", "dry stout", "dunkel", "luostariolut", "imperial stout", "imperial porter", "mead", "trappist"];
@@ -125,7 +125,7 @@ window.onload = function(){
 	document.getElementById('oof').addEventListener('click', closeCard);
 
 	// "hae"-nappi lähettää kyselyn tietokantaan
-	document.getElementsByClassName('button-submit')[0].addEventListener('click', postJSON("http://validate.jsontest.com/?json=", searchVars);
+	document.getElementsByClassName('button-submit')[0].addEventListener('click', postJSON("http://validate.jsontest.com/?json=", searchVars));
 
 	//slaiderien luonti
 	noUiSlider.create(priceSlider, {
@@ -205,12 +205,14 @@ function getJSON(url) {
 	return fetch(url).then(response => response.json());
 };
 
+
+// lähettää parametrit urliin ja vastaanottaa sieltä tulevan JSON datan
 function postJSON(url, param) {
 	let xhr = new XMLHttpRequest();
 	console.log(searchVars);
-	xhr.open("POST", "http://validate.jsontest.com/?json="+ searchVars, true);
+	xhr.open("POST", url+param, true);
 	xhr.setRequestHeader('Content-Type', 'application/json');
-	xhr.send(searchVars); 
+	xhr.send(); 
 
 	xhr.onreadystatechange = function () {
 		if (xhr.readyState == 4 && xhr.status == 200) {
@@ -342,7 +344,7 @@ function renderBarInfo(place) {
 	console.log(place);
 	getJSON(`https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/details/json?reference=${place.reference}&key=AIzaSyDuIpE10xbisU_de-Mg_xR4-OpmOVl3BxA`)
 		.then(data => {
-			console.log(data.results);
+			console.log(data.result);
 			const photoref = data.result.photos[0].photo_reference;
  	 		const maxwidth = "600"; 
  	 		document.getElementById("bar-photo").style.backgroundSize = "cover";
