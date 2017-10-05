@@ -452,6 +452,17 @@ header {
 /* ----- KARTAN HAKUKENTTÄ LOPPU ----- */
 
 
+/* ----- TUTORIAL MODAL ALKU ----- */
+
+.modal-container {
+	height: 100vh;
+	width: 100vw;
+	background-color: #ccc;
+}
+
+
+/* ----- TUTORIAL MODAL LOPPU ----- */
+
 .selected {
 	background-color: #ffffff;
 	color: #101010;
