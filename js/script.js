@@ -98,7 +98,6 @@ window.onload = function(){
 		let icon = this.children[0];
 		toggleVisible(ul);
 		rotateIcon(icon);
-		//closeList(document.getElementById('barType-list'));
 		closeList(document.getElementById('type-list'));
 	});
 
@@ -109,7 +108,6 @@ window.onload = function(){
 		toggleVisible(ul);
 		rotateIcon(icon);
 		closeList(document.getElementById('brand-list'));
-		//closeList(document.getElementById('barType-list'));
 	});
 
 	// menun avaus
@@ -119,12 +117,21 @@ window.onload = function(){
 
 	// sulkee menun kun sen ulkopuolelle klikataan tai kun yläkulman X klikataan
 	document.getElementById('menu-close-x').addEventListener('click', closeMenu);
-	document.getElementById('menu-oof').addEventListener('click', closeMenu);
+	document.getElementById('oof').addEventListener('click', closeMenu);
 
 	// sulkee "restaurant cardin" kun sen ulkopuolelle klikataan tai kun yläkulman X klikataan
 	document.getElementById('card-close-x').addEventListener('click', closeCard);
-	document.getElementById('card-oof').addEventListener('click', closeCard);
+	document.getElementById('oof').addEventListener('click', closeCard);
 
+	document.addEventListener('backbutton', function(){
+  		if(document.getElementById("side-menu").style.left = "0px") {
+	       closeCard;
+	   	return false;
+	  	}
+	  	else {
+	    	navigator.app.exitApp();
+  		}
+	});
 
 	//slaiderien luonti
 	noUiSlider.create(priceSlider, {
@@ -195,7 +202,7 @@ window.onload = function(){
 	    
   	});
 
-  	setTimeout(function() { window.scrollTo(0, 1) }, 100);
+  	createTutorial;
 
 };
 
@@ -281,19 +288,19 @@ function rotateIcon(icon) {
 /* blurraa kartan kun menu avataan */
 function openMenu() {
     document.getElementById("side-menu").style.left = "0px";
-    document.getElementById("menu-oof").style.width = "100%";
+    document.getElementById("oof").style.width = "100%";
 };
 
 /* palauttaa kartan takaisin normaaliksi kun menu suljetaan */
 function closeMenu() {
     document.getElementById("side-menu").style.left = "-300px";
-    document.getElementById("menu-oof").style.width = "0";
+    document.getElementById("oof").style.width = "0";
 };
 
 /* blurraa kartan kun restaurant card avataan ja baarin kuvaksi loading icon*/
 function openCard() {
 	document.getElementById("restaurant-card").style.right = "0";
-	document.getElementById("card-oof").style.width = "100%";    
+	document.getElementById("oof").style.width = "100%";    
 	document.getElementById("bar-photo").style.backgroundImage = "url('kgps_icons/beer-load.gif')";
 	document.getElementById("bar-photo").style.backgroundSize = "150px";
 };
@@ -305,9 +312,14 @@ function closeCard() {
 	} else {
 		document.getElementById("restaurant-card").style.right = "-600px";
 	}
-	document.getElementById("card-oof").style.width = "0";
-    
+	document.getElementById("oof").style.width = "0";
 };
+
+function createTutorial() {
+	const container = document.createElement('div');
+	container.classList.add('modal-container');
+	document.getElementById('oof').after(container);
+}
 
 // lisää restaurant cardiin baarin tiedot
 function renderBarInfo(place) {
@@ -322,7 +334,7 @@ function renderBarInfo(place) {
 	console.log(place);
 	getJSON(`https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/details/json?reference=${place.reference}&key=AIzaSyDuIpE10xbisU_de-Mg_xR4-OpmOVl3BxA`)
 		.then(data => {
-			console.log("data" + data);
+			console.log(data.results);
 			const photoref = data.result.photos[0].photo_reference;
  	 		const maxwidth = "600"; 
  	 		document.getElementById("bar-photo").style.backgroundSize = "cover";
@@ -406,15 +418,8 @@ function locateUser(distance) {
 	          	lng: position.coords.longitude
 	        };
         	map.setCenter(pos);
-        	/* 
-        	let marker = new google.maps.Marker({
-				map: map,
-				position: pos,
-				label: 'YOU',
-				animation: google.maps.Animation.DROP,
-			});
-			markers.push(marker);
-			*/
+
+
         	if(pos != null) {
         		searchNearby(pos, distance);
         	}
@@ -453,7 +458,21 @@ function geocodeAddress(geocoder, map, address, distance) {
 // hakee max 60 baaria annetun sijainnin läheltä
 function searchNearby(loc, distance) {
 	clearMarkers();
+	var image = 'kgps_icons/googledot.png';
+	let marker = new google.maps.Marker({
+		map: map,
+		position: pos,
+		icon : image,
+		animation: google.maps.Animation.DROP,
+	});
+	markers.push(marker);
 	let service = new google.maps.places.PlacesService(map);
+    service.nearbySearch({
+      	location: loc, 
+      	radius: distance,
+      	type: ["night_club"]
+    }, processResults);	
+
     service.nearbySearch({
       	location: loc, 
       	radius: distance,
@@ -477,7 +496,8 @@ function processResults(results, status, pagination) {
 function createMarker(place) {
 	var marker = new google.maps.Marker({
 		map: map,
-		position: place.geometry.location
+		position: place.geometry.location,
+		animation: google.maps.Animation.DROP,
 	});
 	markers.push(marker);
 	google.maps.event.addListener(marker, 'click', function() {
