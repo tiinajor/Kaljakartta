@@ -21,6 +21,7 @@ window.onload = function(){
 	infoWindow = new google.maps.InfoWindow();
 	markers = [];
 
+	//localhost:xxxx/getRestaurant
 	getJSON("https://jsonplaceholder.typicode.com/posts").then(data => console.log(data));;
 
 	let beerBrands = ["karhu", "koff", "karjala", "lapin kulta", "ale coq", "heineken", "pirkka", "grimbergen", "duvel", "olut"];
@@ -123,6 +124,9 @@ window.onload = function(){
 	document.getElementById('card-close-x').addEventListener('click', closeCard);
 	document.getElementById('oof').addEventListener('click', closeCard);
 
+	// "hae"-nappi lähettää kyselyn tietokantaan
+	document.getElementsByClassName('button-submit')[0].addEventListener('click', postJSON("http://validate.jsontest.com/?json=", searchVars);
+
 	//slaiderien luonti
 	noUiSlider.create(priceSlider, {
 		start: 8.5,
@@ -200,6 +204,20 @@ window.onload = function(){
 function getJSON(url) {
 	return fetch(url).then(response => response.json());
 };
+
+function postJSON(url, param) {
+	let xhr = new XMLHttpRequest();
+	console.log(searchVars);
+	xhr.open("POST", "http://validate.jsontest.com/?json="+ searchVars, true);
+	xhr.setRequestHeader('Content-Type', 'application/json');
+	xhr.send(searchVars); 
+
+	xhr.onreadystatechange = function () {
+		if (xhr.readyState == 4 && xhr.status == 200) {
+			console.log(xhr.responseText);               
+		}
+	};
+}
 
 // luo listan divin sisään (aakkosjärjestyksessä ja eka kirjain isolla)
 function createList(list, parentDiv, id) {
