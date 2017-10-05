@@ -123,16 +123,6 @@ window.onload = function(){
 	document.getElementById('card-close-x').addEventListener('click', closeCard);
 	document.getElementById('oof').addEventListener('click', closeCard);
 
-	document.addEventListener('backbutton', function(){
-  		if(document.getElementById("side-menu").style.left = "0px") {
-	       closeCard;
-	   	return false;
-	  	}
-	  	else {
-	    	navigator.app.exitApp();
-  		}
-	});
-
 	//slaiderien luonti
 	noUiSlider.create(priceSlider, {
 		start: 8.5,
