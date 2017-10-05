@@ -369,7 +369,7 @@ header {
 }
 
 #bar-name {
-	font-size: 1.8em
+	font-size: 1.8em;
 	margin: 0;
 }
 
@@ -504,7 +504,7 @@ header {
 
 	.title {
 		font-size: 2.2em;
-		line-height: 55px;
+		line-height: 45px;
 	}
 
 	.menu-icon {
@@ -517,7 +517,7 @@ header {
 	}
 
 	#map {
-		height: calc(100vh - 60px);
+		height: calc(100vh - 45px);
 	}
 }
 
