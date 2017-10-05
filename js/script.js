@@ -487,7 +487,8 @@ function processResults(results, status, pagination) {
 			pagination.nextPage();
 		}
 		for (var i = 0; i < results.length; i++) {
-			createMarker(results[i]);
+			setTimeout((function(i){return function(){createMarker(results[i])};})(i),105*i);
+			//window.setInterval(createMarker(results[i]), 1000);
 		}
     }
 };
@@ -498,6 +499,7 @@ function createMarker(place) {
 		map: map,
 		position: place.geometry.location,
 		animation: google.maps.Animation.DROP,
+		//icon: 'kgps_icons/favicon-32x32.png',
 	});
 	markers.push(marker);
 	google.maps.event.addListener(marker, 'click', function() {
