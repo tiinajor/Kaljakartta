@@ -29,6 +29,10 @@ window.onload = function(){
 	createList(beerBrands, document.getElementById('brand-list'), "brands");
 	createList(beerTypes, document.getElementById('type-list'), "types");
 
+	// asettaa kartan, menun sekä baarikortin korkeuden ja korjaa niitä aina kun ikkunan koko muuttuu
+	setFullHeight;
+	window.addEventListener('resize', setFullHeight);
+
 	// hanat mukana haussa kyllä/ei
 	document.getElementById('tapButton').addEventListener('click', function() {
 		this.classList.toggle('selected');
@@ -193,10 +197,9 @@ window.onload = function(){
 	    const value = alcoholSlider.noUiSlider.get();
 	    searchVars.alcohol.min = value[0];
 	    searchVars.alcohol.max = value[1];
-	    
   	});
 
-  	createTutorial;
+  	createTutorial();
 
 };
 
@@ -216,7 +219,7 @@ function postJSON(url, param) {
 
 	xhr.onreadystatechange = function () {
 		if (xhr.readyState == 4 && xhr.status == 200) {
-			console.log(xhr.responseText);               
+			//console.log(xhr.responseText);               
 		}
 	};
 }
@@ -272,6 +275,16 @@ function toggleInSearch(li, parentID) {
 	}
 };
 
+//laskee ikkunan korkeuden - headerin korkeuden ja asettaa sen karttaan, sekä ikkunan korkeuden menuun ja restaurant cardiin
+function setFullHeight() {
+	let windowHeight = window.innerHeight;
+	let headerHeight = document.getElementsByTagName('header')[0].clientHeight;
+	let mapHeight = windowHeight - headerHeight;
+	document.getElementById('map').style.height = mapHeight + "px";
+	document.getElementById('side-menu').style.height = windowHeight + "px";
+	document.getElementById('restaurant-card').style.height = windowHeight + "px";
+}
+
 // muuttaa ekan kirjaimen isoksi
 function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
@@ -325,11 +338,15 @@ function closeCard() {
 	document.getElementById("oof").style.width = "0";
 };
 
+// luo pop-up ikkunan jossa on käyttöohjeet
 function createTutorial() {
-	const container = document.createElement('div');
-	container.classList.add('modal-container');
-	document.getElementById('oof').after(container);
+	const modal = document.createElement('div');
+	modal.classList.add('modal');
+	const oof = document.getElementById('oof');
+	oof.appendChild(modal);
+	oof.style.width = "100%";
 }
+
 
 // lisää restaurant cardiin baarin tiedot
 function renderBarInfo(place) {

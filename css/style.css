@@ -456,7 +456,21 @@ header {
 .modal-container {
 	height: 100vh;
 	width: 100vw;
-	background-color: #ccc;
+	display: flex;
+	background-color: transparent;
+	opacity: 0;
+	justify-content: center;
+	align-items: center;
+	z-index: 20;
+}
+
+.modal {
+	max-width: 800px;
+	max-height: 600px;
+	height: 75%;
+	width: 90%;
+	border-radius: 12px;
+	background-color: orange;
 }
 
 
