@@ -363,6 +363,8 @@ function renderBarInfo(place) {
 	const barAddress = document.getElementById('bar-address');
 	const barOpen = document.getElementById('bar-open');
 	const barPhoto = document.getElementById('bar-photo');
+	barAddress.innerHTML = " ";
+	barOpen.innerHTML = " ";
 	getJSON(`https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/details/json?reference=${place.reference}&key=AIzaSyDuIpE10xbisU_de-Mg_xR4-OpmOVl3BxA`)
 		.then(data => {
 			console.log(data.result);
