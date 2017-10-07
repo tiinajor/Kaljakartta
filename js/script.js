@@ -29,6 +29,13 @@ window.onload = function(){
 	createList(beerBrands, document.getElementById('brand-list'), "brands");
 	createList(beerTypes, document.getElementById('type-list'), "types");
 
+	//createTutorial();
+
+	// asettaa kartan, menun sekä baarikortin korkeuden ja korjaa niitä aina kun ikkunan koko muuttuu
+	setFullHeight;
+	window.addEventListener('resize', setFullHeight);
+	document.getElementsByClassName('title')[0].innerHTML += ("<span class='beta'>Beta</span>");
+
 	// hanat mukana haussa kyllä/ei
 	document.getElementById('tapButton').addEventListener('click', function() {
 		this.classList.toggle('selected');
@@ -60,7 +67,6 @@ window.onload = function(){
 			geocodeAddress(geocoder, map, input.value, distanceSlider.noUiSlider.get());
 			input.value = '';
 		}
-		
 	});
 
 	// hakukentässä enterin painaminen käynnistää haun myös
@@ -114,6 +120,7 @@ window.onload = function(){
 	// menun avaus
 	document.getElementById('hamburger-menu').addEventListener('click', openMenu);
 
+	// käyttäjän GPS paikannus
 	document.getElementById('locate').addEventListener('click', () => locateUser(distanceSlider.noUiSlider.get()));
 
 	// sulkee menun kun sen ulkopuolelle klikataan tai kun yläkulman X klikataan
@@ -123,6 +130,9 @@ window.onload = function(){
 	// sulkee "restaurant cardin" kun sen ulkopuolelle klikataan tai kun yläkulman X klikataan
 	document.getElementById('card-close-x').addEventListener('click', closeCard);
 	document.getElementById('oof').addEventListener('click', closeCard);
+
+	// sulkee tutorial modalin kun sen ulkopuolelle klikataan tai kun yläkulman X klikataan 
+	//document.getElementById('oof').addEventListener('click', document.getElementsByClassName('modal')[0].remove);
 
 	// "hae"-nappi lähettää kyselyn tietokantaan
 	document.getElementsByClassName('button-submit')[0].addEventListener('click', postJSON("http://validate.jsontest.com/?json=", searchVars));
@@ -193,12 +203,14 @@ window.onload = function(){
 	    const value = alcoholSlider.noUiSlider.get();
 	    searchVars.alcohol.min = value[0];
 	    searchVars.alcohol.max = value[1];
-	    
   	});
-
-  	createTutorial;
-
 };
+// ---- WINDOW.ONLOAD LOPPU ---- 
+
+
+
+
+
 
 // hakee URLista JSON datan
 function getJSON(url) {
@@ -216,7 +228,7 @@ function postJSON(url, param) {
 
 	xhr.onreadystatechange = function () {
 		if (xhr.readyState == 4 && xhr.status == 200) {
-			console.log(xhr.responseText);               
+			//console.log(xhr.responseText);               
 		}
 	};
 }
@@ -237,8 +249,7 @@ function createList(list, parentDiv, id) {
 			this.classList.toggle('selected');
 			toggleInSearch(li, id);
 		});
-		ul.appendChild(li);
-		
+		ul.appendChild(li);	
 	}
 	parentDiv.appendChild(ul);
 };
@@ -271,6 +282,16 @@ function toggleInSearch(li, parentID) {
 		}
 	}
 };
+
+//laskee ikkunan korkeuden - headerin korkeuden ja asettaa sen karttaan, sekä ikkunan korkeuden menuun ja restaurant cardiin
+function setFullHeight() {
+	let windowHeight = window.innerHeight;
+	let headerHeight = document.getElementsByTagName('header')[0].clientHeight;
+	let mapHeight = windowHeight - headerHeight;
+	document.getElementById('map').style.height = mapHeight + "px";
+	document.getElementById('side-menu').style.height = windowHeight + "px";
+	document.getElementById('restaurant-card').style.height = windowHeight + "px";
+}
 
 // muuttaa ekan kirjaimen isoksi
 function capitalizeFirstLetter(string) {
@@ -325,35 +346,38 @@ function closeCard() {
 	document.getElementById("oof").style.width = "0";
 };
 
+// luo pop-up ikkunan jossa on käyttöohjeet
 function createTutorial() {
-	const container = document.createElement('div');
-	container.classList.add('modal-container');
-	document.getElementById('oof').after(container);
+	const modal = document.createElement('div');
+	modal.classList.add('modal');
+	const oof = document.getElementById('oof');
+	oof.appendChild(modal);
+	oof.style.width = "100%";
 }
 
 // lisää restaurant cardiin baarin tiedot
 function renderBarInfo(place) {
-	var openText = "Aukioloajat ei tiedossa";
-	if (place.opening_hours != null) {
-		if(place.opening_hours.open_now) {
-			openText = "Avoinna nyt";
-		} else {
-			openText = "Suljettu";
-		}
-	}
+	const date = new Date();
+	const weekday = date.getDay();
 	console.log(place);
+	const barAddress = document.getElementById('bar-address');
+	const barOpen = document.getElementById('bar-open');
+	const barPhoto = document.getElementById('bar-photo');
+	barAddress.innerHTML = " ";
+	barOpen.innerHTML = " ";
 	getJSON(`https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/details/json?reference=${place.reference}&key=AIzaSyDuIpE10xbisU_de-Mg_xR4-OpmOVl3BxA`)
 		.then(data => {
 			console.log(data.result);
 			const photoref = data.result.photos[0].photo_reference;
  	 		const maxwidth = "600"; 
- 	 		document.getElementById("bar-photo").style.backgroundSize = "cover";
- 	 		document.getElementById('bar-photo').style.backgroundImage = `url(https://maps.googleapis.com/maps/api/place/photo?maxwidth=${maxwidth}&photoreference=${photoref}&key=AIzaSyDuIpE10xbisU_de-Mg_xR4-OpmOVl3BxA)`;
+ 	 		const address = data.result.formatted_address;
+ 	 		barOpen.innerHTML = capitalizeFirstLetter(data.result.opening_hours.weekday_text[weekday]);
+ 	 		barAddress.innerHTML = address.split("," ,2).join();
+ 	 		barPhoto.style.backgroundSize = "cover";
+ 	 		barPhoto.style.backgroundImage = `url(https://maps.googleapis.com/maps/api/place/photo?maxwidth=${maxwidth}&photoreference=${photoref}&key=AIzaSyDuIpE10xbisU_de-Mg_xR4-OpmOVl3BxA)`;
 		});
 
 	document.getElementById('bar-name').innerHTML = place.name;
-	document.getElementById('bar-address').innerHTML = place.vicinity;
-	document.getElementById('bar-desc').innerHTML = openText;
 	setRating(place.rating);
 };
 
@@ -533,3 +557,9 @@ function handleLocationError(browserHasGeolocation, infoWindow, pos) {
 	                      'Error: Your browser doesn\'t support geolocation.');
 	infoWindow.open(map);
 };
+
+/*
+Element.prototype.remove = function() {
+    this.parentElement.removeChild(this);
+};
+*/
