@@ -32,7 +32,7 @@ window.onload = function(){
 	//createTutorial();
 
 	// asettaa kartan, menun sekä baarikortin korkeuden ja korjaa niitä aina kun ikkunan koko muuttuu
-	setFullHeight;
+	setFullHeight();
 	window.addEventListener('resize', setFullHeight);
 	document.getElementsByClassName('title')[0].innerHTML += ("<span class='beta'>Beta</span>");
 
@@ -291,6 +291,7 @@ function setFullHeight() {
 	document.getElementById('map').style.height = mapHeight + "px";
 	document.getElementById('side-menu').style.height = windowHeight + "px";
 	document.getElementById('restaurant-card').style.height = windowHeight + "px";
+	console.log("window: " + windowHeight + " map:" + mapHeight);
 }
 
 // muuttaa ekan kirjaimen isoksi
