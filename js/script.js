@@ -361,24 +361,27 @@ function renderBarInfo(place) {
 	const date = new Date();
 	const weekday = date.getDay();
 	console.log(place);
-	const barAddress = document.getElementById('bar-address');
+	document.getElementById('bar-address').innerHTML = place.vicinity;
 	const barOpen = document.getElementById('bar-open');
+	barOpen.innerHTML = "Aukioloajat ei tiedossa.";
 	const barPhoto = document.getElementById('bar-photo');
-	barAddress.innerHTML = " ";
-	barOpen.innerHTML = " ";
+	document.getElementById('bar-name').innerHTML = place.name;
+	// https://crossorigin.me/
 	getJSON(`https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/details/json?reference=${place.reference}&key=AIzaSyDuIpE10xbisU_de-Mg_xR4-OpmOVl3BxA`)
 		.then(data => {
 			console.log(data.result);
 			const photoref = data.result.photos[0].photo_reference;
  	 		const maxwidth = "600"; 
+ 	 		/* 
  	 		const address = data.result.formatted_address;
+ 	 		barAddress.innerHTML = address.split("," ,2).join(); 
+ 	 		*/
  	 		barOpen.innerHTML = capitalizeFirstLetter(data.result.opening_hours.weekday_text[weekday]);
- 	 		barAddress.innerHTML = address.split("," ,2).join();
  	 		barPhoto.style.backgroundSize = "cover";
  	 		barPhoto.style.backgroundImage = `url(https://maps.googleapis.com/maps/api/place/photo?maxwidth=${maxwidth}&photoreference=${photoref}&key=AIzaSyDuIpE10xbisU_de-Mg_xR4-OpmOVl3BxA)`;
 		});
-
-	document.getElementById('bar-name').innerHTML = place.name;
+	
+	
 	setRating(place.rating);
 };
 
