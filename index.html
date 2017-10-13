@@ -4,7 +4,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 	<meta name="description" content="Huurteisten hinnastot samasta paikasta.">
-	<meta name="keywords" content="olut,kalja,bisse,tuoppi,tölkki,pullo,olutpullo,baari,bar,kuppila,räkälä,urheilubaari,sporttibaari,yökerho,nightclub,pubi">
+	<meta name="keywords" content="olut,kalja,bisse,tuoppi,tölkki,pullo,olutpullo,baari,bar,kuppila,räkälä,urheilubaari,sporttibaari,yökerho,nightclub,pubi,haku,hakukone">
 	<title>Kaljakartta</title>
 	<link rel="stylesheet" href="css/style.css">
 	<link rel="stylesheet" href="css/nouislider.min.css">
@@ -12,7 +12,7 @@
 	<script src="js/script.js"></script>
 	<script src="js/wNumb.js"></script>
 	<script src="js/nouislider.min.js"></script>
-	<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDuIpE10xbisU_de-Mg_xR4-OpmOVl3BxA&libraries=places&callback=initMap"></script>
+	<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDuIpE10xbisU_de-Mg_xR4-OpmOVl3BxA&libraries=places&language=fi&region=FI&callback=initMap"></script>
 	
 	
 	<!-- https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=-33.8670522,151.1957362&radius=500&type=bar&key=AIzaSyDuIpE10xbisU_de-Mg_xR4-OpmOVl3BxA 
@@ -173,7 +173,10 @@
 	<header>
 		<button id="hamburger-menu" class="header-button button"><img class="header-icon" src="kgps_icons/menu.svg"></button>
 		<div id="title-container">
-			<a class="title" href="index.html"><img class="logo" src="kgps_icons/beer.svg">Kaljakartta</a>
+			<a class="title" href="index.html">
+				<img class="logo" src="kgps_icons/beer.svg">
+				<span>Kaljakartta</span>
+			</a>
 		</div>
 		<button id="locate" class="header-button button"><img class="header-icon" src="kgps_icons/user-location.svg"></button>
 	</header>
