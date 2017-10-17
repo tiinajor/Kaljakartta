@@ -21,6 +21,7 @@ window.onload = function(){
 	infoWindow = new google.maps.InfoWindow();
 	markers = [];
 
+	document.getElementsByClassName('title')[0].innerHTML += ("<span class='beta'>Beta</span>");
 	//localhost:xxxx/getRestaurant
 	//getJSON("https://jsonplaceholder.typicode.com/posts").then(data => console.log(data));;
 
@@ -34,7 +35,6 @@ window.onload = function(){
 	// asettaa kartan, menun sekä baarikortin korkeuden ja korjaa niitä aina kun ikkunan koko muuttuu
 	setFullHeight();
 	window.addEventListener('resize', setFullHeight);
-	document.getElementsByClassName('title')[0].innerHTML += ("<span class='beta'>Beta</span>");
 
 	// hanat mukana haussa kyllä/ei
 	document.getElementById('tapButton').addEventListener('click', function() {
@@ -291,7 +291,7 @@ function setFullHeight() {
 	document.getElementById('map').style.height = mapHeight + "px";
 	document.getElementById('side-menu').style.height = windowHeight + "px";
 	document.getElementById('restaurant-card').style.height = windowHeight + "px";
-	console.log("window: " + windowHeight + " map:" + mapHeight);
+	//console.log("window: " + windowHeight + " map:" + mapHeight);
 }
 
 // muuttaa ekan kirjaimen isoksi
@@ -360,7 +360,6 @@ function createTutorial() {
 function renderBarInfo(place) {
 	const date = new Date();
 	const weekday = date.getDay();
-	console.log(place);
 	document.getElementById('bar-address').innerHTML = place.vicinity;
 	const barOpen = document.getElementById('bar-open');
 	barOpen.innerHTML = "Aukioloajat ei tiedossa.";
@@ -376,12 +375,10 @@ function renderBarInfo(place) {
  	 		const address = data.result.formatted_address;
  	 		barAddress.innerHTML = address.split("," ,2).join(); 
  	 		*/
- 	 		barOpen.innerHTML = capitalizeFirstLetter(data.result.opening_hours.weekday_text[weekday]);
+ 	 		barOpen.innerHTML = capitalizeFirstLetter(data.result.opening_hours.weekday_text[weekday-1]);
  	 		barPhoto.style.backgroundSize = "cover";
  	 		barPhoto.style.backgroundImage = `url(https://maps.googleapis.com/maps/api/place/photo?maxwidth=${maxwidth}&photoreference=${photoref}&key=AIzaSyDuIpE10xbisU_de-Mg_xR4-OpmOVl3BxA)`;
 		});
-	
-	
 	setRating(place.rating);
 };
 
@@ -472,28 +469,31 @@ function locateUser(distance) {
 
 // käyttäjän tekemä osoitehaku hakukentässä
 function geocodeAddress(geocoder, map, address, distance) {
-	let userPos;
 	geocoder.geocode(
 		{'address': address,
 		componentRestrictions: {
 			country: 'FI'
 		}}, function(results, status) {
+			console.log(results);
 		if (status == 'OK') {
-			userPos = results[0].geometry.location;
-			map.setCenter(userPos);
+			const searchPos = results[0].geometry.location;
+			map.setCenter(searchPos);
 			let marker = new google.maps.Marker({
 				map: map,
-				position: userPos,
+				position: searchPos,
 			});
 			markers.push(marker);
-			searchNearby(userPos, distance);
+			// jos etsitty paikka on baari -> näyttää vain sen markerin, muuten etsii baarit lähistöltä normaalisti
+			results[0].types.filter(type => type === "bar" || type === "night_club").length > 0 ? searchNearby(searchPos, 1) : searchNearby(searchPos, distance);
+
+			
 		} else {
 			alert('Geocode was not successful for the following reason: ' + status);
 		}
 	})
 };
 
-// hakee max 60 baaria annetun sijainnin läheltä
+// hakee max 120 baaria annetun sijainnin läheltä
 function searchNearby(loc, distance) {
 	clearMarkers();
 	var image = 'kgps_icons/googledot.png';
@@ -525,7 +525,11 @@ function processResults(results, status, pagination) {
 			pagination.nextPage();
 		}
 		for (var i = 0; i < results.length; i++) {
-			setTimeout((function(i){return function(){createMarker(results[i])};})(i),105*i);
+			setTimeout((function(i){
+				return function(){
+					createMarker(results[i]);
+				};
+			})(i),105*i);
 			//window.setInterval(createMarker(results[i]), 1000);
 		}
     }
