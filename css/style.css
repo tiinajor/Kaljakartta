@@ -555,6 +555,13 @@ header {
 
 /* ----- TUTORIAL MODAL LOPPU ----- */
 
+#route {
+	bottom: 0;
+	width: 100%;
+	z-index: 50;
+	overflow-y:  scroll;
+}
+
 .selected {
 	background-color: #ffffff;
 	color: #101010;

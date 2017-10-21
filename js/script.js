@@ -17,9 +17,13 @@ window.onload = function(){
 	const priceSlider = document.getElementById('price-slider');
 	const alcoholSlider = document.getElementById('alcohol-slider');
 	const distanceSlider = document.getElementById('distance-slider');
-	let geocoder = new google.maps.Geocoder();
+	const directionsService = new google.maps.DirectionsService;
+    const directionsRenderer = new google.maps.DirectionsRenderer;
+	const geocoder = new google.maps.Geocoder();
 	infoWindow = new google.maps.InfoWindow();
 	markers = [];
+	directionsRenderer.setMap(map);
+	directionsRenderer.setPanel(document.getElementById('route'));
 
 	document.getElementsByClassName('title')[0].innerHTML += ("<span class='beta'>Beta</span>");
 	//localhost:xxxx/getRestaurant
@@ -29,8 +33,6 @@ window.onload = function(){
 	let beerTypes = ["lager", "tumma lager", "vahva lager", "IPA", "bock", "Stout", "porter", "pils", "vehnäolut", "sahti", "bitter", "dobbelbock", "dry stout", "dunkel", "luostariolut", "imperial stout", "imperial porter", "mead", "trappist"];
 	createList(beerBrands, document.getElementById('brand-list'), "brands");
 	createList(beerTypes, document.getElementById('type-list'), "types");
-
-	//createTutorial();
 
 	// asettaa kartan, menun sekä baarikortin korkeuden ja korjaa niitä aina kun ikkunan koko muuttuu
 	setFullHeight();
@@ -133,6 +135,11 @@ window.onload = function(){
 
 	// sulkee tutorial modalin kun sen ulkopuolelle klikataan tai kun yläkulman X klikataan 
 	//document.getElementById('oof').addEventListener('click', document.getElementsByClassName('modal')[0].remove);
+
+	document.getElementById('bar-address').addEventListener('click', function() {
+		console.log(this.parentElement);
+		calcRoute(directionsService,directionsRenderer,this.textContent);
+	});
 
 	// "hae"-nappi lähettää kyselyn tietokantaan
 	document.getElementsByClassName('button-submit')[0].addEventListener('click', postJSON("http://validate.jsontest.com/?json=", searchVars));
@@ -402,45 +409,37 @@ function setRating(rating) {
 // luo kartan 
 function initMap() {
     map = new google.maps.Map(document.getElementById('map'), {
-      center: {lat: 60.162786, lng: 24.932607},
-      zoom: 14,
-      gestureHandling: 'greedy',
-      styles: [
-		  {
-		    "featureType": "poi",
-		    "elementType": "labels.text",
-		    "stylers": [
-		      {
-		        "visibility": "off"
-		      }
-		    ]
-		  },
-		  {
-		    "featureType": "poi.business",
-		    "stylers": [
-		      {
-		        "visibility": "off"
-		      }
-		    ]
-		  },
-		  {
-		    "featureType": "road",
-		    "elementType": "labels.icon",
-		    "stylers": [
-		      {
-		        "visibility": "off"
-		      }
-		    ]
-		  },
-		  {
-		    "featureType": "transit",
-		    "stylers": [
-		      {
-		        "visibility": "off"
-		      }
-		    ]
-		  }
-	]
+      	center: {lat: 60.162786, lng: 24.932607},
+		zoom: 14,
+		gestureHandling: 'greedy',
+		styles: [
+	  		{
+			    "featureType": "poi",
+			    "elementType": "labels.text",
+			    "stylers": [
+			      	{
+		    			"visibility": "off"
+			      	}
+	    		]
+	  		},
+		  	{
+		    	"featureType": "poi.business",
+		    	"stylers": [
+		      		{
+	        			"visibility": "off"
+			      	}
+		    	]
+		  	},
+		  	{
+		    	"featureType": "road",
+		    	"elementType": "labels.icon",
+		    	"stylers": [
+		      		{
+		        		"visibility": "off"
+		      		}
+		    	]
+		  	}
+		]
     });
 };
 
@@ -453,13 +452,11 @@ function locateUser(distance) {
 	          	lng: position.coords.longitude
 	        };
         	map.setCenter(pos);
-
-
         	if(pos != null) {
         		searchNearby(pos, distance);
         	}
-		 	}, function() {
-    		handleLocationError(true, infoWindow, map.getCenter());
+	 	}, function() {
+			handleLocationError(true, infoWindow, map.getCenter());
   		});
 	} else {
 		// Browser doesn't support Geolocation
@@ -483,15 +480,52 @@ function geocodeAddress(geocoder, map, address, distance) {
 				position: searchPos,
 			});
 			markers.push(marker);
-			// jos etsitty paikka on baari -> näyttää vain sen markerin, muuten etsii baarit lähistöltä normaalisti
+			// jos etsitty paikka on baari/yökerho -> näyttää vain sen markerin, muuten etsii baarit lähistöltä normaalisti
 			results[0].types.filter(type => type === "bar" || type === "night_club").length > 0 ? searchNearby(searchPos, 1) : searchNearby(searchPos, distance);
-
-			
 		} else {
 			alert('Geocode was not successful for the following reason: ' + status);
 		}
 	})
 };
+
+function calcRoute(directionsService, directionsRenderer, endPoint) {
+	if (pos == undefined && navigator.geolocation) {
+  		navigator.geolocation.getCurrentPosition(function(position) {
+	        pos = {
+	          	lat: position.coords.latitude,
+	          	lng: position.coords.longitude
+	        };
+    	});
+    }
+	directionsService.route({
+		origin: pos,
+		destination: endPoint,
+		travelMode: 'TRANSIT',
+		transitOptions: {
+		    modes: ['BUS', 'RAIL'],
+		    routingPreference: 'FEWER_TRANSFERS'
+	  	},
+	}, function(response, status) {
+		if (status === 'OK') {
+			showDirections(directionsRenderer, response);
+		} else {
+			window.alert('Directions request failed due to ' + status);
+		}
+	});
+};
+
+function showDirections(directionsRenderer, response) {
+	clearMarkers();
+	directionsRenderer.setDirections(response);
+	const windowHeight = window.innerHeight;
+	const headerHeight = document.getElementsByTagName('header')[0].clientHeight;
+	const mapHeight = (windowHeight - headerHeight) * 0.6 + "px";
+	const directionsHeight = (windowHeight - headerHeight) * 0.4 + "px";
+	document.getElementById('map').style.height = mapHeight;
+	document.getElementById('route').style.height = directionsHeight;
+	document.getElementById('search-container').style.position = "static";
+	closeCard();
+}
 
 // hakee max 120 baaria annetun sijainnin läheltä
 function searchNearby(loc, distance) {
