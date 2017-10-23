@@ -366,7 +366,7 @@ function createTutorial() {
 // lisää restaurant cardiin baarin tiedot
 function renderBarInfo(place) {
 	const date = new Date();
-	const weekday = date.getDay();
+	const weekday = date.getDay() > 0 ? date.getDay()-1 : 6;
 	document.getElementById('bar-address').innerHTML = place.vicinity;
 	const barOpen = document.getElementById('bar-open');
 	barOpen.innerHTML = "Aukioloajat ei tiedossa.";
@@ -382,7 +382,7 @@ function renderBarInfo(place) {
  	 		const address = data.result.formatted_address;
  	 		barAddress.innerHTML = address.split("," ,2).join(); 
  	 		*/
- 	 		barOpen.innerHTML = capitalizeFirstLetter(data.result.opening_hours.weekday_text[weekday-1]);
+ 	 		barOpen.innerHTML = capitalizeFirstLetter(data.result.opening_hours.weekday_text[weekday]);
  	 		barPhoto.style.backgroundSize = "cover";
  	 		barPhoto.style.backgroundImage = `url(https://maps.googleapis.com/maps/api/place/photo?maxwidth=${maxwidth}&photoreference=${photoref}&key=AIzaSyDuIpE10xbisU_de-Mg_xR4-OpmOVl3BxA)`;
 		});
