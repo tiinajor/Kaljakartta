@@ -88,7 +88,6 @@ window.onload = function(){
 			geocodeAddress(geocoder, map, input.value, distanceSlider.noUiSlider.get());
 			input.value = '';
 		}
-		
 	});
 
 	// menun hakukentässä enterin painaminen käynnistää haun myös
@@ -136,10 +135,13 @@ window.onload = function(){
 	// sulkee tutorial modalin kun sen ulkopuolelle klikataan tai kun yläkulman X klikataan 
 	//document.getElementById('oof').addEventListener('click', document.getElementsByClassName('modal')[0].remove);
 
-	document.getElementById('bar-address').addEventListener('click', function() {
-		console.log(this.parentElement);
-		calcRoute(directionsService,directionsRenderer,this.textContent);
-	});
+	const buttons = document.getElementsByClassName('directions-button');
+	Array.from(buttons).forEach((e) => e.addEventListener('click', function() {
+		const endPoint = document.getElementById('bar-address').textContent;
+		const mode = e.id.toUpperCase();
+		console.log(mode);
+		calcRoute(directionsService,directionsRenderer,endPoint,mode);
+	}));
 
 	// "hae"-nappi lähettää kyselyn tietokantaan
 	document.getElementsByClassName('button-submit')[0].addEventListener('click', postJSON("http://validate.jsontest.com/?json=", searchVars));
@@ -375,7 +377,6 @@ function renderBarInfo(place) {
 	// https://crossorigin.me/
 	getJSON(`https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/details/json?reference=${place.reference}&key=AIzaSyDuIpE10xbisU_de-Mg_xR4-OpmOVl3BxA`)
 		.then(data => {
-			console.log(data.result);
 			const photoref = data.result.photos[0].photo_reference;
  	 		const maxwidth = "600"; 
  	 		/* 
@@ -488,7 +489,7 @@ function geocodeAddress(geocoder, map, address, distance) {
 	})
 };
 
-function calcRoute(directionsService, directionsRenderer, endPoint) {
+function calcRoute(directionsService, directionsRenderer, endPoint, mode) {
 	if (pos == undefined && navigator.geolocation) {
   		navigator.geolocation.getCurrentPosition(function(position) {
 	        pos = {
@@ -500,22 +501,29 @@ function calcRoute(directionsService, directionsRenderer, endPoint) {
 	directionsService.route({
 		origin: pos,
 		destination: endPoint,
-		travelMode: 'TRANSIT',
+		travelMode: mode,
 		transitOptions: {
 		    modes: ['BUS', 'RAIL'],
 		    routingPreference: 'FEWER_TRANSFERS'
 	  	},
+	  	drivingOptions: {
+			departureTime: new Date(Date.now()),
+			trafficModel: 'bestguess'
+		},
+		provideRouteAlternatives: true,
+		region: "FI"
 	}, function(response, status) {
 		if (status === 'OK') {
-			showDirections(directionsRenderer, response);
+			showDirections(directionsRenderer, response, endPoint);
 		} else {
 			window.alert('Directions request failed due to ' + status);
 		}
 	});
 };
 
-function showDirections(directionsRenderer, response) {
-	clearMarkers();
+function showDirections(directionsRenderer, response, endPoint) {
+	//clearMarkers();
+	console.log(endPoint);
 	directionsRenderer.setDirections(response);
 	const windowHeight = window.innerHeight;
 	const headerHeight = document.getElementsByTagName('header')[0].clientHeight;
