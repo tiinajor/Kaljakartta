@@ -18,12 +18,13 @@ window.onload = function(){
 	const alcoholSlider = document.getElementById('alcohol-slider');
 	const distanceSlider = document.getElementById('distance-slider');
 	const directionsService = new google.maps.DirectionsService;
-    const directionsRenderer = new google.maps.DirectionsRenderer;
-	const geocoder = new google.maps.Geocoder();
+    const directionsRenderer = new google.maps.DirectionsRenderer(
+		{
+	  		suppressMarkers: true
+		});
 	infoWindow = new google.maps.InfoWindow();
 	markers = [];
-	directionsRenderer.setMap(map);
-	directionsRenderer.setPanel(document.getElementById('route'));
+	//directionsRenderer.setPanel(document.getElementById('route'));
 
 	document.getElementsByClassName('title')[0].innerHTML += ("<span class='beta'>Beta</span>");
 	//localhost:xxxx/getRestaurant
@@ -66,7 +67,8 @@ window.onload = function(){
 	document.getElementById('search-button').addEventListener('click', function() {
 		const input = document.getElementById('searchbox');
 		if(input.value != '') {
-			geocodeAddress(geocoder, map, input.value, distanceSlider.noUiSlider.get());
+			directionsRenderer.setMap(null);
+			geocodeAddress(input.value, distanceSlider.noUiSlider.get());
 			input.value = '';
 		}
 	});
@@ -76,7 +78,8 @@ window.onload = function(){
 		e.preventDefault();
 		const input = document.getElementById('searchbox');
 		if(e.keyCode == 13 && input.value != ''){ 
-			geocodeAddress(geocoder, map, input.value, distanceSlider.noUiSlider.get());
+			directionsRenderer.setMap(null);
+			geocodeAddress(input.value, distanceSlider.noUiSlider.get());
 			this.value = '';
 		}
 	});
@@ -85,7 +88,8 @@ window.onload = function(){
 	document.getElementById('menu-search-button').addEventListener('click', function() {
 		const input = document.getElementById('menu-searchbox');
 		if(input.value != '') {
-			geocodeAddress(geocoder, map, input.value, distanceSlider.noUiSlider.get());
+			directionsRenderer.setMap(null);
+			geocodeAddress(input.value, distanceSlider.noUiSlider.get());
 			input.value = '';
 		}
 	});
@@ -95,7 +99,8 @@ window.onload = function(){
 		e.preventDefault();
 		const input = document.getElementById('menu-searchbox');
 		if(e.keyCode == 13 && input.value != ''){ 
-			geocodeAddress(geocoder, map, input.value, distanceSlider.noUiSlider.get());
+			directionsRenderer.setMap(null);
+			geocodeAddress(input.value, distanceSlider.noUiSlider.get());
 			this.value = '';
 		}
 	});
@@ -466,7 +471,8 @@ function locateUser(distance) {
 };
 
 // käyttäjän tekemä osoitehaku hakukentässä
-function geocodeAddress(geocoder, map, address, distance) {
+function geocodeAddress(address, distance) {
+	const geocoder = new google.maps.Geocoder();
 	geocoder.geocode(
 		{'address': address,
 		componentRestrictions: {
@@ -498,6 +504,7 @@ function calcRoute(directionsService, directionsRenderer, endPoint, mode) {
 	        };
     	});
     }
+    directionsRenderer.setMap(map);
 	directionsService.route({
 		origin: pos,
 		destination: endPoint,
@@ -522,9 +529,11 @@ function calcRoute(directionsService, directionsRenderer, endPoint, mode) {
 };
 
 function showDirections(directionsRenderer, response, endPoint) {
-	//clearMarkers();
+	clearMarkers();
+	geocodeAddress(endPoint, 5);
 	console.log(endPoint);
 	directionsRenderer.setDirections(response);
+	/*
 	const windowHeight = window.innerHeight;
 	const headerHeight = document.getElementsByTagName('header')[0].clientHeight;
 	const mapHeight = (windowHeight - headerHeight) * 0.6 + "px";
@@ -532,6 +541,7 @@ function showDirections(directionsRenderer, response, endPoint) {
 	document.getElementById('map').style.height = mapHeight;
 	document.getElementById('route').style.height = directionsHeight;
 	document.getElementById('search-container').style.position = "static";
+	*/
 	closeCard();
 }
 
