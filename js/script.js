@@ -18,13 +18,10 @@ window.onload = function(){
 	const alcoholSlider = document.getElementById('alcohol-slider');
 	const distanceSlider = document.getElementById('distance-slider');
 	const directionsService = new google.maps.DirectionsService;
-    const directionsRenderer = new google.maps.DirectionsRenderer(
-		{
-	  		suppressMarkers: true
-		});
+    const directionsRenderer = new google.maps.DirectionsRenderer({suppressMarkers: true});
 	infoWindow = new google.maps.InfoWindow();
 	markers = [];
-	//directionsRenderer.setPanel(document.getElementById('route'));
+	directionsRenderer.setPanel(document.getElementById('route'));
 
 	document.getElementsByClassName('title')[0].innerHTML += ("<span class='beta'>Beta</span>");
 	//localhost:xxxx/getRestaurant
@@ -127,7 +124,13 @@ window.onload = function(){
 	document.getElementById('hamburger-menu').addEventListener('click', openMenu);
 
 	// käyttäjän GPS paikannus
-	document.getElementById('locate').addEventListener('click', () => locateUser(distanceSlider.noUiSlider.get()));
+	document.getElementById('locate').addEventListener('click', () => {
+		document.getElementById('route').style.height = 0+"px";
+		document.getElementById('search-container').style.position = "absolute";
+		setFullHeight();
+		directionsRenderer.setMap(null);
+		locateUser(distanceSlider.noUiSlider.get())
+	});
 
 	// sulkee menun kun sen ulkopuolelle klikataan tai kun yläkulman X klikataan
 	document.getElementById('menu-close-x').addEventListener('click', closeMenu);
@@ -230,7 +233,6 @@ window.onload = function(){
 function getJSON(url) {
 	return fetch(url).then(response => response.json());
 };
-
 
 // lähettää parametrit urliin ja vastaanottaa sieltä tulevan JSON datan
 function postJSON(url, param) {
@@ -374,16 +376,18 @@ function createTutorial() {
 function renderBarInfo(place) {
 	const date = new Date();
 	const weekday = date.getDay() > 0 ? date.getDay()-1 : 6;
-	document.getElementById('bar-address').innerHTML = place.vicinity;
+	const barAddress = document.getElementById('bar-address');
+	const barName = document.getElementById('bar-name');
 	const barOpen = document.getElementById('bar-open');
-	barOpen.innerHTML = "Aukioloajat ei tiedossa.";
 	const barPhoto = document.getElementById('bar-photo');
-	document.getElementById('bar-name').innerHTML = place.name;
-	// https://crossorigin.me/
+	barName.innerHTML = place.name;
+	barAddress.innerHTML = place.vicinity;
+	barOpen.innerHTML = "Aukioloajat ei tiedossa.";
+	
 	getJSON(`https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/details/json?reference=${place.reference}&key=AIzaSyDuIpE10xbisU_de-Mg_xR4-OpmOVl3BxA`)
 		.then(data => {
 			const photoref = data.result.photos[0].photo_reference;
- 	 		const maxwidth = "600"; 
+ 	 		const maxwidth = "1000"; 
  	 		/* 
  	 		const address = data.result.formatted_address;
  	 		barAddress.innerHTML = address.split("," ,2).join(); 
@@ -533,7 +537,6 @@ function showDirections(directionsRenderer, response, endPoint) {
 	geocodeAddress(endPoint, 5);
 	console.log(endPoint);
 	directionsRenderer.setDirections(response);
-	/*
 	const windowHeight = window.innerHeight;
 	const headerHeight = document.getElementsByTagName('header')[0].clientHeight;
 	const mapHeight = (windowHeight - headerHeight) * 0.6 + "px";
@@ -541,11 +544,10 @@ function showDirections(directionsRenderer, response, endPoint) {
 	document.getElementById('map').style.height = mapHeight;
 	document.getElementById('route').style.height = directionsHeight;
 	document.getElementById('search-container').style.position = "static";
-	*/
 	closeCard();
 }
 
-// hakee max 120 baaria annetun sijainnin läheltä
+// hakee max 60 baaria ja 60 yökerhoa annetun sijainnin läheltä
 function searchNearby(loc, distance) {
 	clearMarkers();
 	var image = 'kgps_icons/googledot.png';
@@ -581,8 +583,7 @@ function processResults(results, status, pagination) {
 				return function(){
 					createMarker(results[i]);
 				};
-			})(i),105*i);
-			//window.setInterval(createMarker(results[i]), 1000);
+			})(i),100*i);
 		}
     }
 };
