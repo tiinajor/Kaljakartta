@@ -1,20 +1,22 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fi">
 <head>
 	<meta charset="UTF-8">
+	<meta http-equiv="x-ua-compatible" content="ie=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-	<meta name="description" content="Kolottaako kaljahammastasi, mutta et tiedä missä on lähin baari? Oletko halvan kännin perässä, vai haetko kenties jotain tasokkaampaa? Kaljakartta tarjoaa kaiken tämän ja enemmän! Hae haluamiasi oluita Suomen tuhansista ravintoloista. Kaljakartta tarjoaa listat seka hinnat lähes kaikkiin Suomen baareihin! Disclaimer: kaljakartta ei ole vastuussa maksa-arvojen äkillisestä kohoamisesta, eikä ole yhteistyössä minkään juottolan kanssa. Käyttäjät ovat itse vastuussa juomisestaan.">
+	<title>Kaljakartta - Huurteisten hinnastot samasta paikasta.</title>
+	<meta name="description" content="Kolottaako kaljahammastasi, mutta et tiedä missä on lähin baari? Oletko halvan kännin perässä, vai haetko kenties jotain tasokkaampaa? Kaljakartasta löydät oluiden hinnastot lähes kaikkiin Suomen baareihin!">
 	<meta name="keywords" content="olut,kalja,bisse,tuoppi,tölkki,pullo,olutpullo,baari,bar,kuppila,räkälä,urheilubaari,sporttibaari,yökerho,nightclub,pubi,haku,hakukone,kartta,kaljakartta">
 	<meta name="google-site-verification" content="QKSQah6iJ5sLUY5k7yJdmTt7oqf2WIUzThs8buFcsuQ" />
 	<meta name="mobile-web-app-capable" content="yes">
-	<title>Kaljakartta - Huurteisten hinnastot samasta paikasta.</title>
+	<link rel="stylesheet" href="css/reset.css">
 	<link rel="stylesheet" href="css/style.css">
 	<link rel="stylesheet" href="css/nouislider.min.css">
 	<link rel="icon" type="image/png" sizes="32x32" href="kgps_icons/favicon-32x32.png">
-	<script src="https://apis.google.com/js/api.js" type="text/javascript"></script>
-	<script src="js/script.js"></script>
-	<script src="js/wNumb.js"></script>
-	<script src="js/nouislider.min.js"></script>
+	<script async defer src="https://apis.google.com/js/api.js" type="text/javascript"></script>
+	<script async src="js/script.js"></script>
+	<script async defer src="js/wNumb.js"></script>
+	<script async defer src="js/nouislider.min.js"></script>
 	<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDuIpE10xbisU_de-Mg_xR4-OpmOVl3BxA&libraries=places&language=fi&region=FI&callback=initMap"></script>
 	
 	
@@ -28,22 +30,21 @@
 
 	<div id="side-menu">
 		<div class="menu-main-section">
-			<div class="menu-close-container menu-block">
-				<a id="menu-close-x" class="closebtn button">x</a>
-			</div>
+		 	<div class="close-x-container"> 
+        		<a id="menu-close-x" class="closebtn button">x</a> 
+      		</div> 
 			
-
 			<div class="menu-search-container menu-block centered">
 				<input id="menu-searchbox" class="search" type="text" placeholder="Etsi...">
-				<button id="menu-search-button"><img class="button" src="kgps_icons/search.svg"></button>
+				<button id="menu-search-button"><img class="button" src="kgps_icons/search.svg" alt="haku"></button>
 			</div>
 		
 			<div id="search-option-buttons" class="centered menu-block">
 				<button id="tapButton" class="search-option button">
-					<img class="icon" src="kgps_icons/beer-tap.svg">Hanat
+					<img class="icon" src="kgps_icons/beer-tap.svg" alt="hanat">Hanat
 				</button>
 				<button id="bottleButton" class="search-option button">
-					<img class="icon" src="kgps_icons/beer-bottle.svg">Pullot
+					<img class="icon" src="kgps_icons/beer-bottle.svg" alt="pullot">Pullot
 				</button>
 			</div>
 			
@@ -68,11 +69,11 @@
 			</div>
 			<div class="lists-container menu-block centered">			
 				<div id="brand-list" class="dropdown button">
-					<div>Olutmerkki<img class="dropdown-icon right" src="kgps_icons/sort-down.svg"></div>
+					<div>Olutmerkki<img class="dropdown-icon right" src="kgps_icons/sort-down.svg" alt="nuoli-alas"></div>
 				</div>
 
 				<div id="type-list" class="dropdown button">
-					<div>Oluttyyppi<img class="dropdown-icon right" src="kgps_icons/sort-down.svg"></div>
+					<div>Oluttyyppi<img class="dropdown-icon right" src="kgps_icons/sort-down.svg" alt="nuoli-alas"></div>
 				</div>
 			</div>
 		</div>
@@ -86,7 +87,9 @@
 	</div>
 
 	<div id="restaurant-card">
-		<a id="card-close-x" class="closebtn button absolute">x</a>
+		<div class="close-x-container"> 
+    		<a id="card-close-x" class="closebtn button">x</a>
+  		</div> 
 		
 		<div id="bar-photo" class="hero-image">
 		</div>
@@ -101,10 +104,10 @@
 				<div id="rating"></div>
 			</div>
 			<div class="directions-buttons">
-				<button class="directions-button" id="walking">W</button>
-				<button class="directions-button" id="driving">D</button>
-				<button class="directions-button" id="transit">T</button>
-				<button class="directions-button" id="bicycling">B</button>
+				<button class="directions-button" id="walking"><img class="transit-icon" src="kgps_icons/directions-walk.svg" alt="walk" title="Walking directions"></button>
+				<button class="directions-button" id="driving"><img class="transit-icon" src="kgps_icons/directions-car.svg" alt="drive" title="Driving directions"></button>
+				<button class="directions-button" id="transit"><img class="transit-icon" src="kgps_icons/directions-bus.svg" alt="transit" title="Public transport directions"></button>
+				<button class="directions-button" id="bicycling"><img class="transit-icon" src="kgps_icons/directions-bike.svg" alt="bicycle" title="Bicycle directions"></button>
 			</div>
 			
 			<hr>
@@ -152,23 +155,26 @@
 	<div id="oof" class="out-of-focus-area"></div>
 
 	<header>
-		<button id="hamburger-menu" class="header-button button"><img class="header-icon" src="kgps_icons/menu.svg"></button>
+		<button id="hamburger-menu" class="header-button button"><img class="header-icon" src="kgps_icons/menu.svg" alt="menu"></button>
 		<div id="title-container">
 			<a class="title" href="index.html">
-				<img class="logo" src="kgps_icons/beer.svg">
+				<img class="logo" src="kgps_icons/beer.svg" alt="logo">
 				<span>Kaljakartta</span>
 			</a>
 		</div>
-		<button id="locate" class="header-button button"><img class="header-icon" src="kgps_icons/user-location.svg"></button>
+		<button id="locate" class="header-button button"><img class="header-icon" src="kgps_icons/user-location.svg" alt="paikannus"></button>
 	</header>
-	
 
 	<div id="map"></div>
-	<div id="route"></div>
+	<div id="route">
+		<div class="close-x-container"> 
+    		<a id="route-close-x" class="closebtn button">x</a>
+  		</div> 
+	</div>
 
 	<div id="search-container">
 		<input id="searchbox" class="search" type="text" placeholder="Search...">
-		<button id="search-button"><img class="button" src="kgps_icons/search.svg"></button>
+		<button id="search-button"><img class="button" src="kgps_icons/search.svg" alt="haku"></button>
 	</div>
 
 </body>

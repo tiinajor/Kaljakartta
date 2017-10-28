@@ -34,15 +34,16 @@ body, html {
 }
 
 .closebtn {
-    background-color: #eee;
+    background-color: white;
     border-radius: 50%;
     color: var(--bg-darker);
     font-size: 1.5em;
     opacity: 0.75;
-    padding: 0 10px 5px 10px;
-    right: 15px;
+    padding: 0 8px 5px 8px;
     text-decoration: none;
-    top: 1vh;
+    top: 5px;
+    border: solid 2px var(--bg-darker);
+    margin: 6px;
 }
 
 .closebtn:hover {
@@ -86,7 +87,7 @@ header {
 	        align-items: center;
 }
 
-.beta {
+.version {
 	font-size: 0.35em;
 	letter-spacing: 1px;
 	padding-top: 8px;
@@ -187,7 +188,7 @@ header {
 	top: 0;
 }
 
-.menu-close-container {
+.close-x-container {
 	display: -webkit-box;
 	display: -ms-flexbox;
 	display: flex;
@@ -386,6 +387,11 @@ header {
 	padding-left: 2px;
 }
 
+.transit-icon {
+	height: 30px;
+	padding: 2px;
+}
+
 .column {
 	padding: 0 10px;
 	width: calc(50% - 20px);
@@ -431,7 +437,7 @@ header {
 	font-style: italic;
 	margin: 0;
 	padding-left: 3px;
-	color: #575757;
+	color: #484848;
 }
 
 #bar-open {

@@ -23,7 +23,7 @@ window.onload = function(){
 	markers = [];
 	directionsRenderer.setPanel(document.getElementById('route'));
 
-	document.getElementsByClassName('title')[0].innerHTML += ("<span class='beta'>Beta</span>");
+	document.getElementsByClassName('title')[0].innerHTML += ("<span class='version'>pre-alpha</span>");
 	//localhost:xxxx/getRestaurant
 	//getJSON("https://jsonplaceholder.typicode.com/posts").then(data => console.log(data));;
 
@@ -85,6 +85,7 @@ window.onload = function(){
 	document.getElementById('menu-search-button').addEventListener('click', function() {
 		const input = document.getElementById('menu-searchbox');
 		if(input.value != '') {
+			closeMenu();
 			directionsRenderer.setMap(null);
 			geocodeAddress(input.value, distanceSlider.noUiSlider.get());
 			input.value = '';
@@ -96,13 +97,14 @@ window.onload = function(){
 		e.preventDefault();
 		const input = document.getElementById('menu-searchbox');
 		if(e.keyCode == 13 && input.value != ''){ 
+			closeMenu();
 			directionsRenderer.setMap(null);
 			geocodeAddress(input.value, distanceSlider.noUiSlider.get());
 			this.value = '';
 		}
 	});
 
-	// avaa merkit-listan ja sulkee muut-listat
+	// avaa merkit-listan ja sulkee muut listat
 	document.getElementById('brand-list').children[0].addEventListener('click', function() {
 		let ul = document.getElementById('brand-list').children[1];
 		let icon = this.children[0];
@@ -111,7 +113,7 @@ window.onload = function(){
 		closeList(document.getElementById('type-list'));
 	});
 
-	// avaa oluttyypit-listan ja sulkee muut-listat
+	// avaa oluttyypit-listan ja sulkee muut listat
 	document.getElementById('type-list').children[0].addEventListener('click', function() {
 		let ul = document.getElementById('type-list').children[1];
 		let icon = this.children[0];
@@ -129,7 +131,7 @@ window.onload = function(){
 		document.getElementById('search-container').style.position = "absolute";
 		setFullHeight();
 		directionsRenderer.setMap(null);
-		locateUser(distanceSlider.noUiSlider.get())
+		locateUser(distanceSlider.noUiSlider.get());
 	});
 
 	// sulkee menun kun sen ulkopuolelle klikataan tai kun yläkulman X klikataan
@@ -139,6 +141,12 @@ window.onload = function(){
 	// sulkee "restaurant cardin" kun sen ulkopuolelle klikataan tai kun yläkulman X klikataan
 	document.getElementById('card-close-x').addEventListener('click', closeCard);
 	document.getElementById('oof').addEventListener('click', closeCard);
+
+	document.getElementById('route-close-x').addEventListener('click', function() {
+		directionsRenderer.setMap(null);
+		closeDirections();
+		//searchNearby(searchPos, 1) : searchNearby(searchPos, distance);
+	});
 
 	// sulkee tutorial modalin kun sen ulkopuolelle klikataan tai kun yläkulman X klikataan 
 	//document.getElementById('oof').addEventListener('click', document.getElementsByClassName('modal')[0].remove);
@@ -355,14 +363,21 @@ function openCard() {
 
 /* palauttaa kartan takaisin normaaliksi kun restaurant card suljetaan */
 function closeCard() {
-	if(window.innerWidth <= 600) {
-		document.getElementById("restaurant-card").style.right = "-100%";
-	} else {
-		document.getElementById("restaurant-card").style.right = "-600px";
-	}
+	document.getElementById("restaurant-card").style.right = window.innerWidth <= 600 ? "-100%" : "-600px";
 	document.getElementById("oof").style.width = "0";
 };
 
+function closeDirections() {
+	const windowHeight = window.innerHeight;
+	const headerHeight = document.getElementsByTagName('header')[0].clientHeight;
+	const mapHeight = windowHeight - headerHeight + "px";
+	const directionsHeight = 0 + "px";
+	document.getElementById('map').style.height = mapHeight;
+	document.getElementById('route').style.height = directionsHeight;
+	document.getElementById('search-container').style.position = "fixed";
+}
+
+/*
 // luo pop-up ikkunan jossa on käyttöohjeet
 function createTutorial() {
 	const modal = document.createElement('div');
@@ -371,6 +386,7 @@ function createTutorial() {
 	oof.appendChild(modal);
 	oof.style.width = "100%";
 }
+*/
 
 // lisää restaurant cardiin baarin tiedot
 function renderBarInfo(place) {
@@ -461,10 +477,10 @@ function locateUser(distance) {
 	          	lat: position.coords.latitude,
 	          	lng: position.coords.longitude
 	        };
-        	map.setCenter(pos);
-        	if(pos != null) {
-        		searchNearby(pos, distance);
-        	}
+	        if(pos != null) {
+	    		map.setCenter(pos);
+	    		searchNearby(pos, distance);
+	    	}
 	 	}, function() {
 			handleLocationError(true, infoWindow, map.getCenter());
   		});
@@ -507,7 +523,7 @@ function calcRoute(directionsService, directionsRenderer, endPoint, mode) {
 	          	lng: position.coords.longitude
 	        };
     	});
-    }
+    };
     directionsRenderer.setMap(map);
 	directionsService.route({
 		origin: pos,
@@ -614,13 +630,7 @@ function clearMarkers() {
 function handleLocationError(browserHasGeolocation, infoWindow, pos) {
 	infoWindow.setPosition(pos);
 	infoWindow.setContent(browserHasGeolocation ?
-	                      'Error: The Geolocation service failed.' :
-	                      'Error: Your browser doesn\'t support geolocation.');
+	                      'Error: Paikannus epäonnistui.' :
+	                      'Error: Selaimesi ei tue paikannusta.');
 	infoWindow.open(map);
 };
-
-/*
-Element.prototype.remove = function() {
-    this.parentElement.removeChild(this);
-};
-*/
