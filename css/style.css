@@ -41,9 +41,10 @@ body, html {
     opacity: 0.75;
     padding: 0 8px 5px 8px;
     text-decoration: none;
-    top: 5px;
+    top: 8px;
+    z-index: 20;
     border: solid 2px var(--bg-darker);
-    margin: 6px;
+    position: relative;
 }
 
 .closebtn:hover {
@@ -129,6 +130,10 @@ header {
 .menu-block {
 	margin: 10px auto;
 	width: calc(100% - 60px);
+}
+
+.menu-main-section {
+	position: relative;
 }
 
 .menu-search-container {
@@ -354,6 +359,10 @@ header {
     z-index: 50;
 }
 
+#menu-close-x {
+	left: 88%;
+}
+
 #search-option-sliders {
 	margin: 10px auto 20px auto;
 }
@@ -388,7 +397,7 @@ header {
 }
 
 .transit-icon {
-	height: 30px;
+	height: 20px;
 	padding: 2px;
 }
 
@@ -404,6 +413,10 @@ header {
 
 #card-content {
 	margin: 0 25px;
+}
+
+#card-close-x {
+	left: 94%;
 }
 
 #drinks-container {
@@ -565,7 +578,12 @@ header {
 	bottom: 0;
 	width: 100%;
 	z-index: 50;
+	height:  0;
 	overflow-y:  scroll;
+}
+
+#route-close-x {
+	right: -95%;
 }
 
 .selected {
