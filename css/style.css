@@ -128,12 +128,8 @@ header {
 
 /* ----- MENU ----- */
 .menu-block {
-	margin: 10px auto;
+	margin: 17px auto;
 	width: calc(100% - 60px);
-}
-
-.menu-main-section {
-	position: relative;
 }
 
 .menu-search-container {
@@ -399,6 +395,14 @@ header {
 .transit-icon {
 	height: 20px;
 	padding: 2px;
+}
+
+.directions-buttons {
+	margin-top: 8px;
+}
+
+.directions-button {
+	margin-right: 4px;
 }
 
 .column {
