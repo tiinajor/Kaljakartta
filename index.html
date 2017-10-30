@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fi">
 <head>
 	<meta charset="UTF-8">
 	<meta http-equiv="x-ua-compatible" content="ie=edge">
@@ -30,22 +30,19 @@
 
 	<div id="side-menu">
 		<div class="menu-main-section">
-			<div class="menu-close-container menu-block">
-				<a id="menu-close-x" class="closebtn button">x</a>
-			</div>
+    		<a id="menu-close-x" class="closebtn button">x</a> 
 			
-
 			<div class="menu-search-container menu-block centered">
 				<input id="menu-searchbox" class="search" type="text" placeholder="Etsi...">
-				<button id="menu-search-button"><img class="button" src="kgps_icons/search.svg"></button>
+				<button id="menu-search-button"><img class="button" src="kgps_icons/search.svg" alt="haku"></button>
 			</div>
 		
 			<div id="search-option-buttons" class="centered menu-block">
 				<button id="tapButton" class="search-option button">
-					<img class="icon" src="kgps_icons/beer-tap.svg">Hanat
+					<img class="icon" src="kgps_icons/beer-tap.svg" alt="hanat">Hanat
 				</button>
 				<button id="bottleButton" class="search-option button">
-					<img class="icon" src="kgps_icons/beer-bottle.svg">Pullot
+					<img class="icon" src="kgps_icons/beer-bottle.svg" alt="pullot">Pullot
 				</button>
 			</div>
 			
@@ -70,11 +67,11 @@
 			</div>
 			<div class="lists-container menu-block centered">			
 				<div id="brand-list" class="dropdown button">
-					<div>Olutmerkki<img class="dropdown-icon right" src="kgps_icons/sort-down.svg"></div>
+					<div>Olutmerkki<img class="dropdown-icon right" src="kgps_icons/sort-down.svg" alt="nuoli-alas"></div>
 				</div>
 
 				<div id="type-list" class="dropdown button">
-					<div>Oluttyyppi<img class="dropdown-icon right" src="kgps_icons/sort-down.svg"></div>
+					<div>Oluttyyppi<img class="dropdown-icon right" src="kgps_icons/sort-down.svg" alt="nuoli-alas"></div>
 				</div>
 			</div>
 		</div>
@@ -88,10 +85,11 @@
 	</div>
 
 	<div id="restaurant-card">
-		<a id="card-close-x" class="closebtn button absolute">x</a>
 		
 		<div id="bar-photo" class="hero-image">
+			<a id="card-close-x" class="closebtn button">x</a>
 		</div>
+
 
 		<div id="card-content">
 			<div id="card-top-container">
@@ -102,6 +100,12 @@
 				</div>
 				<div id="rating"></div>
 			</div>
+			<div class="directions-buttons">
+				<button class="directions-button" id="walking"><img class="transit-icon" src="kgps_icons/directions-walk.svg" alt="Kävely" title="Kävely"></button>
+				<button class="directions-button" id="driving"><img class="transit-icon" src="kgps_icons/directions-car.svg" alt="Auto" title="Auto"></button>
+				<button class="directions-button" id="transit"><img class="transit-icon" src="kgps_icons/directions-train.svg" alt="Julkinen Liikenne" title="Julkinen Liikenne"></button>
+				<button class="directions-button" id="bicycling"><img class="transit-icon" src="kgps_icons/directions-bike.svg" alt="Pyöräily" title="Pyöräily"></button>
+			</div>
 			
 			<hr>
 
@@ -109,34 +113,6 @@
 				<div id="tap-selection" class="column">
 					<h3>Hanat</h3>
 					<ul>
-						<li>Karjala III</li>
-						<li>Lapin Kulta IV</li>
-						<li>Happy Joe</li>
-						<li>Hartwall Gin</li>
-						<li>Karjala III</li>
-						<li>Lapin Kulta IV</li>
-						<li>Happy Joe</li>
-						<li>Hartwall Gin</li>
-						<li>Karjala III</li>
-						<li>Lapin Kulta IV</li>
-						<li>Happy Joe</li>
-						<li>Hartwall Gin</li>
-						<li>Karjala III</li>
-						<li>Lapin Kulta IV</li>
-						<li>Happy Joe</li>
-						<li>Hartwall Gin</li>
-						<li>Karjala III</li>
-						<li>Lapin Kulta IV</li>
-						<li>Happy Joe</li>
-						<li>Hartwall Gin</li>
-						<li>Karjala III</li>
-						<li>Lapin Kulta IV</li>
-						<li>Happy Joe</li>
-						<li>Hartwall Gin</li>
-						<li>Karjala III</li>
-						<li>Lapin Kulta IV</li>
-						<li>Happy Joe</li>
-						<li>Hartwall Gin</li>
 						<li>Karjala III</li>
 						<li>Lapin Kulta IV</li>
 						<li>Happy Joe</li>
@@ -176,21 +152,24 @@
 	<div id="oof" class="out-of-focus-area"></div>
 
 	<header>
-		<button id="hamburger-menu" class="header-button button"><img class="header-icon" src="kgps_icons/menu.svg"></button>
+		<button id="hamburger-menu" class="header-button button"><img class="header-icon" src="kgps_icons/menu.svg" alt="menu"></button>
 		<div id="title-container">
 			<a class="title" href="index.html">
-				<img class="logo" src="kgps_icons/beer.svg">
+				<img class="logo" src="kgps_icons/beer.svg" alt="logo">
 				<span>Kaljakartta</span>
 			</a>
 		</div>
-		<button id="locate" class="header-button button"><img class="header-icon" src="kgps_icons/user-location.svg"></button>
+		<button id="locate" class="header-button button"><img class="header-icon" src="kgps_icons/user-location.svg" alt="paikannus"></button>
 	</header>
 
 	<div id="map"></div>
+	<div id="route">
+		<a id="route-close-x" class="closebtn button">x</a>
+	</div>
 
 	<div id="search-container">
-		<input id="searchbox" class="search" type="text" placeholder="Search...">
-		<button id="search-button"><img class="button" src="kgps_icons/search.svg"></button>
+		<input id="searchbox" class="search" type="text" placeholder="Etsi...">
+		<button id="search-button"><img class="button" src="kgps_icons/search.svg" alt="haku"></button>
 	</div>
 
 </body>
