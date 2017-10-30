@@ -83,21 +83,16 @@ header {
 	display:  -webkit-box;
 	display:  -ms-flexbox;
 	display:  flex;
-	-webkit-box-align: center;
-	    -ms-flex-align: center;
-	        align-items: center;
-}
-
-.title span:first-child {
-	align-self: flex-end;
+	-webkit-box-align: baseline;
+	    -ms-flex-align: baseline;
+	        align-items: baseline;
 }
 
 .version {
 	font-size: 0.35em;
 	letter-spacing: 1px;
-	padding-top: 8px;
-	-ms-flex-item-align: baseline;
-	    align-self: baseline;
+	-ms-flex-item-align: flex-start;
+	    align-self: flex-start;
 }
 
 .header-icon {
@@ -110,6 +105,7 @@ header {
 	display: -ms-flexbox;
 	display: flex;
 	height: 60px;
+	align-items: flex-end;
 	min-width: 190px;
 }
 
@@ -646,7 +642,7 @@ header {
 	}
 
 	.logo {
-		height: 30px;
+		height: 27px;
 		padding-right: 0;
 	}
 
