@@ -88,6 +88,10 @@ header {
 	        align-items: center;
 }
 
+.title span:first-child {
+	align-self: flex-end;
+}
+
 .version {
 	font-size: 0.35em;
 	letter-spacing: 1px;
