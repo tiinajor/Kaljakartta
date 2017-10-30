@@ -8,9 +8,21 @@ window.onload = function(){
 	const priceSlider = document.getElementById('price-slider');
 	const alcoholSlider = document.getElementById('alcohol-slider');
 	const distanceSlider = document.getElementById('distance-slider');
+	const buttons = document.getElementsByClassName('directions-button');
+	const handle = document.querySelector('.draggable');
+	const headerElement = document.querySelector('header');
+	let headerHeight = headerElement.clientHeight;
+	let windowHeight = window.innerHeight;
+	const mapElement = document.getElementById('map');
+	const directionsElement = document.getElementById('route');
 	const directionsService = new google.maps.DirectionsService;
     const directionsRenderer = new google.maps.DirectionsRenderer({suppressMarkers: true});
     let serving = '';
+    let mouseDown = false;
+    let mouseStartPos;
+    let handleOffset;
+    let directionsMaxHeight;
+    let mapMinHeight;
     const searchVars = {
 		serving : serving,
 		price : 8.5,
@@ -155,10 +167,28 @@ window.onload = function(){
 		resizeWindow();
 	});
 
-	// sulkee tutorial modalin kun sen ulkopuolelle klikataan tai kun yläkulman X klikataan 
-	//document.getElementById('oof').addEventListener('click', document.getElementsByClassName('modal')[0].remove);
+	// reittioheiden divin koon muuttaminen
+	handle.addEventListener('mousedown', (e) => {
+		mouseDown = true;
+		mouseStartPos = e.pageY;
+		handleOffset = mouseStartPos - handle.getBoundingClientRect().top;
+		directionsMaxHeight = document.querySelector('.adp-list').clientHeight + document.querySelector('.adp').clientHeight + 8;
+		mapMinHeight = windowHeight - headerHeight - directionsMaxHeight;
+	});
+	window.addEventListener('mouseleave', () => mouseDown = false);
+	window.addEventListener('mouseup', () => mouseDown = false);
+	window.addEventListener('mousemove', (e) => {
+		if(!mouseDown) return;
+		e.preventDefault();
+		const handleTopPos = e.pageY - handleOffset;
+		const directionsHeight = windowHeight - handleTopPos;
+		const mapHeight = windowHeight - directionsHeight - headerHeight;		
+		mapElement.style.height = (mapHeight > mapMinHeight) ? mapHeight + "px" : mapMinHeight + "px";
+		directionsElement.style.height = (directionsHeight < directionsMaxHeight) ? directionsHeight + "px" : directionsMaxHeight + "px";
+	});
 
-	const buttons = document.getElementsByClassName('directions-button');
+
+
 	Array.from(buttons).forEach((e) => e.addEventListener('click', function() {
 		const endPoint = document.getElementById('bar-address').textContent;
 		const barName = document.getElementById('bar-name').textContent;
@@ -317,7 +347,7 @@ function toggleInSearch(li, parentID, searchVars) {
 //laskee ikkunan korkeuden - headerin korkeuden ja asettaa sen karttaan, sekä ikkunan korkeuden menuun ja restaurant cardiin
 function resizeWindow() {
 	const windowHeight = window.innerHeight;
-	const headerHeight = document.getElementsByTagName('header')[0].clientHeight;
+	const headerHeight = document.querySelector('header').clientHeight;
 	const routeHeight = document.getElementById('route').clientHeight;
 	const mapHeight = routeHeight > 0 ? (windowHeight - headerHeight - routeHeight) : (windowHeight - headerHeight); 
 	document.getElementById('side-menu').style.height = windowHeight + "px";
@@ -389,7 +419,7 @@ function closeDirections() {
 	const directionsHeight = 0 + "px";
 	document.getElementById('map').style.height = mapHeight;
 	document.getElementById('route').style.height = directionsHeight;
-	document.getElementById('search-container').style.position = "fixed";
+	document.getElementById('search-container').style.display = "block";
 }
 
 /*
@@ -582,7 +612,7 @@ function showDirections(directionsRenderer, response) {
 	directionsRenderer.setDirections(response);
 	const windowHeight = window.innerHeight;
 	document.getElementById('route').style.height = windowHeight * 0.3 + "px";
-	document.getElementById('search-container').style.position = "static";
+	document.getElementById('search-container').style.display = "none";
 	resizeWindow();
 	closeCard();
 }
