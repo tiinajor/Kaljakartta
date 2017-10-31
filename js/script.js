@@ -170,7 +170,7 @@ window.onload = function(){
 		mouseDown = true;
 		mouseStartPos = e.pageY;
 		handleOffset = mouseStartPos - handle.getBoundingClientRect().top;
-		directionsMaxHeight = document.querySelector('.adp-list').clientHeight + document.querySelector('.adp').clientHeight + 8;
+		directionsMaxHeight = document.querySelector('.adp-list').clientHeight + document.querySelector('.adp').clientHeight + 8 || windowHeight - headerHeight;
 		mapMinHeight = windowHeight - headerHeight - directionsMaxHeight;
 	});
 	window.addEventListener('mouseleave', () => mouseDown = false);
@@ -196,7 +196,7 @@ window.onload = function(){
 	}));
 
 	// "hae"-nappi lähettää kyselyn tietokantaan
-	document.getElementsByClassName('button-submit')[0].addEventListener('click', postJSON("http://validate.jsontest.com/?json=", searchVars));
+	//document.getElementsByClassName('button-submit')[0].addEventListener('click', () => postJSON("http://validate.jsontest.com/?json=", searchVars));
 
 	//slaiderien luonti
 	noUiSlider.create(priceSlider, {
@@ -351,7 +351,6 @@ function resizeWindow() {
 	document.getElementById('side-menu').style.height = windowHeight + "px";
 	document.getElementById('restaurant-card').style.height = windowHeight + "px";
 	document.getElementById('map').style.height = mapHeight + "px";
-	/*
 	const closeButtons = document.getElementsByClassName('closebtn');
 	for(let i=0; i<closeButtons.length; i++) {
 		const parentWidth = closeButtons[i].parentElement.clientWidth;
@@ -359,9 +358,7 @@ function resizeWindow() {
 		const fromLeft = parentWidth - closeButton.width - 5;
 		closeButtons[i].style.left = fromLeft + "px";
 	}
-	*/
-
-}
+};
 
 // muuttaa ekan kirjaimen isoksi
 function capitalizeFirstLetter(string) {
