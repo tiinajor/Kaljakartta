@@ -178,6 +178,15 @@ window.onload = function(){
 		directionsMaxHeight = document.querySelector('.adp').clientHeight  + routeOptionsHeight + 8;
 		mapMinHeight = windowHeight - headerHeight - directionsMaxHeight;
 	});
+	handle.addEventListener('touchstart', (e) => {
+		mouseDown = true;
+		mouseStartPos = e.pageY;
+		handleOffset = mouseStartPos - handle.getBoundingClientRect().top;
+		const routeOptionsHeight = document.querySelector('.adp-list') != null ? document.querySelector('.adp-list').clientHeight : 0;
+		directionsMaxHeight = document.querySelector('.adp').clientHeight  + routeOptionsHeight + 8;
+		mapMinHeight = windowHeight - headerHeight - directionsMaxHeight;
+	});
+	window.addEventListener('touchend', () => mouseDown = false);
 	window.addEventListener('mouseleave', () => mouseDown = false);
 	window.addEventListener('mouseup', () => mouseDown = false);
 	window.addEventListener('mousemove', (e) => {
@@ -189,6 +198,7 @@ window.onload = function(){
 		mapElement.style.height = (mapHeight > mapMinHeight) ? mapHeight + "px" : mapMinHeight + "px";
 		directionsElement.style.height = (directionsHeight < directionsMaxHeight) ? directionsHeight + "px" : directionsMaxHeight + "px";
 	});
+
 
 
 
@@ -445,6 +455,7 @@ function renderBarInfo(place) {
 	barName.innerHTML = place.name;
 	barAddress.innerHTML = place.vicinity;
 	barOpen.innerHTML = "Aukioloajat ei tiedossa.";
+	console.log(place);
 	
 	getJSON(`https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/details/json?reference=${place.reference}&key=AIzaSyDuIpE10xbisU_de-Mg_xR4-OpmOVl3BxA`)
 		.then(data => {

@@ -78,9 +78,9 @@ header {
 	display:  -webkit-box;
 	display:  -ms-flexbox;
 	display:  flex;
-	-webkit-box-align: baseline;
-	    -ms-flex-align: baseline;
-	        align-items: baseline;
+	-webkit-box-align: center;
+	    -ms-flex-align: center;
+	        align-items: center;
 }
 
 .version {
@@ -100,7 +100,7 @@ header {
 	display: -ms-flexbox;
 	display: flex;
 	height: 60px;
-	align-items: flex-end;
+	align-items: center;
 	min-width: 190px;
 }
 
@@ -684,6 +684,10 @@ header {
 
 	.title {
 		font-size: 2.2em;
+	}
+
+	.title-text {
+		height: 0.7em;
 	}
 
 	.rating-icon {
