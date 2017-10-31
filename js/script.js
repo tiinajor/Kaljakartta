@@ -37,7 +37,10 @@ window.onload = function(){
 	markers = [];
 	directionsRenderer.setPanel(document.getElementById('route'));
 
-	document.getElementsByClassName('title')[0].innerHTML += ("<span class='version'>alpha</span>");
+	document.querySelector('.title').innerHTML += ("<span class='version'>pre-alpha</span>");
+
+	showModal();
+	
 	//localhost:xxxx/getRestaurant
 	//getJSON("https://jsonplaceholder.typicode.com/posts").then(data => console.log(data));;
 
@@ -64,7 +67,6 @@ window.onload = function(){
 	// pullot mukana haussa kyllä/ei
 	document.getElementById('bottleButton').addEventListener('click', function() {
 		this.classList.toggle('selected');
-		this.classList.toggle('selected-border');
 		if(searchVars.serving == '' || searchVars.serving == 'tap') {
 			searchVars.serving = 'bottle';
 		} else {
@@ -158,6 +160,9 @@ window.onload = function(){
 	// "restaurant cardin" sulkeminen
 	document.getElementById('card-close-x').addEventListener('click', closeCard);
 	document.getElementById('oof').addEventListener('click', closeCard);
+
+	document.getElementById('modal-close-x').addEventListener('click', hideModal);
+	document.getElementById('oof').addEventListener('click', hideModal);
 
 	document.getElementById('route-close-x').addEventListener('click', function() {
 		directionsRenderer.setMap(null);
@@ -351,14 +356,7 @@ function resizeWindow() {
 	document.getElementById('side-menu').style.height = windowHeight + "px";
 	document.getElementById('restaurant-card').style.height = windowHeight + "px";
 	document.getElementById('map').style.height = mapHeight + "px";
-	const closeButtons = document.getElementsByClassName('closebtn');
-	for(let i=0; i<closeButtons.length; i++) {
-		const parentWidth = closeButtons[i].parentElement.clientWidth;
-		const closeButton = closeButtons[i].getBoundingClientRect();
-		const fromLeft = parentWidth - closeButton.width - 5;
-		closeButtons[i].style.left = fromLeft + "px";
-	}
-};
+}
 
 // muuttaa ekan kirjaimen isoksi
 function capitalizeFirstLetter(string) {
@@ -419,16 +417,21 @@ function closeDirections() {
 	document.getElementById('search-container').style.display = "block";
 }
 
-/*
-// luo pop-up ikkunan jossa on käyttöohjeet
-function createTutorial() {
-	const modal = document.createElement('div');
-	modal.classList.add('modal');
+// luo pop-up käyttöohjeet
+function showModal() {
+	const modal = document.getElementById('modal');
 	const oof = document.getElementById('oof');
-	oof.appendChild(modal);
+	modal.classList.add('visible');
 	oof.style.width = "100%";
 }
-*/
+
+// sulkee modalin
+function hideModal() {
+	const modal = document.getElementById('modal');
+	const oof = document.getElementById('oof');
+	modal.style.display = "none";
+	oof.style.width = 0+"px";
+}
 
 // lisää restaurant cardiin baarin tiedot
 function renderBarInfo(place) {
