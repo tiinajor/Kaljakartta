@@ -477,7 +477,7 @@ header {
     -o-transition: 0.5s;
     transition: 0.5s;
     width: 600px;
-    z-index: 50;
+    z-index: 65;
 }
 
 /* ----- RESTAURANT CARD LOPPU -----*/
@@ -590,15 +590,16 @@ header {
 	color: var(--bg-light);
 }
 
-
 /* ----- TUTORIAL MODAL LOPPU ----- */
 
+
+/* ----- ROUTE/NAVIGATION/DIRECTIONS ALKU ----- */
 #route {
 	bottom: 0;
 	width: 100%;
 	z-index: 50;
 	height:  0;
-	overflow-y:  scroll;
+	overflow-y: auto;
 	position: relative;
 	overflow-x: hidden;
 }
@@ -615,6 +616,20 @@ header {
 	width: 100vw;
 	cursor: pointer;
 }
+
+.warnbox-content {
+	margin-top: 9px;
+}
+
+.adp, .adp-list {
+	padding: 0 5px;
+}
+
+.adp-legal {
+	text-align: center;
+}
+
+/* ----- ROUTE/NAVIGATION/DIRECTIONS ALKU ----- */
 
 .selected {
 	color: var(--secondary);

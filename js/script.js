@@ -32,14 +32,13 @@ window.onload = function(){
 		types : []
 	};
 
-
 	infoWindow = new google.maps.InfoWindow();
 	markers = [];
 	directionsRenderer.setPanel(document.getElementById('route'));
 
 	document.querySelector('.title').innerHTML += ("<span class='version'>pre-alpha</span>");
 
-	showModal();
+	//showModal();
 	
 	//localhost:xxxx/getRestaurant
 	//getJSON("https://jsonplaceholder.typicode.com/posts").then(data => console.log(data));;
@@ -175,7 +174,8 @@ window.onload = function(){
 		mouseDown = true;
 		mouseStartPos = e.pageY;
 		handleOffset = mouseStartPos - handle.getBoundingClientRect().top;
-		directionsMaxHeight = document.querySelector('.adp-list').clientHeight + document.querySelector('.adp').clientHeight + 8 || windowHeight - headerHeight;
+		const routeOptionsHeight = document.querySelector('.adp-list') != null ? document.querySelector('.adp-list').clientHeight : 0;
+		directionsMaxHeight = document.querySelector('.adp').clientHeight  + routeOptionsHeight + 8;
 		mapMinHeight = windowHeight - headerHeight - directionsMaxHeight;
 	});
 	window.addEventListener('mouseleave', () => mouseDown = false);
@@ -421,8 +421,9 @@ function closeDirections() {
 function showModal() {
 	const modal = document.getElementById('modal');
 	const oof = document.getElementById('oof');
-	modal.classList.add('visible');
 	oof.style.width = "100%";
+	modal.classList.add('visible');
+	
 }
 
 // sulkee modalin
