@@ -37,7 +37,7 @@ window.onload = function(){
 	markers = [];
 	directionsRenderer.setPanel(document.getElementById('route'));
 
-	document.getElementsByClassName('title')[0].innerHTML += ("<span class='version'>pre-alpha</span>");
+	document.getElementsByClassName('title')[0].innerHTML += ("<span class='version'>alpha</span>");
 	//localhost:xxxx/getRestaurant
 	//getJSON("https://jsonplaceholder.typicode.com/posts").then(data => console.log(data));;
 
@@ -54,7 +54,6 @@ window.onload = function(){
 	document.getElementById('tapButton').addEventListener('click', function() {
 		this.classList.toggle('selected');
 		this.classList.toggle('selected-border');
-		console.log(searchVars.serving);
 		if(searchVars.serving == '' || searchVars.serving == 'bottle') {
 			searchVars.serving = 'tap';
 		} else {
@@ -161,7 +160,6 @@ window.onload = function(){
 	document.getElementById('oof').addEventListener('click', closeCard);
 
 	document.getElementById('route-close-x').addEventListener('click', function() {
-		console.log(markers);
 		directionsRenderer.setMap(null);
 		closeDirections();
 		resizeWindow();
@@ -353,6 +351,7 @@ function resizeWindow() {
 	document.getElementById('side-menu').style.height = windowHeight + "px";
 	document.getElementById('restaurant-card').style.height = windowHeight + "px";
 	document.getElementById('map').style.height = mapHeight + "px";
+	/*
 	const closeButtons = document.getElementsByClassName('closebtn');
 	for(let i=0; i<closeButtons.length; i++) {
 		const parentWidth = closeButtons[i].parentElement.clientWidth;
@@ -360,6 +359,7 @@ function resizeWindow() {
 		const fromLeft = parentWidth - closeButton.width - 5;
 		closeButtons[i].style.left = fromLeft + "px";
 	}
+	*/
 
 }
 
@@ -558,7 +558,6 @@ function geocodeAddress(address, distance) {
 		componentRestrictions: {
 			country: 'FI'
 		}}, function(results, status) {
-			console.log(results);
 		if (status == 'OK') {
 			const searchPos = results[0].geometry.location;
 			map.setCenter(searchPos);
