@@ -178,6 +178,15 @@ window.onload = function(){
 		directionsMaxHeight = document.querySelector('.adp').clientHeight  + routeOptionsHeight + 8;
 		mapMinHeight = windowHeight - headerHeight - directionsMaxHeight;
 	});
+	handle.addEventListener('touchstart', (e) => {
+		mouseDown = true;
+		mouseStartPos = e.pageY;
+		handleOffset = mouseStartPos - handle.getBoundingClientRect().top;
+		const routeOptionsHeight = document.querySelector('.adp-list') != null ? document.querySelector('.adp-list').clientHeight : 0;
+		directionsMaxHeight = document.querySelector('.adp').clientHeight  + routeOptionsHeight + 8;
+		mapMinHeight = windowHeight - headerHeight - directionsMaxHeight;
+	});
+	window.addEventListener('touchend', () => mouseDown = false);
 	window.addEventListener('mouseleave', () => mouseDown = false);
 	window.addEventListener('mouseup', () => mouseDown = false);
 	window.addEventListener('mousemove', (e) => {
@@ -189,6 +198,7 @@ window.onload = function(){
 		mapElement.style.height = (mapHeight > mapMinHeight) ? mapHeight + "px" : mapMinHeight + "px";
 		directionsElement.style.height = (directionsHeight < directionsMaxHeight) ? directionsHeight + "px" : directionsMaxHeight + "px";
 	});
+
 
 
 
@@ -442,23 +452,23 @@ function renderBarInfo(place) {
 	const barName = document.getElementById('bar-name');
 	const barOpen = document.getElementById('bar-open');
 	const barPhoto = document.getElementById('bar-photo');
+	const service = new google.maps.places.PlacesService(map);
+
 	barName.innerHTML = place.name;
-	barAddress.innerHTML = place.vicinity;
-	barOpen.innerHTML = "Aukioloajat ei tiedossa.";
-	
-	getJSON(`https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/details/json?reference=${place.reference}&key=AIzaSyDuIpE10xbisU_de-Mg_xR4-OpmOVl3BxA`)
-		.then(data => {
-			const photoref = data.result.photos[0].photo_reference;
- 	 		const maxwidth = "1000"; 
- 	 		/* 
- 	 		const address = data.result.formatted_address;
- 	 		barAddress.innerHTML = address.split("," ,2).join(); 
- 	 		*/
- 	 		barOpen.innerHTML = capitalizeFirstLetter(data.result.opening_hours.weekday_text[weekday]);
- 	 		barPhoto.style.backgroundSize = "cover";
- 	 		barPhoto.style.backgroundImage = `url(https://maps.googleapis.com/maps/api/place/photo?maxwidth=${maxwidth}&photoreference=${photoref}&key=AIzaSyDuIpE10xbisU_de-Mg_xR4-OpmOVl3BxA)`;
-		});
 	setRating(place.rating);
+	
+	service.getDetails({
+  		placeId: place.place_id
+    }, function(data, status) {
+  		if (status === google.maps.places.PlacesServiceStatus.OK) {
+      		const address = data.formatted_address;
+      		const url = data.photos[0].getUrl({ 'maxWidth': 600 });
+      		barAddress.innerHTML = address.split("," ,2).join(); 
+      		barOpen.innerHTML = capitalizeFirstLetter(data.opening_hours.weekday_text[weekday]);	
+      		barPhoto.style.backgroundSize = "cover";
+ 	 		barPhoto.style.backgroundImage = "url("+url+")";
+  		}
+    });
 };
 
 // asettaa baarin ratinging tuopin kuvina
