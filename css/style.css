@@ -34,17 +34,12 @@ body, html {
 }
 
 .closebtn {
-    background-color: white;
-    border-radius: 50%;
+    background-color: var(--bg-light);
+    border-radius: 20%;
     color: var(--bg-darker);
     font-size: 1.5em;
-    opacity: 0.75;
-    padding: 0 8px 5px 8px;
-    text-decoration: none;
-    top: 8px;
-    z-index: 20;
-    border: solid 2px var(--bg-darker);
-    position: relative;
+    padding: 0 6px 4px 6px;
+    float: right;
 }
 
 .closebtn:hover {
@@ -128,7 +123,7 @@ header {
 
 /* ----- MENU ----- */
 .menu-block {
-	margin: 17px auto;
+	margin: 17px auto 17px 30px;
 	width: calc(100% - 60px);
 }
 
@@ -136,6 +131,8 @@ header {
 	display: -webkit-box;
 	display: -ms-flexbox;
 	display: flex;
+	margin-top: 30px;
+	margin-bottom: 25px;
 }
 
 .menu-search-container input {
@@ -169,7 +166,7 @@ header {
 }
 
 .search-option {
-	background-color: var(--bg-neutral);
+	background-color: #a9a9a9;
 	border-radius: 8px;
 	border: none;
 	-webkit-box-shadow: 0px 2px 4px rgba(0,0,0,0.18);
@@ -317,7 +314,7 @@ header {
 	height: 100vh;
 	position: absolute;
 	width: 0;
-	z-index: 40;
+	z-index: 60;
 }
 
 .noUi-horizontal.noUi-extended {
@@ -352,11 +349,7 @@ header {
     -o-transition: 0.5s;
     transition: 0.5s;
     width: 300px;
-    z-index: 50;
-}
-
-#menu-close-x {
-	left: 88%;
+    z-index: 70;
 }
 
 #search-option-sliders {
@@ -484,7 +477,7 @@ header {
     -o-transition: 0.5s;
     transition: 0.5s;
     width: 600px;
-    z-index: 50;
+    z-index: 65;
 }
 
 /* ----- RESTAURANT CARD LOPPU -----*/
@@ -544,26 +537,38 @@ header {
 
 /* ----- TUTORIAL MODAL ALKU ----- */
 
-.modal-container {
-	height: 100vh;
-	width: 100vw;
-	display: -webkit-box;
-	display: -ms-flexbox;
-	display: flex;
-	background-color: transparent;
-	opacity: 0;
-	-webkit-box-pack: center;
-	    -ms-flex-pack: center;
-	        justify-content: center;
-	-webkit-box-align: center;
-	    -ms-flex-align: center;
-	        align-items: center;
-	z-index: 20;
+.modal-header {
+	background-color: var(--bg-dark);
+	border-top-left-radius: 12px;
+	border-top-right-radius: 12px;
 }
 
-.modal {
+.modal-body, .modal-header {
+	padding: 16px;
+}
+
+.modal-content {
+	height: calc(100% - 32px);
+	overflow-y: auto;
+}
+
+.modal-content h2 {
+	font: 2em 'Bebas Neue', sans-serif;
+	letter-spacing: 1.5px;
+	color: var(--secondary);
+}
+
+.modal-content p {
+	margin-left: 8px;
+	line-height: 1.4em;
+	font-size: 1em;
+	margin-bottom: 8px;
+}
+
+#modal {
 	max-width: 800px;
 	max-height: 600px;
+	font-family: 'Montserrat', sans-serif;
 	height: 75%;
 	width: 90%;
 	position: fixed;
@@ -573,18 +578,28 @@ header {
 	-webkit-transform: translate(-50%, -50%);
 	    -ms-transform: translate(-50%, -50%);
 	        transform: translate(-50%, -50%);
-	background-color: orange;
+	-webkit-box-shadow: 0px 0px 50px 0px rgba(96,96,96,1);
+		-moz-box-shadow: 0px 0px 50px 0px rgba(96,96,96,1);
+			box-shadow: 0px 0px 50px 0px rgba(96,96,96,1);
+	background-color: var(--bg-light);
 }
 
+#modal-close-x {
+	margin: -15px -15px 0 0;
+	background-color: transparent;
+	color: var(--bg-light);
+}
 
 /* ----- TUTORIAL MODAL LOPPU ----- */
 
+
+/* ----- ROUTE/NAVIGATION/DIRECTIONS ALKU ----- */
 #route {
 	bottom: 0;
 	width: 100%;
 	z-index: 50;
 	height:  0;
-	overflow-y:  scroll;
+	overflow-y: auto;
 	position: relative;
 	overflow-x: hidden;
 }
@@ -599,17 +614,26 @@ header {
 	height: 15px;
 	background-color: black;
 	width: 100vw;
+	cursor: pointer;
 }
+
+.warnbox-content {
+	margin-top: 9px;
+}
+
+.adp, .adp-list {
+	padding: 0 5px;
+}
+
+.adp-legal {
+	text-align: center;
+}
+
+/* ----- ROUTE/NAVIGATION/DIRECTIONS ALKU ----- */
 
 .selected {
-	background-color: #ffffff;
-	color: #101010;
+	color: var(--secondary);
 }
-
-.selected-border {
-	border: solid 4px var(--primary)
-}
-
 
 @media only screen and (min-width: 768px) and (max-width: 1280px) {
 	#search-container {
