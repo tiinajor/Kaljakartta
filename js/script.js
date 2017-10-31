@@ -36,7 +36,7 @@ window.onload = function(){
 	markers = [];
 	directionsRenderer.setPanel(document.getElementById('route'));
 
-	document.querySelector('.title').innerHTML += ("<span class='version'>pre-alpha</span>");
+	document.querySelector('.title').innerHTML += ("<span class='version'>alpha</span>");
 
 	//showModal();
 	
