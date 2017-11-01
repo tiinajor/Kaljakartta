@@ -611,6 +611,12 @@ header {
 }
 
 
+/* ----- ROUTE/NAVIGATION/DIRECTIONS LOPPU ----- */
+
+.selected {
+	color: var(--secondary);
+}
+
 @media only screen and (min-width: 768px) and (max-width: 1280px) {
 	#search-container {
 		bottom: 20px;
@@ -622,6 +628,35 @@ header {
 }
 
 @media only screen and (max-width: 767px){
+	.logo {
+		height: 27px;
+		padding-right: 0;
+	}
+
+	.title {
+		font-size: 2.2em;
+	}
+
+	.title-text {
+		height: 0.7em;
+	}
+
+	.rating-icon {
+		width: 26px;
+	}
+
+	.header-icon {
+		height: 25px;
+	}
+
+	.draggable {
+		height: 25px;
+	}
+
+	header, #title-container {
+		height: 45px;
+	}
+
 	#searchbox{
 		font-size: 20px;
 		height: 20px;
@@ -652,26 +687,8 @@ header {
 		min-width: 130px;
 	}
 
-	.logo {
-		height: 30px;
-		padding-right: 0;
-	}
-
-	.title {
-		font-size: 2.2em;
-	}
-
-	.rating-icon {
-		width: 26px;
-	}
-
-	.header-icon {
-		height: 25px;
-
-	}
-
-	header, #title-container {
-		height: 45px;
+	#route-close-x {
+		margin-top: 25px;
 	}
 }
 
