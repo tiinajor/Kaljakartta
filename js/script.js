@@ -11,12 +11,12 @@ window.onload = function(){
 	const buttons = document.getElementsByClassName('directions-button');
 	const handle = document.querySelector('.draggable');
 	const headerElement = document.querySelector('header');
-	let headerHeight = headerElement.clientHeight;
-	let windowHeight = window.innerHeight;
 	const mapElement = document.getElementById('map');
 	const directionsElement = document.getElementById('route');
 	const directionsService = new google.maps.DirectionsService;
     const directionsRenderer = new google.maps.DirectionsRenderer({suppressMarkers: true});
+    let headerHeight = headerElement.clientHeight;
+	let windowHeight = window.innerHeight;
     let serving = '';
     let mouseDown = false;
     let mouseStartPos;
@@ -39,7 +39,6 @@ window.onload = function(){
 	document.querySelector('.title').innerHTML += ("<span class='version'>alpha</span>");
 
 	//showModal();
-	
 	//localhost:xxxx/getRestaurant
 	//getJSON("https://jsonplaceholder.typicode.com/posts").then(data => console.log(data));;
 
@@ -160,16 +159,18 @@ window.onload = function(){
 	document.getElementById('card-close-x').addEventListener('click', closeCard);
 	document.getElementById('oof').addEventListener('click', closeCard);
 
+	// modaalin sulkeminen
 	document.getElementById('modal-close-x').addEventListener('click', hideModal);
 	document.getElementById('oof').addEventListener('click', hideModal);
 
+	// reittiohjeen sulkeminen
 	document.getElementById('route-close-x').addEventListener('click', function() {
 		directionsRenderer.setMap(null);
 		closeDirections();
 		resizeWindow();
 	});
 
-	// reittioheiden divin koon muuttaminen
+	// reittioheiden koon muuttaminen koneella
 	handle.addEventListener('mousedown', (e) => {
 		mouseDown = true;
 		mouseStartPos = e.pageY;
@@ -199,9 +200,29 @@ window.onload = function(){
 		directionsElement.style.height = (directionsHeight < directionsMaxHeight) ? directionsHeight + "px" : directionsMaxHeight + "px";
 	});
 
+	//reittiohjeiden koon muuttaminen mobiilissa
+	handle.addEventListener('touchstart', (e) => {
+		e.preventDefault();
+		mouseDown = true;
+		mouseStartPos = e.touches[0].pageY;
+		handleOffset = mouseStartPos - handle.getBoundingClientRect().top;
+		const routeOptionsHeight = document.querySelector('.adp-list') != null ? document.querySelector('.adp-list').clientHeight : 0;
+		directionsMaxHeight = document.querySelector('.adp').clientHeight  + routeOptionsHeight + 8;
+		mapMinHeight = windowHeight - headerHeight - directionsMaxHeight;
+	});
+	window.addEventListener('touchend', () => mouseDown = false);
+	window.addEventListener('touchcancel', () => mouseDown = false);
+	window.addEventListener('touchmove', (e) => {
+		if(!mouseDown || e.touches.length === 0) return;
+		e.preventDefault();
+		const handleTopPos = e.touches[0].pageY - handleOffset;
+		const directionsHeight = windowHeight - handleTopPos;
+		const mapHeight = windowHeight - directionsHeight - headerHeight;		
+		mapElement.style.height = (mapHeight > mapMinHeight) ? mapHeight + "px" : mapMinHeight + "px";
+		directionsElement.style.height = (directionsHeight < directionsMaxHeight) ? directionsHeight + "px" : directionsMaxHeight + "px";
+	});
 
-
-
+	// reittiohjenapit asettaa kulkuneuvon napin ID:n mukaan
 	Array.from(buttons).forEach((e) => e.addEventListener('click', function() {
 		const endPoint = document.getElementById('bar-address').textContent;
 		const barName = document.getElementById('bar-name').textContent;
@@ -226,7 +247,6 @@ window.onload = function(){
 		  decimals: 1,
 		})
 	});
-
   	noUiSlider.create(alcoholSlider, {
 	    start: [ 2.8, 5.6 ],
 	    connect: true,
@@ -238,7 +258,6 @@ window.onload = function(){
 	      decimals: 1,
 	    })
   	});
-
     noUiSlider.create(distanceSlider, {
 	    start: 500,
 	    connect: [true, false],
@@ -257,12 +276,10 @@ window.onload = function(){
 	    const value = priceSlider.noUiSlider.get();
 	    document.getElementById("price").innerHTML = "0 - " + value + "€";
   	});
-
   	alcoholSlider.noUiSlider.on('update', function() {
 	    const value = alcoholSlider.noUiSlider.get();
 	    document.getElementById("alcohol").innerHTML = value[0] + " - " + value[1] + "%";
   	});
-
   	distanceSlider.noUiSlider.on('update', function() {
 	    const value = distanceSlider.noUiSlider.get();
 	    document.getElementById("distance").innerHTML = "< " + value + "m";
@@ -271,10 +288,8 @@ window.onload = function(){
 	// slaidereiden siirtäminen päivittää hakukriteerit
   	priceSlider.noUiSlider.on('change', function() {
 	    const value = priceSlider.noUiSlider.get();
-	    searchVars.price = value[1];
-	    
+	    searchVars.price = value[1];  
   	});
-
   	alcoholSlider.noUiSlider.on('change', function() {
 	    const value = alcoholSlider.noUiSlider.get();
 	    searchVars.alcohol.min = value[0];
@@ -288,18 +303,17 @@ window.onload = function(){
 
 
 
-// hakee URLista JSON datan
+// GET
 function getJSON(url) {
 	return fetch(url).then(response => response.json());
 };
 
-// lähettää parametrit urliin ja vastaanottaa sieltä tulevan JSON datan
+// POST
 function postJSON(url, param) {
 	let xhr = new XMLHttpRequest();
 	xhr.open("POST", url+param, true);
 	xhr.setRequestHeader('Content-Type', 'application/json');
 	xhr.send(); 
-
 	xhr.onreadystatechange = function () {
 		if (xhr.readyState == 4 && xhr.status == 200) {
 			//console.log(xhr.responseText);               
@@ -307,7 +321,7 @@ function postJSON(url, param) {
 	};
 }
 
-// luo listan divin sisään (aakkosjärjestyksessä ja eka kirjain isolla)
+// luo listan divin sisään (aakkosjärjestyksessä)
 function createList(list, parentDiv, id, searchVars) {
 	const ul = document.createElement('ul');
 	ul.id = id;
@@ -333,7 +347,6 @@ function closeList(div) {
 	let otherList = div.children[1];
 	let otherDiv = div.children[0];
 	let icon = otherDiv.children[0];
-
 	otherList.style.height = '0px';
 	let closed = true;
 	icon.style.transform = "rotate(-90deg)";
@@ -357,7 +370,7 @@ function toggleInSearch(li, parentID, searchVars) {
 	}
 };
 
-//laskee ikkunan korkeuden - headerin korkeuden ja asettaa sen karttaan, sekä ikkunan korkeuden menuun ja restaurant cardiin
+//laskee elementeille uudet korkeudet kun ikkunan koko muuttuu
 function resizeWindow() {
 	const windowHeight = window.innerHeight;
 	const headerHeight = document.querySelector('header').clientHeight;
@@ -368,7 +381,6 @@ function resizeWindow() {
 	document.getElementById('map').style.height = mapHeight + "px";
 }
 
-// muuttaa ekan kirjaimen isoksi
 function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 };
@@ -417,6 +429,7 @@ function closeCard() {
 	document.getElementById("oof").style.width = "0";
 };
 
+// sulkee reittiohjeet
 function closeDirections() {
 	const windowHeight = window.innerHeight;
 	const headerHeight = document.getElementsByTagName('header')[0].clientHeight;
@@ -485,6 +498,7 @@ function setRating(rating) {
 	document.getElementById('rating').innerHTML = html;
 };
 
+// apufunctio hillitsemään windowResize kutsumista
 function debounce(func, wait, immediate) {
 	var timeout;
 	return function() {
@@ -585,6 +599,7 @@ function geocodeAddress(address, distance) {
 	})
 };
 
+// reitti käyttäjän lokaatiosta osoitteeseen
 function calcRoute(directionsService, directionsRenderer, endPoint, mode) {
 	if (pos == undefined && navigator.geolocation) {
   		navigator.geolocation.getCurrentPosition(function(position) {
@@ -618,6 +633,7 @@ function calcRoute(directionsService, directionsRenderer, endPoint, mode) {
 	});
 };
 
+// avaa #route ja näyttää reitin sekä reittiohjeet
 function showDirections(directionsRenderer, response) {
 	directionsRenderer.setDirections(response);
 	const windowHeight = window.innerHeight;
