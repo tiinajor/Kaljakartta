@@ -4,6 +4,15 @@ let pos;
 let infoWindow;
 let markers;
 
+/* TODO
+	- BUG line 631: calcRoute() needs to clear markers except the start and endpoint ones
+	- BUG dragging the route div handle down makes the route div collapse too much 
+
+	- rearrange the top half of the restaurant card (open hours to the right?)
+	- route directions from address too?
+
+ */
+
 window.onload = function(){
 	const priceSlider = document.getElementById('price-slider');
 	const alcoholSlider = document.getElementById('alcohol-slider');
@@ -38,7 +47,7 @@ window.onload = function(){
 
 	document.querySelector('.title').innerHTML += ("<span class='version'>alpha</span>");
 
-	//showModal();
+	showModal();
 	//localhost:xxxx/getRestaurant
 	//getJSON("https://jsonplaceholder.typicode.com/posts").then(data => console.log(data));;
 
@@ -144,7 +153,7 @@ window.onload = function(){
 	// käyttäjän GPS paikannus
 	document.getElementById('locate').addEventListener('click', () => {
 		document.getElementById('route').style.height = 0+"px";
-		document.getElementById('search-container').style.position = "absolute";
+		document.getElementById('search-container').style.display = "block";
 		resizeWindow();
 		directionsRenderer.setMap(null);
 		clearMarkers();
@@ -445,8 +454,7 @@ function showModal() {
 	const modal = document.getElementById('modal');
 	const oof = document.getElementById('oof');
 	oof.style.width = "100%";
-	modal.classList.add('visible');
-	
+	modal.style.display = "block";
 }
 
 // sulkee modalin
@@ -626,22 +634,18 @@ function calcRoute(directionsService, directionsRenderer, endPoint, mode) {
 		region: "FI"
 	}, function(response, status) {
 		if (status === 'OK') {
-			showDirections(directionsRenderer, response);
+			//clearMarkers();
+			directionsRenderer.setDirections(response);
+			const windowHeight = window.innerHeight;
+			document.getElementById('route').style.height = windowHeight * 0.3 + "px";
+			document.getElementById('search-container').style.display = "none";
+			resizeWindow();
+			closeCard();
 		} else {
 			window.alert('Reittioheiden hakeminen ei onnistunut: ' + status);
 		}
 	});
 };
-
-// avaa #route ja näyttää reitin sekä reittiohjeet
-function showDirections(directionsRenderer, response) {
-	directionsRenderer.setDirections(response);
-	const windowHeight = window.innerHeight;
-	document.getElementById('route').style.height = windowHeight * 0.3 + "px";
-	document.getElementById('search-container').style.display = "none";
-	resizeWindow();
-	closeCard();
-}
 
 // hakee max 60 baaria ja 60 yökerhoa annetun sijainnin läheltä
 function searchNearby(loc, distance) {

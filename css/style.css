@@ -574,7 +574,7 @@ header {
 .modal-content h2 {
 	font: 2em 'Bebas Neue', sans-serif;
 	letter-spacing: 1.5px;
-	color: var(--secondary);
+	color: var(--primary);
 }
 
 .modal-content p {
