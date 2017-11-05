@@ -393,6 +393,44 @@ header {
 	width: calc(50% - 10px);
 }
 
+.beers-table {
+	width: 100%;
+}
+
+.beers-table th {
+	padding: 3px 0;
+	border-bottom: 2px solid #808080;
+}
+
+.beers-table tr {
+	display: flex;
+}
+
+.beers-table td {
+	padding: 2px 0 2px 6px;
+}
+
+.beers-table img {
+	height: 18px;
+}
+
+.odd-row {
+	background-color: #cccccc;
+}
+
+.column-s {
+	flex: 1;
+	min-width: 50px;
+}
+
+.column-m {
+	flex: 2;
+}
+
+.column-l {
+	flex: 3;
+}
+
 #openHours p {
 	margin: 0;
 	padding: 0;
