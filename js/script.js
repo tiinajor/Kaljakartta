@@ -53,7 +53,7 @@ window.onload = function(){
 			serving: "tap",
 			brand: "karhu",
 			type: "lager",
-			price: 3.8,
+			price: 3.80,
 			abv: 4.7,
 			vol: 0.5
 		},
@@ -61,7 +61,7 @@ window.onload = function(){
 			serving: "tap",
 			brand: "heineken",
 			type: "lager",
-			price: 4.5,
+			price: 4.50,
 			abv: 4.8,
 			vol: 0.4
 		},
@@ -69,13 +69,13 @@ window.onload = function(){
 			serving: "bottle",
 			brand: "aura",
 			type: "lager",
-			price: 3.9,
+			price: 3.90,
 			abv: 4.7,
 			vol: 0.35
 		},
 		{
 			serving: "bottle",
-			brand: "grimbergen double-ambree",
+			brand: "Grimbergen Double-Ambree",
 			type: "tumma lager",
 			price: 4.95,
 			abv: 8.0,
@@ -84,10 +84,178 @@ window.onload = function(){
 		{
 			serving: "bottle",
 			brand: "Laitilan IPA",
-			type: "IPA",
-			price: 4.3,
+			type: "Ale",
+			price: 4.30,
 			abv: 4.5,
 			vol: 0.568
+		},
+		{
+			serving: "bottle",
+			brand: "Brewdog Punk IPA",
+			type: "Ale",
+			price: 3.39,
+			abv: 5.6,
+			vol: 0.33
+		},
+		{
+			serving: "bottle",
+			brand: "Sandels Vahva",
+			type: "Vahva lager",
+			price: 2.49,
+			abv: 7.5,
+			vol: 0.33
+		},
+		{
+			serving: "bottle",
+			brand: "Saku Porter",
+			type: "Porter",
+			price: 3.69,
+			abv: 6.9,
+			vol: 0.5
+		},
+		{
+			serving: "bottle",
+			brand: "Moa Imperial Stout",
+			type: "Stout",
+			price: 7.91,
+			abv: 10.2,
+			vol: 0.5
+		},
+		{
+			serving: "bottle",
+			brand: "Pyynikin Black IPA",
+			type: "Ale",
+			price: 4.99,
+			abv: 8.5,
+			vol: 0.33
+		},
+		{
+			serving: "tap",
+			brand: "Weihenstephaner Pils",
+			type: "pils",
+			price: 3.68,
+			abv: 5.1,
+			vol: 0.5
+		},
+		{
+			serving: "bottle",
+			brand: "leffe Blonde",
+			type: "Ale",
+			price: 3.92,
+			abv: 6.6,
+			vol: 0.33
+		},
+		{
+			serving: "tap",
+			brand: "Krombacher Weizen",
+			type: "Vehnäolut",
+			price: 3.75,
+			abv: 5.3,
+			vol: 0.5
+		},
+		{
+			serving: "tap",
+			brand: "Olvi A",
+			type: "Lager",
+			price: 4.50,
+			abv: 5.2,
+			vol: 0.4
+		},
+		{
+			serving: "bottle",
+			brand: "Stadin Panimo South Pacific IPL",
+			type: "Lager",
+			price: 4.99,
+			abv: 5.3,
+			vol: 0.33
+		},
+		{
+			serving: "bottle",
+			brand: "Duvel",
+			type: "Ale",
+			price: 3.98,
+			abv: 8.5,
+			vol: 0.33
+		},
+		{
+			serving: "bottle",
+			brand: "Pyynikin Sessio White IPA",
+			type: "Ale",
+			price: 3.62,
+			abv: 4.6,
+			vol: 0.33
+		},
+		{
+			serving: "bottle",
+			brand: "Grimbergen Blanche",
+			type: "Vehnäolut",
+			price: 3.29,
+			abv: 6.0,
+			vol: 0.33
+		},
+		{
+			serving: "bottle",
+			brand: "Sonnisaari Oranki",
+			type: "Ale",
+			price: 4.93,
+			abv: 5.7,
+			vol: 0.33
+		},
+		{
+			serving: "tap",
+			brand: "BrewDog Punk IPA",
+			type: "Ale",
+			price: 6.30,
+			abv: 5.6,
+			vol: 0.4
+		},
+		{
+			serving: "bottle",
+			brand: "Laitilan Savu IPA",
+			type: "Ale",
+			price: 3.99,
+			abv: 5.9,
+			vol: 0.33
+		},
+		{
+			serving: "bottle",
+			brand: "Piraat Tripple Hop",
+			type: "Ale",
+			price: 4.70,
+			abv: 10.5,
+			vol: 0.33
+		},
+		{
+			serving: "bottle",
+			brand: "Fat Lizard Taspy Mary Double IPA",
+			type: "Ale",
+			price: 3.98,
+			abv: 8.0,
+			vol: 0.25
+		},
+		{
+			serving: "tap",
+			brand: "Olvi Tuplapukki",
+			type: "Vahva Lager",
+			price: 7.40,
+			abv: 8.5,
+			vol: 0.5
+		},
+		{
+			serving: "bottle",
+			brand: "Corona Extra",
+			type: "Lager",
+			price: 4.90,
+			abv: 4.5,
+			vol: 0.355
+		},
+		{
+			serving: "bottle",
+			brand: "Olvi Iisalmi IPA",
+			type: "Ale",
+			price: 3.45,
+			abv: 5.0,
+			vol: 0.5
 		}
 	]
 	let beerBrands = ["karhu", "koff", "karjala", "lapin kulta", "ale coq", "heineken", "pirkka", "grimbergen", "duvel", "olut"];
@@ -674,7 +842,9 @@ function debounce(func, wait, immediate) {
 		var callNow = immediate && !timeout;
 		clearTimeout(timeout);
 		timeout = setTimeout(later, wait);
-		if (callNow) func.apply(context, args);
+		if (callNow) {
+			func.apply(context, args)
+		};
 	};
 };
 
@@ -742,6 +912,7 @@ function locateUser(distance) {
 // käyttäjän tekemä osoitehaku hakukentässä
 function geocodeAddress(address, distance) {
 	const geocoder = new google.maps.Geocoder();
+	const image = 'kgps_icons/yellow-marker.png';
 	geocoder.geocode(
 		{'address': address,
 		componentRestrictions: {
@@ -753,6 +924,7 @@ function geocodeAddress(address, distance) {
 			let marker = new google.maps.Marker({
 				map: map,
 				position: searchPos,
+				icon: image
 			});
 			markers.push(marker);
 			// jos etsitty paikka on baari/yökerho -> näyttää vain sen markerin, muuten etsii baarit lähistöltä normaalisti
@@ -809,7 +981,7 @@ function showDirections(directionsRenderer, response) {
 
 // hakee max 60 baaria ja 60 yökerhoa annetun sijainnin läheltä
 function searchNearby(loc, distance) {
-	var image = 'kgps_icons/yellow-marker.png';
+	const image = 'kgps_icons/yellow-marker.png';
 	let marker = new google.maps.Marker({
 		map: map,
 		position: pos,
