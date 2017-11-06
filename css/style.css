@@ -418,6 +418,11 @@ header {
 	background-color: #cccccc;
 }
 
+.column-xs {
+	flex: 1;
+	max-width: 20px;
+}
+
 .column-s {
 	flex: 1;
 	min-width: 50px;
@@ -429,6 +434,11 @@ header {
 
 .column-l {
 	flex: 3;
+}
+
+.card-top-column {
+	display: flex;
+	flex-direction: column;
 }
 
 #openHours p {
@@ -446,6 +456,8 @@ header {
 }
 
 #drinks-container {
+	height: calc(100vh - 340px);
+    overflow-y: auto;
 	display: -webkit-box;
 	display: -ms-flexbox;
 	display: flex;
@@ -472,6 +484,7 @@ header {
 }
 
 #rating {
+	flex: 1;
 	min-width: 160px;
 	-ms-flex-item-align: start;
 	    align-self: flex-start;
@@ -510,6 +523,7 @@ header {
 }
 
 #card-top-container {
+	height: 100px;
 	display: -webkit-box;
 	display: -ms-flexbox;
 	display: flex;

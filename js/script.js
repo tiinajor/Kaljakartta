@@ -91,7 +91,7 @@ window.onload = function(){
 		},
 		{
 			serving: "bottle",
-			brand: "Brewdog Punk IPA",
+			brand: "BrewDog Punk IPA",
 			type: "Ale",
 			price: 3.39,
 			abv: 5.6,
@@ -226,21 +226,22 @@ window.onload = function(){
 			vol: 0.33
 		},
 		{
-			serving: "bottle",
-			brand: "Fat Lizard Taspy Mary Double IPA",
-			type: "Ale",
-			price: 3.98,
-			abv: 8.0,
-			vol: 0.25
-		},
-		{
 			serving: "tap",
 			brand: "Olvi Tuplapukki",
 			type: "Vahva Lager",
 			price: 7.40,
 			abv: 8.5,
 			vol: 0.5
-		},
+		}/*,
+		{
+			serving: "bottle",
+			brand: "Fat Lizard Taspy Mary Double IPA",
+			type: "Ale",
+			price: 3.98,
+			abv: 8.0,
+			vol: 0.25
+		}
+		,
 		{
 			serving: "bottle",
 			brand: "Corona Extra",
@@ -256,7 +257,7 @@ window.onload = function(){
 			price: 3.45,
 			abv: 5.0,
 			vol: 0.5
-		}
+		}*/
 	]
 	let beerBrands = ["karhu", "koff", "karjala", "lapin kulta", "ale coq", "heineken", "pirkka", "grimbergen", "duvel", "olut"];
 	let beerTypes = ["lager", "tumma lager", "vahva lager", "IPA", "bock", "Stout", "porter", "pils", "vehnäolut", "sahti", "bitter", "dobbelbock", "dry stout", "dunkel", "luostariolut", "imperial stout", "imperial porter", "mead", "trappist"];
@@ -586,7 +587,7 @@ function createBeersTable(beers) {
 		beer.serving === "tap" ? src=tapIcon : src=bottleIcon;
 		html += `
 		<tr>
-		<td class="column-s"><img src=${src} alt="pullot"></td>
+		<td class="column-xs"><img src=${src} alt="pullot"></td>
 		<td class="column-l">${brand}</td>
 		<td class="column-m">${type}</td>
 		<td class="column-s">${beer.vol}</td>
