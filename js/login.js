@@ -2,8 +2,8 @@ window.onload = function() {
 	const button = document.querySelector('.button-submit');
 	const usernameField = document.querySelector('input[name="username"]');
 	const passwordField = document.querySelector('input[name="password"]');
-	const usernameErrorField = document.querySelector('.username-invalid');
-	const passwordErrorField = document.querySelector('.password-invalid');
+	const usernameErrorField = document.querySelector('.invalid-user');
+	const passwordErrorField = document.querySelector('.invalid-pw');
 	let username;
 	let password;
 
@@ -11,7 +11,6 @@ window.onload = function() {
 		e.preventDefault();
 		console.log("click");
 		
-
 		if(usernameField.checkValidity()) {
 			username = usernameField.value;
 			usernameErrorField.innerHTML = '';
