@@ -47,7 +47,7 @@ window.onload = function(){
 
 	//showModal();
 	//localhost:xxxx/getRestaurant
-	getJSON("https://localhost:130/restaurant?name=Boothill").then(data => console.log("AKI ON VELHO" + data));;
+	getJSON("http://188.166.162.144:130/restaurants?name=Boothill").then(data => console.log("AKI ON VELHO" + data));;
 	const barBeerList = [
 		{
 			serving: "tap",
