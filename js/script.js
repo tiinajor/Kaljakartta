@@ -47,7 +47,7 @@ window.onload = function(){
 
 	//showModal();
 	//localhost:xxxx/getRestaurant
-	//getJSON("https://jsonplaceholder.typicode.com/posts").then(data => console.log(data));;
+	getJSON("https://localhost:130/restaurant?name=Boothill").then(data => console.log("AKI ON VELHO" + data));;
 	const barBeerList = [
 		{
 			serving: "tap",
