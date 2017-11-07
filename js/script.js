@@ -23,6 +23,13 @@ window.onload = function(){
     let handleOffset;
     let directionsMaxHeight;
     let mapMinHeight;
+    let servingAsc = false;
+    let typeAsc = false;
+    let brandAsc = false;
+    let volAsc = false;
+    let abvAsc = false;
+    let priceAsc = false;
+
     const searchVars = {
 		serving : serving,
 		price : 8.5,
@@ -41,11 +48,265 @@ window.onload = function(){
 	//showModal();
 	//localhost:xxxx/getRestaurant
 	//getJSON("https://jsonplaceholder.typicode.com/posts").then(data => console.log(data));;
-
+	const barBeerList = [
+		{
+			serving: "tap",
+			brand: "karhu",
+			type: "lager",
+			price: 3.80,
+			abv: 4.7,
+			vol: 0.5
+		},
+		{
+			serving: "tap",
+			brand: "heineken",
+			type: "lager",
+			price: 4.50,
+			abv: 4.8,
+			vol: 0.4
+		},
+		{
+			serving: "bottle",
+			brand: "aura",
+			type: "lager",
+			price: 3.90,
+			abv: 4.7,
+			vol: 0.35
+		},
+		{
+			serving: "bottle",
+			brand: "Grimbergen Double-Ambree",
+			type: "tumma lager",
+			price: 4.95,
+			abv: 8.0,
+			vol: 0.33
+		},
+		{
+			serving: "bottle",
+			brand: "Laitilan IPA",
+			type: "Ale",
+			price: 4.30,
+			abv: 4.5,
+			vol: 0.568
+		},
+		{
+			serving: "bottle",
+			brand: "BrewDog Punk IPA",
+			type: "Ale",
+			price: 3.39,
+			abv: 5.6,
+			vol: 0.33
+		},
+		{
+			serving: "bottle",
+			brand: "Sandels Vahva",
+			type: "Vahva lager",
+			price: 2.49,
+			abv: 7.5,
+			vol: 0.33
+		},
+		{
+			serving: "bottle",
+			brand: "Saku Porter",
+			type: "Porter",
+			price: 3.69,
+			abv: 6.9,
+			vol: 0.5
+		},
+		{
+			serving: "bottle",
+			brand: "Moa Imperial Stout",
+			type: "Stout",
+			price: 7.91,
+			abv: 10.2,
+			vol: 0.5
+		},
+		{
+			serving: "bottle",
+			brand: "Pyynikin Black IPA",
+			type: "Ale",
+			price: 4.99,
+			abv: 8.5,
+			vol: 0.33
+		},
+		{
+			serving: "tap",
+			brand: "Weihenstephaner Pils",
+			type: "pils",
+			price: 3.68,
+			abv: 5.1,
+			vol: 0.5
+		},
+		{
+			serving: "bottle",
+			brand: "leffe Blonde",
+			type: "Ale",
+			price: 3.92,
+			abv: 6.6,
+			vol: 0.33
+		},
+		{
+			serving: "tap",
+			brand: "Krombacher Weizen",
+			type: "Vehnäolut",
+			price: 3.75,
+			abv: 5.3,
+			vol: 0.5
+		},
+		{
+			serving: "tap",
+			brand: "Olvi A",
+			type: "Lager",
+			price: 4.50,
+			abv: 5.2,
+			vol: 0.4
+		},
+		{
+			serving: "bottle",
+			brand: "Stadin Panimo South Pacific IPL",
+			type: "Lager",
+			price: 4.99,
+			abv: 5.3,
+			vol: 0.33
+		},
+		{
+			serving: "bottle",
+			brand: "Duvel",
+			type: "Ale",
+			price: 3.98,
+			abv: 8.5,
+			vol: 0.33
+		},
+		{
+			serving: "bottle",
+			brand: "Pyynikin Sessio White IPA",
+			type: "Ale",
+			price: 3.62,
+			abv: 4.6,
+			vol: 0.33
+		},
+		{
+			serving: "bottle",
+			brand: "Grimbergen Blanche",
+			type: "Vehnäolut",
+			price: 3.29,
+			abv: 6.0,
+			vol: 0.33
+		},
+		{
+			serving: "bottle",
+			brand: "Sonnisaari Oranki",
+			type: "Ale",
+			price: 4.93,
+			abv: 5.7,
+			vol: 0.33
+		},
+		{
+			serving: "tap",
+			brand: "BrewDog Punk IPA",
+			type: "Ale",
+			price: 6.30,
+			abv: 5.6,
+			vol: 0.4
+		},
+		{
+			serving: "bottle",
+			brand: "Laitilan Savu IPA",
+			type: "Ale",
+			price: 3.99,
+			abv: 5.9,
+			vol: 0.33
+		},
+		{
+			serving: "bottle",
+			brand: "Piraat Tripple Hop",
+			type: "Ale",
+			price: 4.70,
+			abv: 10.5,
+			vol: 0.33
+		},
+		{
+			serving: "tap",
+			brand: "Olvi Tuplapukki",
+			type: "Vahva Lager",
+			price: 7.40,
+			abv: 8.5,
+			vol: 0.5
+		}/*,
+		{
+			serving: "bottle",
+			brand: "Fat Lizard Taspy Mary Double IPA",
+			type: "Ale",
+			price: 3.98,
+			abv: 8.0,
+			vol: 0.25
+		}
+		,
+		{
+			serving: "bottle",
+			brand: "Corona Extra",
+			type: "Lager",
+			price: 4.90,
+			abv: 4.5,
+			vol: 0.355
+		},
+		{
+			serving: "bottle",
+			brand: "Olvi Iisalmi IPA",
+			type: "Ale",
+			price: 3.45,
+			abv: 5.0,
+			vol: 0.5
+		}*/
+	]
 	let beerBrands = ["karhu", "koff", "karjala", "lapin kulta", "ale coq", "heineken", "pirkka", "grimbergen", "duvel", "olut"];
 	let beerTypes = ["lager", "tumma lager", "vahva lager", "IPA", "bock", "Stout", "porter", "pils", "vehnäolut", "sahti", "bitter", "dobbelbock", "dry stout", "dunkel", "luostariolut", "imperial stout", "imperial porter", "mead", "trappist"];
 	createList(beerBrands, document.getElementById('brand-list'), "brands", searchVars);
 	createList(beerTypes, document.getElementById('type-list'), "types", searchVars);
+	createBeersTable(barBeerList);
+	
+	const theads = document.getElementsByTagName('th');
+	Array.from(theads).forEach((e) => e.addEventListener('click', function() {
+		const column = e.getAttribute('data-id');
+		let sorteValues;
+		switch(column) {
+			case 'serving':
+				servingAsc = !servingAsc;
+				sortedValues = barBeerList.sort(sortBy(column, servingAsc));
+				updateTable(sortedValues);
+				break;
+			case 'brand':
+				brandAsc = !brandAsc;
+				sortedValues = barBeerList.sort(sortBy(column, brandAsc));
+				updateTable(sortedValues);
+				break;
+			case 'type':
+				typeAsc = !typeAsc;
+				sortedValues = barBeerList.sort(sortBy(column, typeAsc));
+				updateTable(sortedValues);
+				break;
+			case 'abv':
+				abvAsc = !abvAsc;
+				sortedValues = barBeerList.sort(sortBy(column, abvAsc));
+				updateTable(sortedValues);
+				break;
+			case 'vol':
+				volAsc = !volAsc;
+				sortedValues = barBeerList.sort(sortBy(column, volAsc));
+				updateTable(sortedValues);
+				break;
+			case 'price':
+				priceAsc = !priceAsc;
+				sortedValues = barBeerList.sort(sortBy(column, priceAsc));
+				updateTable(sortedValues);
+				break;
+			default:
+				break;
+		}
+
+	}));
+
+
 
 	// asettaa kartan, menun, reittiohjeiden sekä baarikortin korkeuden ja korjaa niitä aina kun ikkunan koko muuttuu
 	resizeWindow();
@@ -295,13 +556,85 @@ window.onload = function(){
 	    searchVars.alcohol.min = value[0];
 	    searchVars.alcohol.max = value[1];
   	});
+
+
 };
 // ---- WINDOW.ONLOAD LOPPU ---- 
 
+function createBeersTable(beers) {
+	const table = document.querySelector('.beers-table');
+	const bottleIcon = "kgps_icons/beer-bottle.svg";
+	const tapIcon = "kgps_icons/beer-tap.svg"
+	let html = '';
+	html += `
+	<thead>
+	<tr>
+		<th class="column-s" data-id="serving">Icon</th>
+		<th class="column-l" data-id="brand">Nimi</th>
+		<th class="column-m" data-id="type">Tyyppi</th>
+		<th class="column-s" data-id="vol">Koko (l)</th>
+		<th class="column-s" data-id="abv">Alk-%</th>
+		<th class="column-s" data-id="price">Hinta</th>
+	</tr>
+	</thead>
+	<tbody>`;
+	
+	for(let i=0;i<beers.length;i++) {
+		const beer = beers[i];
+		const brand = capitalizeFirstLetter(beer.brand);
+		const type = capitalizeFirstLetter(beer.type);
+		let src = '';
+		beer.serving === "tap" ? src=tapIcon : src=bottleIcon;
+		html += `
+		<tr>
+		<td class="column-xs"><img src=${src} alt="pullot"></td>
+		<td class="column-l">${brand}</td>
+		<td class="column-m">${type}</td>
+		<td class="column-s">${beer.vol}</td>
+		<td class="column-s">${beer.abv}</td>
+		<td class="column-s">${beer.price}</td>
+		</tr>`;
+	}
+	html += '</tbody>'
+	table.innerHTML = html;
+	const rows = document.getElementsByTagName('tr');
+	for (let i=0; i<rows.length; i++) {
+		if(i % 2 !== 0) {
+			rows[i].classList.add('odd-row');
+		}
+	}
+};
 
+function updateTable(barBeerList) {
+	const rows = document.querySelector('tbody').rows;
+	const bottleIcon = "kgps_icons/beer-bottle.svg";
+	const tapIcon = "kgps_icons/beer-tap.svg"
+	for(let i = 0; i < rows.length; i++){
+		const icon = barBeerList[i].serving === "tap" ? tapIcon : bottleIcon;
+    	rows[i].cells[0].innerHTML = `<img src=${icon}>`;
+    	rows[i].cells[1].textContent = capitalizeFirstLetter(barBeerList[i].brand);
+    	rows[i].cells[2].textContent = capitalizeFirstLetter(barBeerList[i].type);
+    	rows[i].cells[3].textContent = barBeerList[i].vol;
+    	rows[i].cells[4].textContent = barBeerList[i].abv;
+    	rows[i].cells[5].textContent = barBeerList[i].price;
+    }
+}
 
-
-
+function sortBy(col, ascend=true) {
+  	return function(a, b) {
+		if(!a.hasOwnProperty(col) || !b.hasOwnProperty(col)) {
+		  // property doesn't exist on either object
+		    return 0; 
+		}
+		const x = a[col];
+		const y = b[col];
+		if(typeof x === "string" && typeof y === "string") {
+			return ascend ? x.localeCompare(y) : y.localeCompare(x);
+		} else {
+			return ascend ? (parseFloat(x) - parseFloat(y)) : (parseFloat(y) - parseFloat(x));
+		}    
+  	};
+}
 
 // GET
 function getJSON(url) {
@@ -510,7 +843,9 @@ function debounce(func, wait, immediate) {
 		var callNow = immediate && !timeout;
 		clearTimeout(timeout);
 		timeout = setTimeout(later, wait);
-		if (callNow) func.apply(context, args);
+		if (callNow) {
+			func.apply(context, args)
+		};
 	};
 };
 
@@ -578,6 +913,7 @@ function locateUser(distance) {
 // käyttäjän tekemä osoitehaku hakukentässä
 function geocodeAddress(address, distance) {
 	const geocoder = new google.maps.Geocoder();
+	const image = 'kgps_icons/yellow-marker.png';
 	geocoder.geocode(
 		{'address': address,
 		componentRestrictions: {
@@ -589,6 +925,7 @@ function geocodeAddress(address, distance) {
 			let marker = new google.maps.Marker({
 				map: map,
 				position: searchPos,
+				icon: image
 			});
 			markers.push(marker);
 			// jos etsitty paikka on baari/yökerho -> näyttää vain sen markerin, muuten etsii baarit lähistöltä normaalisti
@@ -645,7 +982,7 @@ function showDirections(directionsRenderer, response) {
 
 // hakee max 60 baaria ja 60 yökerhoa annetun sijainnin läheltä
 function searchNearby(loc, distance) {
-	var image = 'kgps_icons/yellow-marker.png';
+	const image = 'kgps_icons/yellow-marker.png';
 	let marker = new google.maps.Marker({
 		map: map,
 		position: pos,

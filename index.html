@@ -86,46 +86,29 @@
 
 		<div id="card-content">
 			<div id="card-top-container">
-				<div id="bar-info">
-					<h2 id="bar-name"></h2>
-					<p id="bar-address"></p>
-					<p id="bar-open"></p>
+				<div class="card-top-column">
+					<div id="bar-info">
+						<h2 id="bar-name"></h2>
+						<p id="bar-address"></p>
+					</div>
+					<div class="directions-buttons">
+						<button class="directions-button" id="walking"><img class="transit-icon" src="kgps_icons/directions-walk.svg" alt="Kävely" title="Kävely"></button>
+						<button class="directions-button" id="driving"><img class="transit-icon" src="kgps_icons/directions-car.svg" alt="Auto" title="Auto"></button>
+						<button class="directions-button" id="transit"><img class="transit-icon" src="kgps_icons/directions-train.svg" alt="Julkinen Liikenne" title="Julkinen Liikenne"></button>
+						<button class="directions-button" id="bicycling"><img class="transit-icon" src="kgps_icons/directions-bike.svg" alt="Pyöräily" title="Pyöräily"></button>
+					</div>
 				</div>
-				<div id="rating"></div>
-			</div>
-			<div class="directions-buttons">
-				<button class="directions-button" id="walking"><img class="transit-icon" src="kgps_icons/directions-walk.svg" alt="Kävely" title="Kävely"></button>
-				<button class="directions-button" id="driving"><img class="transit-icon" src="kgps_icons/directions-car.svg" alt="Auto" title="Auto"></button>
-				<button class="directions-button" id="transit"><img class="transit-icon" src="kgps_icons/directions-train.svg" alt="Julkinen Liikenne" title="Julkinen Liikenne"></button>
-				<button class="directions-button" id="bicycling"><img class="transit-icon" src="kgps_icons/directions-bike.svg" alt="Pyöräily" title="Pyöräily"></button>
+				<div class="card-top-column">
+					<div id="rating"></div>
+					<div id="bar-open"></div>
+				</div>
 			</div>
 			
 			<hr>
 
 			<div id="drinks-container">
-				<div id="tap-selection" class="column">
-					<h3>Hanat</h3>
-					<ul>
-						<li>Karjala III</li>
-						<li>Lapin Kulta IV</li>
-						<li>Karhu A</li>
-						<li>Heineken</li>
-						<li>Carlsberg</li>
-						<li>Koff</li>
-						<li>Happy Joe</li>
-						<li>Hartwall Gin</li>
-					</ul>
-				</div>
-				
-				<div id="bottle-selection" class="column">
-					<h3>Pullot</h3>
-					<ul>
-						<li>Olvi I</li>
-						<li>Heineken</li>
-						<li>Jallu</li>
-						<li>Aura</li>
-					</ul>
-				</div>
+				<table class="beers-table">			
+				</table>
 			</div>
 		</div>
 	</div>

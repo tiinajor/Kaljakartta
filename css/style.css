@@ -393,6 +393,54 @@ header {
 	width: calc(50% - 10px);
 }
 
+.beers-table {
+	width: 100%;
+}
+
+.beers-table th {
+	padding: 3px 0;
+	border-bottom: 2px solid #808080;
+}
+
+.beers-table tr {
+	display: flex;
+}
+
+.beers-table td {
+	padding: 2px 0 2px 6px;
+}
+
+.beers-table img {
+	height: 18px;
+}
+
+.odd-row {
+	background-color: #cccccc;
+}
+
+.column-xs {
+	flex: 1;
+	max-width: 20px;
+}
+
+.column-s {
+	flex: 1;
+	min-width: 50px;
+}
+
+.column-m {
+	flex: 2;
+}
+
+.column-l {
+	flex: 3;
+}
+
+.card-top-column {
+	display: flex;
+	flex-direction: column;
+}
+
 #openHours p {
 	margin: 0;
 	padding: 0;
@@ -408,6 +456,8 @@ header {
 }
 
 #drinks-container {
+	height: calc(100vh - 340px);
+    overflow-y: auto;
 	display: -webkit-box;
 	display: -ms-flexbox;
 	display: flex;
@@ -434,6 +484,7 @@ header {
 }
 
 #rating {
+	flex: 1;
 	min-width: 160px;
 	-ms-flex-item-align: start;
 	    align-self: flex-start;
@@ -472,6 +523,7 @@ header {
 }
 
 #card-top-container {
+	height: 100px;
 	display: -webkit-box;
 	display: -ms-flexbox;
 	display: flex;
