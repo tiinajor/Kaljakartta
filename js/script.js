@@ -47,7 +47,37 @@ window.onload = function(){
 
 	//showModal();
 	//localhost:xxxx/getRestaurant
-	//getJSON("https://jsonplaceholder.typicode.com/posts").then(data => console.log(data));;
+	fetch('https://cors-anywhere.herokuapp.com/http://188.166.162.144:130/restaurants?name=Boothill').then(function(response) {
+	    console.log(response.headers.get('Content-Type'));
+	    console.log(response.headers.get('Date'));
+
+	    console.log(response.status);
+	    console.log(response.statusText);
+	    console.log(response.type);
+	    console.log(response.url);
+	    response.json().then(data => console.log(data));
+	})
+	.catch(function(err) {
+	    console.log('Fetch Error :-S', err);
+	  });
+	/*
+	fetch('https://cors-anywhere.herokuapp.com/http://188.166.162.144:130/restaurants?name=Boothill')
+	  .then(
+	    function(response) {
+	      if (response.status !== 200) {
+	        console.log('Looks like there was a problem. Status Code: ' +
+	          response.status);
+	        return;
+	      }
+
+	      // Examine the text in the response
+	      response.json().then(function(data) {
+	        console.log(data);
+	      });
+	    }
+	  )
+	getJSON("https://cors-anywhere.herokuapp.com/http://188.166.162.144:130/restaurants?name=Boothill").then(data => console.log("AKI ON VELHO" + data));
+	*/
 	const barBeerList = [
 		{
 			serving: "tap",
