@@ -595,10 +595,10 @@ function createBeersTable(beers) {
 	html += `
 	<thead>
 	<tr>
-		<th class="column-s" data-id="serving">Icon</th>
-		<th class="column-l" data-id="brand">Nimi</th>
+		<th class="column-xs" data-id="serving"></th>
+		<th class="column-l" data-id="brand">  Nimi</th>
 		<th class="column-m" data-id="type">Tyyppi</th>
-		<th class="column-s" data-id="vol">Koko (l)</th>
+		<th class="column-s" data-id="vol">Koko</th>
 		<th class="column-s" data-id="abv">Alk-%</th>
 		<th class="column-s" data-id="price">Hinta</th>
 	</tr>
@@ -962,12 +962,13 @@ function geocodeAddress(address, distance) {
 		if (status == 'OK') {
 			const searchPos = results[0].geometry.location;
 			map.setCenter(searchPos);
-			let marker = new google.maps.Marker({
+			/*let marker = new google.maps.Marker({
 				map: map,
 				position: searchPos,
-				//icon: image
+
 			});
-			markers.push(marker);
+			markers.push(marker);*/
+			
 			// jos etsitty paikka on baari/yökerho -> näyttää vain sen markerin, muuten etsii baarit lähistöltä normaalisti
 			results[0].types.filter(type => type === "bar" || type === "night_club").length > 0 ? searchNearby(searchPos, 1) : searchNearby(searchPos, distance);
 		} else {
