@@ -664,8 +664,8 @@ function sortBy(col, ascend=true) {
 }
 
 // GET
-function getJSON(url) {
-	return fetch(url).then(response => response.json());
+function getBarData(barName) {
+	return fetch("https://cors-anywhere.herokuapp.com/http://188.166.162.144:130/restaurant?name="+barName).then(response => response.json());
 };
 
 // POST
@@ -839,7 +839,10 @@ function renderBarInfo(place) {
 	const barOpen = document.getElementById('bar-open');
 	const barPhoto = document.getElementById('bar-photo');
 	const service = new google.maps.places.PlacesService(map);
-
+	const response = getBarData(place.name);
+	response.then(data => {
+		console.log(data.tap);
+	});
 	barName.innerHTML = place.name;
 	setRating(place.rating);
 	
