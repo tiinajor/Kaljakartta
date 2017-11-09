@@ -90,7 +90,6 @@ public class Dao {
 
 			// HashMap<String, Double> tapName = new HashMap();
 
-
 			while (tap.hasNext()) {
 
 				JSONObject tapBev = new JSONObject();
@@ -109,9 +108,7 @@ public class Dao {
 
 				restaurantValues.put(tapBev);
 
-
 			}
-
 
 			Iterator<Edge> bottle = graph.getVertices("Restaurant.name", name).iterator().next()
 					.getEdges(Direction.IN, "Bottle").iterator();
@@ -138,13 +135,11 @@ public class Dao {
 
 			}
 
-
-
 			return restaurantValues;
 
 		} catch (Exception e) {
 
-				return null;
+			return null;
 		}
 
 	}
