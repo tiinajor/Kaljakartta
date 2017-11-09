@@ -58,6 +58,15 @@ window.onload = function(){
 		})
 		.catch(err => console.log('Fetch Error: ', err));
 
+	// hakee menuun olutmerkit
+	fetch('https://cors-anywhere.herokuapp.com/http://188.166.162.144:130/brands')
+		.then(response => {return response.text()})
+		.then(data => {
+			let beerBrands = data.slice(1,-1).split(",");
+			beerBrands = beerBrands.map(x => {return x.trim()});
+			createList(beerBrands, document.getElementById('brand-list'), "brands", searchVars)
+		})
+		.catch(err => console.log('Fetch Error: ', err));
 
 	const barBeerList = [
 		{
@@ -272,7 +281,7 @@ window.onload = function(){
 	]
 	let beerBrands = ["karhu", "koff", "karjala", "lapin kulta", "ale coq", "heineken", "pirkka", "grimbergen", "duvel", "olut"];
 	//let beerTypes = ["lager", "tumma lager", "vahva lager", "IPA", "bock", "Stout", "porter", "pils", "vehnäolut", "sahti", "bitter", "dobbelbock", "dry stout", "dunkel", "luostariolut", "imperial stout", "imperial porter", "mead", "trappist"];
-	createList(beerBrands, document.getElementById('brand-list'), "brands", searchVars);
+	//createList(beerBrands, document.getElementById('brand-list'), "brands", searchVars);
 	//createList(beerTypes, document.getElementById('type-list'), "types", searchVars);
 	createBeersTable(barBeerList);
 	
