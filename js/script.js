@@ -12,6 +12,7 @@ window.onload = function(){
 	const handle = document.querySelector('.draggable');
 	const headerElement = document.querySelector('header');
 	const mapElement = document.getElementById('map');
+	const oof = document.getElementById('oof');
 	const directionsElement = document.getElementById('route');
 	const directionsService = new google.maps.DirectionsService;
     const directionsRenderer = new google.maps.DirectionsRenderer({suppressMarkers: true});
@@ -45,39 +46,19 @@ window.onload = function(){
 
 	document.querySelector('.title').innerHTML += ("<span class='version'>alpha</span>");
 
-	//showModal();
-	//localhost:xxxx/getRestaurant
-	fetch('https://cors-anywhere.herokuapp.com/http://188.166.162.144:130/restaurants?name=Boothill').then(function(response) {
-	    console.log(response.headers.get('Content-Type'));
-	    console.log(response.headers.get('Date'));
+	showModal();
 
-	    console.log(response.status);
-	    console.log(response.statusText);
-	    console.log(response.type);
-	    console.log(response.url);
-	    response.json().then(data => console.log(data));
-	})
-	.catch(function(err) {
-	    console.log('Fetch Error :-S', err);
-	  });
-	/*
-	fetch('https://cors-anywhere.herokuapp.com/http://188.166.162.144:130/restaurants?name=Boothill')
-	  .then(
-	    function(response) {
-	      if (response.status !== 200) {
-	        console.log('Looks like there was a problem. Status Code: ' +
-	          response.status);
-	        return;
-	      }
+	// hakee menuun oluttyypit
+	fetch('https://cors-anywhere.herokuapp.com/http://188.166.162.144:130/beertypes')
+		.then(response => {return response.text()})
+		.then(data => {
+			let beerTypes = data.slice(1,-1).split(",");
+			beerTypes = beerTypes.map(x => {return x.trim()});
+			createList(beerTypes, document.getElementById('type-list'), "types", searchVars)
+		})
+		.catch(err => console.log('Fetch Error: ', err));
 
-	      // Examine the text in the response
-	      response.json().then(function(data) {
-	        console.log(data);
-	      });
-	    }
-	  )
-	getJSON("https://cors-anywhere.herokuapp.com/http://188.166.162.144:130/restaurants?name=Boothill").then(data => console.log("AKI ON VELHO" + data));
-	*/
+
 	const barBeerList = [
 		{
 			serving: "tap",
@@ -262,7 +243,7 @@ window.onload = function(){
 			price: 7.40,
 			abv: 8.5,
 			vol: 0.5
-		}/*,
+		},
 		{
 			serving: "bottle",
 			brand: "Fat Lizard Taspy Mary Double IPA",
@@ -287,12 +268,12 @@ window.onload = function(){
 			price: 3.45,
 			abv: 5.0,
 			vol: 0.5
-		}*/
+		}
 	]
 	let beerBrands = ["karhu", "koff", "karjala", "lapin kulta", "ale coq", "heineken", "pirkka", "grimbergen", "duvel", "olut"];
-	let beerTypes = ["lager", "tumma lager", "vahva lager", "IPA", "bock", "Stout", "porter", "pils", "vehnäolut", "sahti", "bitter", "dobbelbock", "dry stout", "dunkel", "luostariolut", "imperial stout", "imperial porter", "mead", "trappist"];
+	//let beerTypes = ["lager", "tumma lager", "vahva lager", "IPA", "bock", "Stout", "porter", "pils", "vehnäolut", "sahti", "bitter", "dobbelbock", "dry stout", "dunkel", "luostariolut", "imperial stout", "imperial porter", "mead", "trappist"];
 	createList(beerBrands, document.getElementById('brand-list'), "brands", searchVars);
-	createList(beerTypes, document.getElementById('type-list'), "types", searchVars);
+	//createList(beerTypes, document.getElementById('type-list'), "types", searchVars);
 	createBeersTable(barBeerList);
 	
 	const theads = document.getElementsByTagName('th');
@@ -339,8 +320,8 @@ window.onload = function(){
 
 
 	// asettaa kartan, menun, reittiohjeiden sekä baarikortin korkeuden ja korjaa niitä aina kun ikkunan koko muuttuu
-	resizeWindow();
-	window.addEventListener('resize', debounce(resizeWindow,100,false));
+	resizeElementHeights();
+	window.addEventListener('resize', debounce(resizeElementHeights,100,false));
 
 	// hanat mukana haussa kyllä/ei
 	document.getElementById('tapButton').addEventListener('click', function() {
@@ -436,7 +417,7 @@ window.onload = function(){
 	document.getElementById('locate').addEventListener('click', () => {
 		document.getElementById('route').style.height = 0+"px";
 		document.getElementById('search-container').style.position = "absolute";
-		resizeWindow();
+		resizeElementHeights();
 		directionsRenderer.setMap(null);
 		clearMarkers();
 		locateUser(distanceSlider.noUiSlider.get());
@@ -444,21 +425,27 @@ window.onload = function(){
 
 	// menun sulkeminen
 	document.getElementById('menu-close-x').addEventListener('click', closeMenu);
-	document.getElementById('oof').addEventListener('click', closeMenu);
 
 	// "restaurant cardin" sulkeminen
 	document.getElementById('card-close-x').addEventListener('click', closeCard);
-	document.getElementById('oof').addEventListener('click', closeCard);
 
 	// modaalin sulkeminen
 	document.getElementById('modal-close-x').addEventListener('click', hideModal);
-	document.getElementById('oof').addEventListener('click', hideModal);
+
+
+	document.getElementById('oof').addEventListener('click',(e) => {
+		if(e.target === oof) {
+			hideModal();
+			closeCard();
+			closeMenu();
+		}
+	});
 
 	// reittiohjeen sulkeminen
 	document.getElementById('route-close-x').addEventListener('click', function() {
 		directionsRenderer.setMap(null);
 		closeDirections();
-		resizeWindow();
+		resizeElementHeights();
 	});
 
 	// reittioheiden koon muuttaminen koneella
@@ -521,9 +508,6 @@ window.onload = function(){
 		calcRoute(directionsService,directionsRenderer,endPoint,mode);
 		geocodeAddress(barName, 1);
 	}));
-
-	// "hae"-nappi lähettää kyselyn tietokantaan
-	//document.getElementsByClassName('button-submit')[0].addEventListener('click', () => postJSON("http://validate.jsontest.com/?json=", searchVars));
 
 	//slaiderien luonti
 	noUiSlider.create(priceSlider, {
@@ -591,6 +575,9 @@ window.onload = function(){
 };
 // ---- WINDOW.ONLOAD LOPPU ---- 
 
+
+
+
 function createBeersTable(beers) {
 	const table = document.querySelector('.beers-table');
 	const bottleIcon = "kgps_icons/beer-bottle.svg";
@@ -650,6 +637,7 @@ function updateTable(barBeerList) {
     }
 }
 
+
 function sortBy(col, ascend=true) {
   	return function(a, b) {
 		if(!a.hasOwnProperty(col) || !b.hasOwnProperty(col)) {
@@ -691,6 +679,7 @@ function createList(list, parentDiv, id, searchVars) {
 	for (var i = 0; i<list.length; i++) {
 		list[i] = capitalizeFirstLetter(list[i]);
 	}
+	list = removeDuplicates(list);
 	list = list.sort();
 	for (var i = 0; i<list.length; i++) {
 		let li = document.createElement('li');
@@ -734,7 +723,7 @@ function toggleInSearch(li, parentID, searchVars) {
 };
 
 //laskee elementeille uudet korkeudet kun ikkunan koko muuttuu
-function resizeWindow() {
+function resizeElementHeights() {
 	const windowHeight = window.innerHeight;
 	const headerHeight = document.querySelector('header').clientHeight;
 	const routeHeight = document.getElementById('route').clientHeight;
@@ -746,6 +735,12 @@ function resizeWindow() {
 
 function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
+};
+
+function removeDuplicates(array) {
+  	return array.filter(function(element, position, arr) {
+		return arr.indexOf(element) == position;
+  	});
 };
 
 // avaa menun merkki- ja laatulistat niitä painettaessa
@@ -803,8 +798,10 @@ function closeDirections() {
 	document.getElementById('search-container').style.display = "block";
 }
 
-// luo pop-up käyttöohjeet
+// näyttää käyttöohjeet ellei käyttäjä ole valinnut toisin
 function showModal() {
+	const noShow = localStorage.getItem('noMoreInstructions');
+	if(noShow) return;
 	const modal = document.getElementById('modal');
 	const oof = document.getElementById('oof');
 	oof.style.width = "100%";
@@ -816,8 +813,12 @@ function showModal() {
 function hideModal() {
 	const modal = document.getElementById('modal');
 	const oof = document.getElementById('oof');
-	modal.style.display = "none";
+	const checkbox = document.querySelector('input[name="noMoreInstructions"');
+	modal.classList.remove('visible');
 	oof.style.width = 0+"px";
+	if(checkbox.checked) {
+		localStorage.setItem('noMoreInstructions', true);
+	}
 }
 
 // lisää restaurant cardiin baarin tiedot
@@ -955,7 +956,7 @@ function geocodeAddress(address, distance) {
 			let marker = new google.maps.Marker({
 				map: map,
 				position: searchPos,
-				icon: image
+				//icon: image
 			});
 			markers.push(marker);
 			// jos etsitty paikka on baari/yökerho -> näyttää vain sen markerin, muuten etsii baarit lähistöltä normaalisti
@@ -1006,7 +1007,7 @@ function showDirections(directionsRenderer, response) {
 	const windowHeight = window.innerHeight;
 	document.getElementById('route').style.height = windowHeight * 0.3 + "px";
 	document.getElementById('search-container').style.display = "none";
-	resizeWindow();
+	resizeElementHeights();
 	closeCard();
 }
 
