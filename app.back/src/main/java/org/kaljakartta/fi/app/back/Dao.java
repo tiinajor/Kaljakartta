@@ -16,12 +16,11 @@ import com.tinkerpop.blueprints.impls.orient.OrientGraphFactory;
 import com.tinkerpop.blueprints.impls.orient.OrientGraphNoTx;
 import com.tinkerpop.gremlin.java.GremlinPipeline;
 
-
 public class Dao {
 
-	private static OrientGraphFactory factory = new OrientGraphFactory("remote:188.166.162.144:2424/KaljakarttaDB", "dao", "bakkiPassu");
+	private static OrientGraphFactory factory = new OrientGraphFactory("remote:188.166.162.144:2424/KaljakarttaDB",
+			"dao", "bakkiPassu");
 	private static OrientGraphNoTx graph = factory.getNoTx();
-
 
 	public Dao(String address, String user, String pass) {
 
@@ -73,18 +72,23 @@ public class Dao {
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public static String getRestaurant(String name) {
+	public static JSONObject getRestaurant(String name) throws JSONException {
 
 		try {
-//			Vertex restaurant = graph.getVertices("Restaurant.name", name).iterator().next();
+			// Vertex restaurant = graph.getVertices("Restaurant.name",
+			// name).iterator().next();
 
-			HashMap<String, HashMap<String, Double>> restaurantValues = new HashMap();
+			// HashMap<String, HashMap<String, Double>> restaurantValues = new
+			// HashMap();
+			JSONObject restaurantValues = new JSONObject();
 
-//			Iterator keyIter = keys.iterator();
+			// Iterator keyIter = keys.iterator();
 
-			Iterator<Edge> tap = graph.getVertices("Restaurant.name", name).iterator().next().getEdges(Direction.IN, "Tap").iterator();
+			Iterator<Edge> tap = graph.getVertices("Restaurant.name", name).iterator().next()
+					.getEdges(Direction.IN, "Tap").iterator();
 
-			HashMap<String, Double> tapName = new HashMap();
+			// HashMap<String, Double> tapName = new HashMap();
+			JSONObject tapName = new JSONObject();
 
 			while (tap.hasNext()) {
 
@@ -94,15 +98,15 @@ public class Dao {
 
 				tapName.put(bev.getProperty("name").toString(), price);
 
-
 			}
 
 			restaurantValues.put("tap", tapName);
 
+			Iterator<Edge> bottle = graph.getVertices("Restaurant.name", name).iterator().next()
+					.getEdges(Direction.IN, "Bottle").iterator();
 
-			Iterator<Edge> bottle = graph.getVertices("Restaurant.name", name).iterator().next().getEdges(Direction.IN, "Bottle").iterator();
-
-			HashMap<String, Double> botName = new HashMap();
+			// HashMap<String, Double> botName = new HashMap();
+			JSONObject botName = new JSONObject();
 
 			while (bottle.hasNext()) {
 
@@ -112,18 +116,19 @@ public class Dao {
 
 				botName.put(bev.getProperty("name").toString(), price);
 
-
 			}
 
 			restaurantValues.put("bottle", botName);
 
-			return restaurantValues.toString();
+			return restaurantValues;
 
 		} catch (Exception e) {
 
-			return "Not Found";
-		}
+				JSONObject message = new JSONObject();
+				message.put("message", "Not Found");
 
+				return message;
+		}
 
 	}
 
@@ -141,10 +146,8 @@ public class Dao {
 			}
 		});
 
-
 		List<Vertex> beers = new ArrayList();
 		beers = new GremlinPipeline(graph.getVertices("Beer.beer", true)).toList();
-
 
 		for (int i = 0; i < beers.size(); i++) {
 
@@ -175,7 +178,7 @@ public class Dao {
 
 		for (Vertex v : beers) {
 
-			System.out.println("Alku: "+ beers);
+			System.out.println("Alku: " + beers);
 
 			if (keys.containsKey("serving") && !keys.get("serving").equals("")) {
 
@@ -185,7 +188,7 @@ public class Dao {
 				edges = v.getEdges(Direction.OUT, "E").iterator();
 			}
 
-			System.out.println("Menossa Whileen: "+edges);
+			System.out.println("Menossa Whileen: " + edges);
 
 			while (edges.hasNext()) {
 
@@ -196,11 +199,13 @@ public class Dao {
 				System.out.println(e.getPropertyKeys());
 				System.out.println(e.getLabel());
 
-				if (Double.parseDouble(e.getProperty("price").toString()) <= Double.parseDouble(keys.get("price").toString())) {
+				if (Double.parseDouble(e.getProperty("price").toString()) <= Double
+						.parseDouble(keys.get("price").toString())) {
 
 					Vertex restaurant = e.getVertex(Direction.IN);
 
-					Double[] coordinates = {Double.parseDouble(restaurant.getProperty("latitude").toString()), Double.parseDouble(restaurant.getProperty("longitude").toString())};
+					Double[] coordinates = { Double.parseDouble(restaurant.getProperty("latitude").toString()),
+							Double.parseDouble(restaurant.getProperty("longitude").toString()) };
 
 					restaurants.put(restaurant.getProperty("name"), coordinates);
 
@@ -209,7 +214,6 @@ public class Dao {
 			}
 
 		}
-
 
 		System.out.println("Success!\n");
 		return restaurants;
