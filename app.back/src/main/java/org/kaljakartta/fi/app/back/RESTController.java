@@ -14,17 +14,23 @@ public class RESTController
     @RequestMapping(value = "/restaurants", method = RequestMethod.GET)
     public @ResponseBody String passRestaurants(@RequestParam String name) {
 
-//    	return "JEE LÖYTY!";
     	String ret = Dao.getRestaurant(name);
     	return ret;
 
     }
 
     @RequestMapping(value = "/beertypes", method = RequestMethod.GET)
-    public @ResponseBody String passRestaurants() {
+    public @ResponseBody String passTypes() {
 
-//    	return "JEE LÖYTY!";
     	String ret = Dao.getBeerTypes().toString();
+    	return ret;
+
+    }
+
+    @RequestMapping(value = "/brands", method = RequestMethod.GET)
+    public @ResponseBody String passBrands() {
+
+    	String ret = Dao.getBrands().toString();
     	return ret;
 
     }
