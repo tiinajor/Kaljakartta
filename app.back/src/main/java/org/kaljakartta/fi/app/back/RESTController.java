@@ -1,7 +1,6 @@
 package org.kaljakartta.fi.app.back;
 
 import org.springframework.web.bind.annotation.RestController;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -16,12 +15,9 @@ public class RESTController
     public @ResponseBody String passRestaurants(@RequestParam String name) {
 
 //    	String ret = Dao.getRestaurant(name);
-    	try {
+
 			return Dao.getRestaurant(name).toString();
-		} catch (JSONException e) {
-			e.printStackTrace();
-			return "Not Found";
-		}
+
 
     }
 

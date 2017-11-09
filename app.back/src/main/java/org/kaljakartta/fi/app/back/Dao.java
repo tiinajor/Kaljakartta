@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -72,7 +73,7 @@ public class Dao {
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public static JSONObject getRestaurant(String name) throws JSONException {
+	public static JSONArray getRestaurant(String name) {
 
 		try {
 			// Vertex restaurant = graph.getVertices("Restaurant.name",
@@ -80,7 +81,7 @@ public class Dao {
 
 			// HashMap<String, HashMap<String, Double>> restaurantValues = new
 			// HashMap();
-			JSONObject restaurantValues = new JSONObject();
+			JSONArray restaurantValues = new JSONArray();
 
 			// Iterator keyIter = keys.iterator();
 
@@ -88,46 +89,57 @@ public class Dao {
 					.getEdges(Direction.IN, "Tap").iterator();
 
 			// HashMap<String, Double> tapName = new HashMap();
-			JSONObject tapName = new JSONObject();
 
 			while (tap.hasNext()) {
 
+				JSONObject tapBev = new JSONObject();
+
 				Edge e = tap.next();
 				double price = e.getProperty("price");
+				double vol = e.getProperty("vol");
 				Vertex bev = e.getVertex(Direction.OUT);
 
-				tapName.put(bev.getProperty("name").toString(), price);
+				tapBev.put("name", bev.getProperty("name"));
+				tapBev.put("serving", "tap");
+				tapBev.put("price", price);
+				tapBev.put("vol", vol);
+				tapBev.put("abv", bev.getProperty("abv"));
+				tapBev.put("type", bev.getProperty("type"));
+
+				restaurantValues.put(tapBev);
 
 			}
-
-			restaurantValues.put("tap", tapName);
 
 			Iterator<Edge> bottle = graph.getVertices("Restaurant.name", name).iterator().next()
 					.getEdges(Direction.IN, "Bottle").iterator();
 
 			// HashMap<String, Double> botName = new HashMap();
-			JSONObject botName = new JSONObject();
 
 			while (bottle.hasNext()) {
 
-				Edge e = tap.next();
+				JSONObject botBev = new JSONObject();
+
+				Edge e = bottle.next();
 				double price = e.getProperty("price");
+				double vol = e.getProperty("vol");
 				Vertex bev = e.getVertex(Direction.OUT);
 
-				botName.put(bev.getProperty("name").toString(), price);
+				botBev.put("name", bev.getProperty("name"));
+				botBev.put("serving", "bottle");
+				botBev.put("price", price);
+				botBev.put("vol", vol);
+				botBev.put("abv", bev.getProperty("abv"));
+				botBev.put("type", bev.getProperty("type"));
+
+				restaurantValues.put(botBev);
 
 			}
-
-			restaurantValues.put("bottle", botName);
 
 			return restaurantValues;
 
 		} catch (Exception e) {
 
-				JSONObject message = new JSONObject();
-				message.put("message", "Not Found");
-
-				return message;
+			return null;
 		}
 
 	}
