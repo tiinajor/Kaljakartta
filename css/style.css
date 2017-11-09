@@ -400,6 +400,12 @@ header {
 .beers-table th {
 	padding: 3px 0;
 	border-bottom: 2px solid #808080;
+	text-align: left;
+}
+
+.beers-table th.column-xs {
+	max-width: 26px;
+	width: 26px;
 }
 
 .beers-table tr {
@@ -407,7 +413,7 @@ header {
 }
 
 .beers-table td {
-	padding: 2px 0 2px 6px;
+	padding: 2px 0 2px 3px;
 }
 
 .beers-table img {
