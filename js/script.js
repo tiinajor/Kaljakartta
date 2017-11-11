@@ -1,8 +1,14 @@
 let hki = {lat: 60.162786, lng: 24.932607};
 let map;
 let pos;
-let infoWindow;
+let infowindow;
 let markers;
+
+/* 
+- Reittiohjeiden klikkaaminen poistaa kaikki markerit ja näyttää vain lähtöpaikan sekä kohteen
+- Osoitehakua voi rajata tiettyyn kaupunkiin tyylillä (osoite, kaupunki)
+
+*/
 
 window.onload = function(){
 	const priceSlider = document.getElementById('price-slider');
@@ -40,33 +46,13 @@ window.onload = function(){
 		types : []
 	};
 
-	infoWindow = new google.maps.InfoWindow();
+	infowindow = new google.maps.InfoWindow();
 	markers = [];
 	directionsRenderer.setPanel(document.getElementById('route'));
 
 	document.querySelector('.title').innerHTML += ("<span class='version'>alpha</span>");
 
 	showModal();
-
-	// hakee menuun oluttyypit
-	fetch('https://cors-anywhere.herokuapp.com/http://188.166.162.144:130/beertypes')
-		.then(response => {return response.text()})
-		.then(data => {
-			let beerTypes = data.slice(1,-1).split(",");
-			beerTypes = beerTypes.map(x => {return x.trim()});
-			createList(beerTypes, document.getElementById('type-list'), "types", searchVars)
-		})
-		.catch(err => console.log('Fetch Error: ', err));
-
-	// hakee menuun olutmerkit
-	fetch('https://cors-anywhere.herokuapp.com/http://188.166.162.144:130/brands')
-		.then(response => {return response.text()})
-		.then(data => {
-			let beerBrands = data.slice(1,-1).split(",");
-			beerBrands = beerBrands.map(x => {return x.trim()});
-			createList(beerBrands, document.getElementById('brand-list'), "brands", searchVars)
-		})
-		.catch(err => console.log('Fetch Error: ', err));
 
 	const barBeerList = [
 		{
@@ -279,11 +265,9 @@ window.onload = function(){
 			vol: 0.5
 		}
 	]
-	let beerBrands = ["karhu", "koff", "karjala", "lapin kulta", "ale coq", "heineken", "pirkka", "grimbergen", "duvel", "olut"];
-	//let beerTypes = ["lager", "tumma lager", "vahva lager", "IPA", "bock", "Stout", "porter", "pils", "vehnäolut", "sahti", "bitter", "dobbelbock", "dry stout", "dunkel", "luostariolut", "imperial stout", "imperial porter", "mead", "trappist"];
-	//createList(beerBrands, document.getElementById('brand-list'), "brands", searchVars);
-	//createList(beerTypes, document.getElementById('type-list'), "types", searchVars);
 	createBeersTable(barBeerList);
+
+	updateTable(barBeerList.sort(sortBy("brand", true)));
 	
 	const theads = document.getElementsByTagName('th');
 	Array.from(theads).forEach((e) => e.addEventListener('click', function() {
@@ -359,7 +343,8 @@ window.onload = function(){
 		if(input.value != '') {
 			directionsRenderer.setMap(null);
 			clearMarkers();
-			geocodeAddress(input.value, distanceSlider.noUiSlider.get());
+			const {address, city} = handleInputAddress(input.value);
+			geocodeAddress(address, city, distance, infowindow);
 			input.value = '';
 		}
 	});
@@ -371,7 +356,9 @@ window.onload = function(){
 		if(e.keyCode == 13 && input.value != ''){ 
 			directionsRenderer.setMap(null);
 			clearMarkers();
-			geocodeAddress(input.value, distanceSlider.noUiSlider.get());
+			const {address, city} = handleInputAddress(input.value);
+			const distance = distanceSlider.noUiSlider.get();
+			geocodeAddress(address, city, distance, infowindow);
 			this.value = '';
 		}
 	});
@@ -383,7 +370,9 @@ window.onload = function(){
 			closeMenu();
 			clearMarkers();
 			directionsRenderer.setMap(null);
-			geocodeAddress(input.value, distanceSlider.noUiSlider.get());
+			const {address, city} = handleInputAddress(input.value);
+			const distance = distanceSlider.noUiSlider.get();
+			geocodeAddress(address, city, distance, infowindow);
 			input.value = '';
 		}
 	});
@@ -396,8 +385,10 @@ window.onload = function(){
 			closeMenu();
 			clearMarkers();
 			directionsRenderer.setMap(null);
-			geocodeAddress(input.value, distanceSlider.noUiSlider.get());
-			this.value = '';
+			const {address, city} = handleInputAddress(input.value);
+			const distance = distanceSlider.noUiSlider.get();
+			geocodeAddress(address, city, distance, infowindow);
+			input.value = '';
 		}
 	});
 
@@ -420,16 +411,43 @@ window.onload = function(){
 	});
 
 	// menun avaus
-	document.getElementById('hamburger-menu').addEventListener('click', openMenu);
+	document.getElementById('hamburger-menu').addEventListener('click', () => {
+		openMenu();
+		// hakee menuun oluttyypit
+		fetch('https://cors-anywhere.herokuapp.com/http://188.166.162.144:130/beertypes')
+			.then(response => {return response.text()})
+			.then(data => {
+				let beerTypes = data.slice(1,-1).split(",");
+				beerTypes = beerTypes.map(x => {return x.trim()});
+				createList(beerTypes, document.getElementById('type-list'), "types", searchVars)
+			})
+			.catch(err => console.log('Fetch Error: ', err));
+
+		// hakee menuun olutmerkit
+		fetch('https://cors-anywhere.herokuapp.com/http://188.166.162.144:130/brands')
+			.then(response => {
+				console.log(response.ok);
+				if (!response.ok) {
+			      		throw Error(response.statusText);
+			    }
+			    return response.text();
+			})
+			.then(data => {
+				let beerBrands = data.slice(1,-1).split(",");
+				beerBrands = beerBrands.map(x => {return x.trim()});
+				createList(beerBrands, document.getElementById('brand-list'), "brands", searchVars);
+			})
+			.catch(err => {createList(["Error 404", "No beer found"], document.getElementById('brand-list'), "brands", searchVars);});
+	});
 
 	// käyttäjän GPS paikannus
 	document.getElementById('locate').addEventListener('click', () => {
 		document.getElementById('route').style.height = 0+"px";
 		document.getElementById('search-container').style.position = "absolute";
 		resizeElementHeights();
-		directionsRenderer.setMap(null);
 		clearMarkers();
-		locateUser(distanceSlider.noUiSlider.get());
+		directionsRenderer.setMap(null);
+		locateUser(distanceSlider.noUiSlider.get(), infowindow);
 	});
 
 	// menun sulkeminen
@@ -515,7 +533,7 @@ window.onload = function(){
 		const barName = document.getElementById('bar-name').textContent;
 		const mode = e.id.toUpperCase();
 		calcRoute(directionsService,directionsRenderer,endPoint,mode);
-		geocodeAddress(barName, 1);
+		//geocodeAddress(barName, 1);
 	}));
 
 	//slaiderien luonti
@@ -640,19 +658,15 @@ function updateTable(barBeerList) {
     	rows[i].cells[0].innerHTML = `<img src=${icon}>`;
     	rows[i].cells[1].textContent = capitalizeFirstLetter(barBeerList[i].brand);
     	rows[i].cells[2].textContent = capitalizeFirstLetter(barBeerList[i].type);
-    	rows[i].cells[3].textContent = barBeerList[i].vol;
-    	rows[i].cells[4].textContent = barBeerList[i].abv;
-    	rows[i].cells[5].textContent = barBeerList[i].price;
+    	rows[i].cells[3].textContent = barBeerList[i].vol + "l";
+    	rows[i].cells[4].textContent = barBeerList[i].abv + "%";
+    	rows[i].cells[5].textContent = barBeerList[i].price + "€";
     }
 }
 
 
 function sortBy(col, ascend=true) {
   	return function(a, b) {
-		if(!a.hasOwnProperty(col) || !b.hasOwnProperty(col)) {
-		  // property doesn't exist on either object
-		    return 0; 
-		}
 		const x = a[col];
 		const y = b[col];
 		if(typeof x === "string" && typeof y === "string") {
@@ -730,6 +744,11 @@ function toggleInSearch(li, parentID, searchVars) {
 		}
 	}
 };
+
+function handleInputAddress(searchText) {
+	const textParts = searchText.split(",");
+	return textParts.length === 1 ? {address: textParts[0], city: null} : {address: textParts[0].trim(), city: textParts[1].trim()};
+}
 
 //laskee elementeille uudet korkeudet kun ikkunan koko muuttuu
 function resizeElementHeights() {
@@ -852,7 +871,7 @@ function renderBarInfo(place) {
   		if (status === google.maps.places.PlacesServiceStatus.OK) {
       		const address = data.formatted_address;
       		const url = data.photos[0].getUrl({ 'maxWidth': 600 });
-      		barAddress.innerHTML = address.split("," ,2).join(); 
+      		barAddress.innerHTML = address.split(",",2).join(); 
       		barOpen.innerHTML = capitalizeFirstLetter(data.opening_hours.weekday_text[weekday]);	
       		barPhoto.style.backgroundSize = "cover";
  	 		barPhoto.style.backgroundImage = "url("+url+")";
@@ -933,7 +952,7 @@ function initMap() {
 };
 
 // paikantaa käyttäjän ja hakee lähimmät baarit jos paikannus onnistuu/sallittu
-function locateUser(distance) {
+function locateUser(distance, infowindow) {
 	if (navigator.geolocation) {
   		navigator.geolocation.getCurrentPosition(function(position) {
 	        pos = {
@@ -942,19 +961,26 @@ function locateUser(distance) {
 	        };
 	        if(pos != null) {
 	    		map.setCenter(pos);
+	    		const image = 'kgps_icons/yellow-marker.png';
+	    		const marker = new google.maps.Marker({
+	    			map: map,
+	    			position: pos,
+	    			icon : image,
+	    		});
+	    		markers.push(marker);
 	    		searchNearby(pos, distance);
 	    	}
 	 	}, function() {
-			handleLocationError(true, infoWindow, map.getCenter());
+			handleLocationError(true, infowindow, map.getCenter());
   		});
 	} else {
 		// Browser doesn't support Geolocation
-		handleLocationError(false, infoWindow, map.getCenter());
+		handleLocationError(false, infowindow, map.getCenter());
 	}
 };
 
 // käyttäjän tekemä osoitehaku hakukentässä
-function geocodeAddress(address, distance) {
+function geocodeAddress(address, searchCity, distance, infowindow) {
 	const geocoder = new google.maps.Geocoder();
 	const image = 'kgps_icons/yellow-marker.png';
 	geocoder.geocode(
@@ -963,17 +989,35 @@ function geocodeAddress(address, distance) {
 			country: 'FI'
 		}}, function(results, status) {
 		if (status == 'OK') {
-			const searchPos = results[0].geometry.location;
+			let result = results[0];
+			if(searchCity) {
+				for(let i=0;i<results.length;i++) {
+					let resultCity = results[i].address_components[1].long_name;
+					if(resultCity.toUpperCase() === searchCity.toUpperCase()) {
+						result = results[i];
+					}
+				}
+			}
+			const searchPos = result.geometry.location;
 			map.setCenter(searchPos);
-			/*let marker = new google.maps.Marker({
-				map: map,
-				position: searchPos,
-
-			});
-			markers.push(marker);*/
 			
 			// jos etsitty paikka on baari/yökerho -> näyttää vain sen markerin, muuten etsii baarit lähistöltä normaalisti
-			results[0].types.filter(type => type === "bar" || type === "night_club").length > 0 ? searchNearby(searchPos, 1) : searchNearby(searchPos, distance);
+			if(result.types.filter(type => type === "bar" || type === "night_club").length > 0) {
+				searchNearby(searchPos, 1);
+			} else {
+				searchNearby(searchPos, distance);
+				const image = 'kgps_icons/yellow-marker.png';
+				const marker = new google.maps.Marker({
+					map: map,
+					position: searchPos,
+					icon : image,
+				});
+				markers.push(marker);
+				infowindow.setContent(result.formatted_address);
+		        google.maps.event.addListener(marker, 'click', function() {
+		        	infowindow.open(map, marker);
+		        }); 
+			}
 		} else {
 			alert('Paikannus ei onnistunut: ' + status);
 		}
@@ -1026,14 +1070,7 @@ function showDirections(directionsRenderer, response) {
 
 // hakee max 60 baaria ja 60 yökerhoa annetun sijainnin läheltä
 function searchNearby(loc, distance) {
-	const image = 'kgps_icons/yellow-marker.png';
-	let marker = new google.maps.Marker({
-		map: map,
-		position: pos,
-		icon : image,
-	});
-	markers.push(marker);
-	let service = new google.maps.places.PlacesService(map);
+	const service = new google.maps.places.PlacesService(map);
     service.nearbySearch({
       	location: loc, 
       	radius: distance,
@@ -1083,13 +1120,14 @@ function clearMarkers() {
     for (var i = 0; i < markers.length; i++) {
       markers[i].setMap(null);
     }
+    markers = [];
 };
 
 // googlen oma error funktio
-function handleLocationError(browserHasGeolocation, infoWindow, pos) {
-	infoWindow.setPosition(pos);
-	infoWindow.setContent(browserHasGeolocation ?
+function handleLocationError(browserHasGeolocation, infowindow, pos) {
+	infowindow.setPosition(pos);
+	infowindow.setContent(browserHasGeolocation ?
 	                      'Error: Paikannus epäonnistui.' :
 	                      'Error: Selaimesi ei tue paikannusta.');
-	infoWindow.open(map);
+	infowindow.open(map);
 };
