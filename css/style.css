@@ -11,12 +11,10 @@ body, html {
 	font-family: sans-serif;
 	margin: 0;
 	max-height: 100vh;
-	min-width: 300px;
+	min-width: 320px;
 	overflow: hidden;
 	padding: 0;
 }
-
-/* old primary colors #f9da49 */
 
 .centered {
 	margin: 0 auto;
@@ -59,6 +57,7 @@ header {
 	display: -ms-flexbox;
 	display: flex;
 	height: 60px;
+	align-items: center;
 	-webkit-box-pack: justify;
 	    -ms-flex-pack: justify;
 	        justify-content: space-between;
@@ -112,6 +111,7 @@ header {
 	display: flex;
 	-ms-flex-line-pack: center;
 	    align-content: center;
+	height: 100%;
 }
 
 .header-button:hover {
@@ -381,11 +381,18 @@ header {
 }
 
 .directions-buttons {
-	margin-top: 8px;
+	display: flex;
+	max-width: 250px;
+	justify-content: space-around;
 }
 
 .directions-button {
-	margin-right: 4px;
+	margin-top: 8px;
+	width: 53px;
+	height: 35px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 
 .column {
@@ -426,12 +433,12 @@ header {
 
 .column-xs {
 	flex: 1;
-	max-width: 20px;
+	max-width: 18px;
 }
 
 .column-s {
 	flex: 1;
-	min-width: 50px;
+	min-width: 45px;
 }
 
 .column-m {
@@ -453,7 +460,11 @@ header {
 }
 
 #card-content {
-	margin: 0 25px;
+	margin: 0 0.3em;
+	flex: 1;
+}
+
+#card-content .card-top-column:first-child {
 	flex: 1;
 }
 
@@ -492,8 +503,8 @@ header {
 #rating {
 	flex: 1;
 	min-width: 190px;
-	-ms-flex-item-align: start;
-	    align-self: flex-start;
+	-ms-flex-item-align: end;
+	    align-self: flex-end;
 }
 
 #bar-info {
@@ -536,7 +547,7 @@ header {
 	-webkit-box-pack: justify;
 	    -ms-flex-pack: justify;
 	        justify-content: space-between;
-	margin-top: 20px;
+	padding: 0.9em 0.4em 0 0.4em;
 }
 
 #restaurant-card {
@@ -750,20 +761,33 @@ input[type="checkbox"] {
 		padding-right: 0;
 	}
 
+	.directions-buttons {
+		display: flex;
+		justify-content: space-around;
+	}
+
+	.directions-button {
+		width: 40px;
+		height: 35px;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+
 	.title {
 		font-size: 2.2em;
 	}
 
-	.title-text {
-		height: 0.7em;
-	}
-
 	.rating-icon {
-		width: 26px;
+		width: 30px;
 	}
 
 	.header-icon {
 		height: 25px;
+	}
+
+	.beers-table {
+		font-size: 0.9em;
 	}
 
 	.draggable {
@@ -772,6 +796,10 @@ input[type="checkbox"] {
 
 	header, #title-container {
 		height: 45px;
+	}
+
+	#card-content {
+		margin: 0;
 	}
 
 	#searchbox{
@@ -794,10 +822,6 @@ input[type="checkbox"] {
 	#restaurant-card {
 		width: 100%;
 		max-width: 600px;
-	}
-
-	#card-content {
-		margin: 0 10px;
 	}
 
 	#rating {
