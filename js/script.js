@@ -6,7 +6,8 @@ let markers;
 
 /* 
 - Reittiohjeiden klikkaaminen poistaa kaikki markerit ja näyttää vain lähtöpaikan sekä kohteen
-- Osoitehakua voi rajata tiettyyn kaupunkiin tyylillä (osoite, kaupunki)
+- Reittiohjeiden musta palkki ei liiku, kun reittiohjeita scrollataan
+- Restaurant cardin element heights, juomalista voi mennä näytön ulkopuolelle?
 
 */
 
@@ -18,6 +19,8 @@ window.onload = function(){
 	const handle = document.querySelector('.draggable');
 	const headerElement = document.querySelector('header');
 	const mapElement = document.getElementById('map');
+	const menuElement = document.getElementById('side-menu');
+	const restaurantCard = document.getElementById('restaurant-card');
 	const oof = document.getElementById('oof');
 	const directionsElement = document.getElementById('route');
 	const directionsService = new google.maps.DirectionsService;
@@ -52,7 +55,7 @@ window.onload = function(){
 
 	document.querySelector('.title').innerHTML += ("<span class='version'>alpha</span>");
 
-	showModal();
+	//showModal();
 
 	const barBeerList = [
 		{
@@ -478,16 +481,16 @@ window.onload = function(){
 	// reittioheiden koon muuttaminen koneella
 	handle.addEventListener('mousedown', (e) => {
 		mouseDown = true;
-		mouseStartPos = e.pageY;
-		handleOffset = mouseStartPos - handle.getBoundingClientRect().top;
+		mouseStartPos = {x: e.pageX, y: e.pageY};
+		handleOffset = mouseStartPos.y - handle.getBoundingClientRect().top;
 		const routeOptionsHeight = document.querySelector('.adp-list') != null ? document.querySelector('.adp-list').clientHeight : 0;
 		directionsMaxHeight = document.querySelector('.adp').clientHeight  + routeOptionsHeight + 8;
 		mapMinHeight = windowHeight - headerHeight - directionsMaxHeight;
 	});
 	handle.addEventListener('touchstart', (e) => {
 		mouseDown = true;
-		mouseStartPos = e.pageY;
-		handleOffset = mouseStartPos - handle.getBoundingClientRect().top;
+		mouseStartPos = {x: e.pageX, y: e.pageY};
+		handleOffset = mouseStartPos.y - handle.getBoundingClientRect().top;
 		const routeOptionsHeight = document.querySelector('.adp-list') != null ? document.querySelector('.adp-list').clientHeight : 0;
 		directionsMaxHeight = document.querySelector('.adp').clientHeight  + routeOptionsHeight + 8;
 		mapMinHeight = windowHeight - headerHeight - directionsMaxHeight;
@@ -509,8 +512,9 @@ window.onload = function(){
 	handle.addEventListener('touchstart', (e) => {
 		e.preventDefault();
 		mouseDown = true;
-		mouseStartPos = e.touches[0].pageY;
-		handleOffset = mouseStartPos - handle.getBoundingClientRect().top;
+		mouseStartPos = {x: e.touches[0].pageX, y: e.touches[0].pageY};
+		console.log(mouseStartPos);
+		handleOffset = mouseStartPos.y - handle.getBoundingClientRect().top;
 		const routeOptionsHeight = document.querySelector('.adp-list') != null ? document.querySelector('.adp-list').clientHeight : 0;
 		directionsMaxHeight = document.querySelector('.adp').clientHeight  + routeOptionsHeight + 8;
 		mapMinHeight = windowHeight - headerHeight - directionsMaxHeight;
@@ -525,6 +529,33 @@ window.onload = function(){
 		const mapHeight = windowHeight - directionsHeight - headerHeight;		
 		mapElement.style.height = (mapHeight > mapMinHeight) ? mapHeight + "px" : mapMinHeight + "px";
 		directionsElement.style.height = (directionsHeight < directionsMaxHeight) ? directionsHeight + "px" : directionsMaxHeight + "px";
+	});
+
+	// menun voi avata pyyhkäisemällä vasemmasta reunasta
+	mapElement.addEventListener('touchstart', (e) => mouseStartPos = {x: e.changedTouches[0].pageX, y: e.changedTouches[0].pageX});
+	mapElement.addEventListener('touchend', (e) => {
+		const moveAmount = e.changedTouches[0].pageX - mouseStartPos.x;
+		if(mouseStartPos.x < 25 && moveAmount > 50) {
+			openMenu();
+		}
+	});
+
+	// menun voi sulkea pyyhkäisemällä sitä vasemmalle
+	menuElement.addEventListener('touchstart', (e) => mouseStartPos = {x: e.changedTouches[0].pageX, y: e.changedTouches[0].pageX});
+	menuElement.addEventListener('touchend', (e) => {
+		const moveAmount = mouseStartPos.x - e.changedTouches[0].pageX;
+		if(moveAmount > 50) {
+			closeMenu();
+		}
+	});
+
+	//ravintolakortin voi sulkea pyyhkäisemällä sitä oikealle
+	restaurantCard.addEventListener('touchstart', (e) => mouseStartPos = {x: e.changedTouches[0].pageX, y: e.changedTouches[0].pageX});
+	restaurantCard.addEventListener('touchend', (e) => {
+		const moveAmount = e.changedTouches[0].pageX - mouseStartPos.x;
+		if(moveAmount > 150) {
+			closeCard();
+		}
 	});
 
 	// reittiohjenapit asettaa kulkuneuvon napin ID:n mukaan
