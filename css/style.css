@@ -11,18 +11,16 @@ body, html {
 	font-family: sans-serif;
 	margin: 0;
 	max-height: 100vh;
-	min-width: 300px;
+	min-width: 320px;
 	overflow: hidden;
 	padding: 0;
 }
-
-/* old primary colors #f9da49 */
 
 .centered {
 	margin: 0 auto;
 }
 
-.button {
+.clickable {
 	cursor: pointer;
 }
 
@@ -59,6 +57,7 @@ header {
 	display: -ms-flexbox;
 	display: flex;
 	height: 60px;
+	align-items: center;
 	-webkit-box-pack: justify;
 	    -ms-flex-pack: justify;
 	        justify-content: space-between;
@@ -112,6 +111,7 @@ header {
 	display: flex;
 	-ms-flex-line-pack: center;
 	    align-content: center;
+	height: 100%;
 }
 
 .header-button:hover {
@@ -381,11 +381,18 @@ header {
 }
 
 .directions-buttons {
-	margin-top: 8px;
+	display: flex;
+	max-width: 250px;
+	justify-content: space-around;
 }
 
 .directions-button {
-	margin-right: 4px;
+	margin-top: 8px;
+	width: 53px;
+	height: 35px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 
 .column {
@@ -400,6 +407,12 @@ header {
 .beers-table th {
 	padding: 3px 0;
 	border-bottom: 2px solid #808080;
+	text-align: left;
+}
+
+.beers-table th.column-xs {
+	max-width: 26px;
+	width: 26px;
 }
 
 .beers-table tr {
@@ -407,7 +420,7 @@ header {
 }
 
 .beers-table td {
-	padding: 2px 0 2px 6px;
+	padding: 2px 0 2px 3px;
 }
 
 .beers-table img {
@@ -420,12 +433,12 @@ header {
 
 .column-xs {
 	flex: 1;
-	max-width: 20px;
+	max-width: 18px;
 }
 
 .column-s {
 	flex: 1;
-	min-width: 50px;
+	min-width: 45px;
 }
 
 .column-m {
@@ -447,7 +460,11 @@ header {
 }
 
 #card-content {
-	margin: 0 25px;
+	margin: 0 0.3em;
+	flex: 1;
+}
+
+#card-content .card-top-column:first-child {
 	flex: 1;
 }
 
@@ -485,9 +502,9 @@ header {
 
 #rating {
 	flex: 1;
-	min-width: 160px;
-	-ms-flex-item-align: start;
-	    align-self: flex-start;
+	min-width: 190px;
+	-ms-flex-item-align: end;
+	    align-self: flex-end;
 }
 
 #bar-info {
@@ -530,7 +547,7 @@ header {
 	-webkit-box-pack: justify;
 	    -ms-flex-pack: justify;
 	        justify-content: space-between;
-	margin-top: 20px;
+	padding: 0.9em 0.4em 0 0.4em;
 }
 
 #restaurant-card {
@@ -608,32 +625,49 @@ header {
 
 /* ----- TUTORIAL MODAL ALKU ----- */
 
+input[type="checkbox"] {
+	margin-right: 0.75em;
+}
+
+.modal-body, .modal-header, .modal-footer {
+	padding: 0 1em;
+}
+
 .modal-header {
 	background-color: var(--bg-dark);
-	border-top-left-radius: 12px;
-	border-top-right-radius: 12px;
+	border-top-left-radius: 0.75em;
+	border-top-right-radius: 0.75em;
+	height: 65px;
+	padding-right: 0;
 }
 
-.modal-body, .modal-header {
-	padding: 16px;
+.modal-header h2 {
+	font: 2em 'Bebas Neue', sans-serif;
+	text-align: center;
+	letter-spacing: 1.5px;
+	color: var(--primary);
+	top: 50%;
+	position: relative;
+	transform: translateY(-50%);
 }
 
-.modal-content {
-	height: calc(100% - 32px);
+.modal-body {
+	flex: 1;
+	padding-top: 1em;
 	overflow-y: auto;
 }
 
-.modal-content h2 {
-	font: 2em 'Bebas Neue', sans-serif;
-	letter-spacing: 1.5px;
-	color: var(--secondary);
-}
-
-.modal-content p {
-	margin-left: 8px;
+.modal-body p {
+	margin-left: 0.5em;
 	line-height: 1.4em;
 	font-size: 1em;
-	margin-bottom: 8px;
+	margin-bottom: 0.5em;
+}
+
+.modal-footer {
+	height: 45px;
+	display: flex;
+	align-items: center;
 }
 
 #modal {
@@ -643,6 +677,7 @@ header {
 	height: 75%;
 	width: 90%;
 	position: fixed;
+	flex-direction: column;
 	border-radius: 12px;
 	top:  50%;
 	left: 50%;
@@ -656,8 +691,11 @@ header {
 	background-color: var(--bg-light);
 }
 
+#modal.visible {
+	display: flex;
+}
+
 #modal-close-x {
-	margin: -15px -15px 0 0;
 	background-color: transparent;
 	color: var(--bg-light);
 }
@@ -723,20 +761,33 @@ header {
 		padding-right: 0;
 	}
 
+	.directions-buttons {
+		display: flex;
+		justify-content: space-around;
+	}
+
+	.directions-button {
+		width: 40px;
+		height: 35px;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+
 	.title {
 		font-size: 2.2em;
 	}
 
-	.title-text {
-		height: 0.7em;
-	}
-
 	.rating-icon {
-		width: 26px;
+		width: 30px;
 	}
 
 	.header-icon {
 		height: 25px;
+	}
+
+	.beers-table {
+		font-size: 0.9em;
 	}
 
 	.draggable {
@@ -745,6 +796,10 @@ header {
 
 	header, #title-container {
 		height: 45px;
+	}
+
+	#card-content {
+		margin: 0;
 	}
 
 	#searchbox{
@@ -767,10 +822,6 @@ header {
 	#restaurant-card {
 		width: 100%;
 		max-width: 600px;
-	}
-
-	#card-content {
-		margin: 0 10px;
 	}
 
 	#rating {

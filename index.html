@@ -27,7 +27,7 @@
 			
 			<div class="menu-search-container menu-block centered">
 				<input id="menu-searchbox" class="search" type="text" placeholder="Etsi...">
-				<button id="menu-search-button"><img class="button" src="kgps_icons/search.svg" alt="haku"></button>
+				<button id="menu-search-button"><img class="clickable" src="kgps_icons/search.svg" alt="haku"></button>
 			</div>
 		
 			<div id="search-option-buttons" class="centered menu-block">
@@ -115,19 +115,20 @@
 
 	<div id="oof" class="out-of-focus-area">
 		<div id="modal">
-			
-			<div class="modal-content">
-				<div class="modal-header">
-					<a id="modal-close-x" class="closebtn button">x</a>
-					<h2>Mikä ihmeen kaljakartta?</h2>
-				</div>
-				<div class="modal-body">
-					<p>Kaljakartan avulla löydät juuri Sinun makuusi ja kukkarollesi sopivat olutravintolat lähistöltäsi.</p>
-					<p>Voit etsiä oluita haluamillasi hakukriteereillä ja rajata hakua esimerkiksi hinnan, alkoholipitoisuuden, merkin ja panimon mukaan.</p>
-				</div>
-				
-				
+
+			<div class="modal-header">
+				<a id="modal-close-x" class="closebtn button">x</a>
+				<h2>Mikä ihmeen kaljakartta?</h2>
 			</div>
+			<div class="modal-body">
+				<p>Kaljakartan avulla löydät juuri Sinun makuusi ja kukkarollesi sopivat olutravintolat lähistöltäsi.</p>
+				<p>Voit etsiä oluita haluamillasi hakukriteereillä ja rajata hakua esimerkiksi hinnan, alkoholipitoisuuden, merkin ja panimon mukaan.</p>
+				<p>Voit hakea osoitteita tietystä kaupungista lisäämällä sen hakukenttään osoitteen perään. Esimerkiksi "Jyrätie, Tornio" etsii vain Tornion alueelta.</p>
+			</div>
+			<div class="modal-footer">
+				<label class="clickable"><input type="checkbox" name="noMoreInstructions">Älä näytä ohjeita enää uudelleen.</label>
+			</div>
+
 		</div>
 	</div>
 
@@ -150,7 +151,7 @@
 
 	<div id="search-container">
 		<input id="searchbox" class="search" type="text" placeholder="Etsi...">
-		<button id="search-button"><img class="button" src="kgps_icons/search.svg" alt="haku"></button>
+		<button id="search-button"><img class="clickable" src="kgps_icons/search.svg" alt="haku"></button>
 	</div>
 
 </body>
