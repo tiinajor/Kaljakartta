@@ -11,11 +11,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class RESTController
 {
 
-    @RequestMapping(value = "/restaurants", method = RequestMethod.GET)
+    @RequestMapping(value = "/restaurant", method = RequestMethod.GET)
     public @ResponseBody String passRestaurants(@RequestParam String name) {
 
-    	String ret = Dao.getRestaurant(name);
-    	return ret;
+//    	String ret = Dao.getRestaurant(name);
+
+			return Dao.getRestaurant(name).toString();
+
 
     }
 
