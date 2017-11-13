@@ -18,19 +18,19 @@ import com.tinkerpop.gremlin.java.GremlinPipeline;
 
 public class Dao {
 
-	private static OrientGraphFactory factory = new OrientGraphFactory("remote:188.166.162.144:2424/KaljakarttaDB",
-			"dao", "bakkiPassu");
-	private static OrientGraphNoTx graph = factory.getNoTx();
+	private static OrientGraphFactory factory;
+	private static OrientGraphNoTx graph;
 
 	public Dao(String address, String user, String pass) {
 
-		factory = new OrientGraphFactory("remote:188.166.162.144:2424/KaljakarttaDB", "dao", "bakkiPassu");
+		System.out.println("New Dao object created");
+		factory = new OrientGraphFactory(address, user, pass).setupPool(0, 20);
 		graph = factory.getNoTx();
 
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public static ArrayList<String> getBrands() {
+	public ArrayList<String> getBrands() {
 
 		ArrayList<String> brands = new ArrayList();
 
@@ -51,7 +51,7 @@ public class Dao {
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public static ArrayList<String> getBeerTypes() {
+	public ArrayList<String> getBeerTypes() {
 
 		ArrayList<String> types = new ArrayList();
 
@@ -71,8 +71,7 @@ public class Dao {
 
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public static JSONArray getRestaurant(String name) {
+	public JSONArray getRestaurant(String name) {
 
 		try {
 			// Vertex restaurant = graph.getVertices("Restaurant.name",
@@ -144,7 +143,7 @@ public class Dao {
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public static HashMap<String, Double[]> filterRestaurants(JSONObject params) {
+	public HashMap<String, Double[]> filterRestaurants(JSONObject params) {
 
 		HashMap restaurants = new HashMap();
 		HashMap keys = new HashMap();
