@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -99,12 +98,12 @@ public class Dao {
 				double vol = e.getProperty("vol");
 				Vertex bev = e.getVertex(Direction.OUT);
 
-				tapBev.put("name", bev.getProperty("name"));
+				tapBev.put("name", bev.getProperty("name").toString());
 				tapBev.put("serving", "tap");
 				tapBev.put("price", price);
 				tapBev.put("vol", vol);
-				tapBev.put("abv", bev.getProperty("abv"));
-				tapBev.put("type", bev.getProperty("type"));
+				tapBev.put("abv", bev.getProperty("abv").toString());
+				tapBev.put("type", bev.getProperty("type").toString());
 
 				restaurantValues.put(tapBev);
 
@@ -124,12 +123,12 @@ public class Dao {
 				double vol = e.getProperty("vol");
 				Vertex bev = e.getVertex(Direction.OUT);
 
-				botBev.put("name", bev.getProperty("name"));
+				botBev.put("name", bev.getProperty("name").toString());
 				botBev.put("serving", "bottle");
 				botBev.put("price", price);
 				botBev.put("vol", vol);
-				botBev.put("abv", bev.getProperty("abv"));
-				botBev.put("type", bev.getProperty("type"));
+				botBev.put("abv", bev.getProperty("abv").toString());
+				botBev.put("type", bev.getProperty("type").toString());
 
 				restaurantValues.put(botBev);
 
