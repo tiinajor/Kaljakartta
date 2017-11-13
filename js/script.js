@@ -269,7 +269,6 @@ window.onload = function(){
 		}
 	]
 	createBeersTable(barBeerList);
-
 	updateTable(barBeerList.sort(sortBy("brand", true)));
 	
 	const theads = document.getElementsByTagName('th');
@@ -462,7 +461,7 @@ window.onload = function(){
 	// modaalin sulkeminen
 	document.getElementById('modal-close-x').addEventListener('click', hideModal);
 
-
+	// out of focus alueen klikkaaminen sulkee kaikki
 	document.getElementById('oof').addEventListener('click',(e) => {
 		if(e.target === oof) {
 			hideModal();
@@ -1005,7 +1004,7 @@ function locateUser(distance, infowindow) {
 			handleLocationError(true, infowindow, map.getCenter());
   		});
 	} else {
-		// Browser doesn't support Geolocation
+		// Selain ei tue geolokaatiota
 		handleLocationError(false, infowindow, map.getCenter());
 	}
 };
@@ -1082,22 +1081,22 @@ function calcRoute(directionsService, directionsRenderer, endPoint, mode) {
 		region: "FI"
 	}, function(response, status) {
 		if (status === 'OK') {
-			showDirections(directionsRenderer, response);
+			directionsRenderer.setDirections(response);
+			const windowHeight = window.innerHeight;
+			document.getElementById('route').style.height = windowHeight * 0.3 + "px";
+			document.getElementById('search-container').style.display = "none";
+			const marker = new google.maps.Marker({
+				map: map,
+				position: endPoint,
+			});
+			markers.push(marker);
+			resizeElementHeights();
+			closeCard();
 		} else {
 			window.alert('Reittioheiden hakeminen ei onnistunut: ' + status);
 		}
 	});
 };
-
-// avaa #route ja näyttää reitin sekä reittiohjeet
-function showDirections(directionsRenderer, response) {
-	directionsRenderer.setDirections(response);
-	const windowHeight = window.innerHeight;
-	document.getElementById('route').style.height = windowHeight * 0.3 + "px";
-	document.getElementById('search-container').style.display = "none";
-	resizeElementHeights();
-	closeCard();
-}
 
 // hakee max 60 baaria ja 60 yökerhoa annetun sijainnin läheltä
 function searchNearby(loc, distance) {
