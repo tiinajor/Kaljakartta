@@ -405,14 +405,15 @@ header {
 }
 
 .beers-table th {
-	padding: 3px 0;
+	padding-bottom: 5px;
 	border-bottom: 2px solid #808080;
 	text-align: left;
+	cursor: pointer;
 }
 
-.beers-table th.column-xs {
-	max-width: 26px;
-	width: 26px;
+.beers-table th img {
+	height: 18px;
+	vertical-align: middle;
 }
 
 .beers-table tr {
@@ -426,7 +427,6 @@ header {
 
 .beers-table img {
 	height: 18px;
-	vertical-align: bottom;
 }
 
 .odd-row {
@@ -441,6 +441,7 @@ header {
 .column-s {
 	flex: 1;
 	min-width: 45px;
+	text-align: center;
 }
 
 .column-m {
@@ -791,10 +792,6 @@ input[type="checkbox"] {
 		height: 25px;
 	}
 
-	.beers-table {
-		font-size: 0.9em;
-	}
-
 	.draggable {
 		height: 25px;
 	}
@@ -838,8 +835,8 @@ input[type="checkbox"] {
 	}
 }
 
-@media only screen and (max-width: 400px) {
-	td.column-m {
+@media only screen and (max-width: 450px) {
+	.column-m {
 		display: none;
 	}
 }
