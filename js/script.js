@@ -227,13 +227,14 @@ window.onload = function(){
 	const priceSlider = document.getElementById('price-slider');
 	const alcoholSlider = document.getElementById('alcohol-slider');
 	const distanceSlider = document.getElementById('distance-slider');
-	const buttons = document.getElementsByClassName('directions-button');
+	const directionsButtons = document.getElementsByClassName('directions-button');
 	const handle = document.querySelector('.draggable');
 	const headerElement = document.querySelector('header');
 	const mapElement = document.getElementById('map');
 	const menuElement = document.getElementById('side-menu');
 	const restaurantCard = document.getElementById('restaurant-card');
 	const oof = document.getElementById('oof');
+	const theads = document.getElementsByTagName('th');
 	const directionsElement = document.getElementById('route');
 	const directionsService = new google.maps.DirectionsService;
     const directionsRenderer = new google.maps.DirectionsRenderer({suppressMarkers: true});
@@ -270,48 +271,63 @@ window.onload = function(){
 
 	//showModal();
 
-	
 	createBeerTable();
 	
-	const theads = document.getElementsByTagName('th');
+
 	Array.from(theads).forEach((e) => e.addEventListener('click', function() {
 		const column = e.getAttribute('data-id');
+		const inactiveSortIcon = 'kgps_icons/sort-icon-inactive.png';
+		const ascSortIcon = 'kgps_icons/sort-icon-ascend.png';
+		const descSortIcon = 'kgps_icons/sort-icon-descend.png';
 		let sorteValues;
+		let activeSortIcon;
+		
 		switch(column) {
 			case 'serving':
 				servingAsc = !servingAsc;
 				sortedValues = beerList.sort(sortBy(column, servingAsc));
 				updateTable(sortedValues);
+				activeSortIcon = servingAsc ? descSortIcon : ascSortIcon;
 				break;
 			case 'name':
 				nameAsc = !nameAsc;
 				sortedValues = beerList.sort(sortBy(column, nameAsc));
 				updateTable(sortedValues);
+				activeSortIcon = nameAsc ? descSortIcon : ascSortIcon;
 				break;
 			case 'type':
 				typeAsc = !typeAsc;
 				sortedValues = beerList.sort(sortBy(column, typeAsc));
 				updateTable(sortedValues);
+				activeSortIcon = typeAsc ? descSortIcon : ascSortIcon;
 				break;
 			case 'abv':
 				abvAsc = !abvAsc;
 				sortedValues = beerList.sort(sortBy(column, abvAsc));
 				updateTable(sortedValues);
+				activeSortIcon = abvAsc ? descSortIcon : ascSortIcon;
 				break;
 			case 'vol':
 				volAsc = !volAsc;
 				sortedValues = beerList.sort(sortBy(column, volAsc));
 				updateTable(sortedValues);
+				activeSortIcon = volAsc ? descSortIcon : ascSortIcon;
 				break;
 			case 'price':
 				priceAsc = !priceAsc;
 				sortedValues = beerList.sort(sortBy(column, priceAsc));
 				updateTable(sortedValues);
+				activeSortIcon = priceAsc ? descSortIcon : ascSortIcon;
 				break;
 			default:
 				break;
 		}
 
+		for (let i = 0; i < theads.length; i++) {
+			if (theads[i].childNodes.length > 0) {
+				theads[i].childNodes[0].src = (theads[i] === e) ? activeSortIcon : inactiveSortIcon;
+			}
+		}
 	}));
 
 
@@ -440,7 +456,7 @@ window.onload = function(){
 				beerBrands = beerBrands.map(x => {return x.trim()});
 				createList(beerBrands, document.getElementById('brand-list'), "brands", searchVars);
 			})
-			.catch(err => {createList(["Error 404", "No beer found"], document.getElementById('brand-list'), "brands", searchVars);});
+			.catch(err => createList(["Error 404", "No beer found"], document.getElementById('brand-list'), "brands", searchVars));
 	});
 
 	// käyttäjän GPS paikannus
@@ -487,15 +503,6 @@ window.onload = function(){
 		directionsMaxHeight = document.querySelector('.adp').clientHeight  + routeOptionsHeight + 8;
 		mapMinHeight = windowHeight - headerHeight - directionsMaxHeight;
 	});
-	handle.addEventListener('touchstart', (e) => {
-		mouseDown = true;
-		mouseStartPos = {x: e.pageX, y: e.pageY};
-		handleOffset = mouseStartPos.y - handle.getBoundingClientRect().top;
-		const routeOptionsHeight = document.querySelector('.adp-list') != null ? document.querySelector('.adp-list').clientHeight : 0;
-		directionsMaxHeight = document.querySelector('.adp').clientHeight  + routeOptionsHeight + 8;
-		mapMinHeight = windowHeight - headerHeight - directionsMaxHeight;
-	});
-	window.addEventListener('touchend', () => mouseDown = false);
 	window.addEventListener('mouseleave', () => mouseDown = false);
 	window.addEventListener('mouseup', () => mouseDown = false);
 	window.addEventListener('mousemove', (e) => {
@@ -532,7 +539,11 @@ window.onload = function(){
 	});
 
 	// menun voi avata pyyhkäisemällä vasemmasta reunasta
-	mapElement.addEventListener('touchstart', (e) => mouseStartPos = {x: e.changedTouches[0].pageX, y: e.changedTouches[0].pageX});
+	mapElement.addEventListener('touchstart', (e) => {
+		const boolean = !(e.changedTouches[0].pageX < 25);
+		map.setOptions({ draggable: boolean});
+		mouseStartPos = {x: e.changedTouches[0].pageX, y: e.changedTouches[0].pageX};
+	});
 	mapElement.addEventListener('touchend', (e) => {
 		const moveAmount = e.changedTouches[0].pageX - mouseStartPos.x;
 		if(mouseStartPos.x < 25 && moveAmount > 50) {
@@ -558,8 +569,8 @@ window.onload = function(){
 		}
 	});
 
-	// reittiohjenapit asettaa kulkuneuvon napin ID:n mukaan
-	Array.from(buttons).forEach((e) => e.addEventListener('click', function() {
+	// reittiohjenapit asettaa reitin kulkuneuvon napin ID:n mukaan
+	Array.from(directionsButtons).forEach((e) => e.addEventListener('click', function() {
 		const endPoint = document.getElementById('bar-address').textContent;
 		const barName = document.getElementById('bar-name').textContent;
 		const mode = e.id.toUpperCase();
@@ -642,11 +653,11 @@ function createBeerTable() {
 	<thead>
 	<tr>
 		<th class="column-xs" data-id="serving"></th>
-		<th class="column-l" data-id="name"><img src="kgps_icons/sort-icon-active.svg"/>Nimi</th>
-		<th class="column-m" data-id="type"><img src="kgps_icons/sort-icon.svg"/>Tyyppi</th>
-		<th class="column-s" data-id="vol"><img src="kgps_icons/sort-icon.svg"/>Koko</th>
-		<th class="column-s" data-id="abv"><img src="kgps_icons/sort-icon.svg"/>Alk-%</th>
-		<th class="column-s" data-id="price"><img src="kgps_icons/sort-icon.svg"/>Hinta</th>
+		<th class="column-l" data-id="name"><img src="kgps_icons/sort-icon-descend.png"/>Nimi</th>
+		<th class="column-m" data-id="type"><img src="kgps_icons/sort-icon-inactive.png"/>Tyyppi</th>
+		<th class="column-s" data-id="vol"><img src="kgps_icons/sort-icon-inactive.png"/>Koko</th>
+		<th class="column-s" data-id="abv"><img src="kgps_icons/sort-icon-inactive.png"/>Alk-%</th>
+		<th class="column-s" data-id="price"><img src="kgps_icons/sort-icon-inactive.png"/>Hinta</th>
 	</tr>
 	</thead>
 	<tbody>
