@@ -405,18 +405,20 @@ header {
 }
 
 .beers-table th {
-	padding: 3px 0;
+	padding-bottom: 5px;
 	border-bottom: 2px solid #808080;
 	text-align: left;
+	cursor: pointer;
 }
 
-.beers-table th.column-xs {
-	max-width: 26px;
-	width: 26px;
+.beers-table th img {
+	height: 18px;
+	vertical-align: middle;
 }
 
 .beers-table tr {
 	display: flex;
+	padding: 2px 0;
 }
 
 .beers-table td {
@@ -439,6 +441,7 @@ header {
 .column-s {
 	flex: 1;
 	min-width: 45px;
+	text-align: center;
 }
 
 .column-m {
@@ -462,6 +465,8 @@ header {
 #card-content {
 	margin: 0 0.3em;
 	flex: 1;
+	overflow-y: auto;
+	height: calc(100vh - 200px);
 }
 
 #card-content .card-top-column:first-child {
@@ -473,8 +478,6 @@ header {
 }
 
 #drinks-container {
-	height: calc(100vh - 340px);
-    overflow-y: auto;
 	display: -webkit-box;
 	display: -ms-flexbox;
 	display: flex;
@@ -516,6 +519,7 @@ header {
 #bar-name {
 	font-size: 1.8em;
 	margin: 0;
+	padding-bottom: 3px;
 }
 
 #bar-address {
@@ -537,10 +541,11 @@ header {
 
 #bar-open {
 	margin: 12px auto 0 auto;
+	font-size: 1.1em;
 }
 
 #card-top-container {
-	height: 100px;
+	min-height: 100px;
 	display: -webkit-box;
 	display: -ms-flexbox;
 	display: flex;
@@ -564,7 +569,8 @@ header {
     -webkit-transition: 0.5s;
     -o-transition: 0.5s;
     transition: 0.5s;
-    width: 600px;
+	width: 600px;
+	min-width: 320px;
     z-index: 65;
 }
 
@@ -786,10 +792,6 @@ input[type="checkbox"] {
 		height: 25px;
 	}
 
-	.beers-table {
-		font-size: 0.9em;
-	}
-
 	.draggable {
 		height: 25px;
 	}
@@ -830,6 +832,12 @@ input[type="checkbox"] {
 
 	#route-close-x {
 		margin-top: 25px;
+	}
+}
+
+@media only screen and (max-width: 450px) {
+	.column-m {
+		display: none;
 	}
 }
 
