@@ -10,18 +10,231 @@ let markers;
 - Restaurant cardin element heights, juomalista voi mennä näytön ulkopuolelle?
 
 */
+let beerlist = [];
+let hardCodedBarBeerList = [
+	{
+		serving: "tap",
+		name: "karhu",
+		type: "lager",
+		price: 3.80,
+		abv: 4.7,
+		vol: 0.5
+	},
+	{
+		serving: "tap",
+		name: "heineken",
+		type: "lager",
+		price: 4.50,
+		abv: 4.8,
+		vol: 0.4
+	},
+	{
+		serving: "bottle",
+		name: "aura",
+		type: "lager",
+		price: 3.90,
+		abv: 4.7,
+		vol: 0.35
+	},
+	{
+		serving: "bottle",
+		name: "Grimbergen Double-Ambree",
+		type: "tumma lager",
+		price: 4.95,
+		abv: 8.0,
+		vol: 0.33
+	},
+	{
+		serving: "bottle",
+		name: "Laitilan IPA",
+		type: "Ale",
+		price: 4.30,
+		abv: 4.5,
+		vol: 0.568
+	},
+	{
+		serving: "bottle",
+		name: "BrewDog Punk IPA",
+		type: "Ale",
+		price: 3.39,
+		abv: 5.6,
+		vol: 0.33
+	},
+	{
+		serving: "bottle",
+		name: "Sandels Vahva",
+		type: "Vahva lager",
+		price: 2.49,
+		abv: 7.5,
+		vol: 0.33
+	},
+	{
+		serving: "bottle",
+		name: "Saku Porter",
+		type: "Porter",
+		price: 3.69,
+		abv: 6.9,
+		vol: 0.5
+	},
+	{
+		serving: "bottle",
+		name: "Moa Imperial Stout",
+		type: "Stout",
+		price: 7.91,
+		abv: 10.2,
+		vol: 0.5
+	},
+	{
+		serving: "bottle",
+		name: "Pyynikin Black IPA",
+		type: "Ale",
+		price: 4.99,
+		abv: 8.5,
+		vol: 0.33
+	},
+	{
+		serving: "tap",
+		name: "Weihenstephaner Pils",
+		type: "pils",
+		price: 3.68,
+		abv: 5.1,
+		vol: 0.5
+	},
+	{
+		serving: "bottle",
+		name: "leffe Blonde",
+		type: "Ale",
+		price: 3.92,
+		abv: 6.6,
+		vol: 0.33
+	},
+	{
+		serving: "tap",
+		name: "Krombacher Weizen",
+		type: "Vehnäolut",
+		price: 3.75,
+		abv: 5.3,
+		vol: 0.5
+	},
+	{
+		serving: "tap",
+		name: "Olvi A",
+		type: "Lager",
+		price: 4.50,
+		abv: 5.2,
+		vol: 0.4
+	},
+	{
+		serving: "bottle",
+		name: "Stadin Panimo South Pacific IPL",
+		type: "Lager",
+		price: 4.99,
+		abv: 5.3,
+		vol: 0.33
+	},
+	{
+		serving: "bottle",
+		name: "Duvel",
+		type: "Ale",
+		price: 3.98,
+		abv: 8.5,
+		vol: 0.33
+	},
+	{
+		serving: "bottle",
+		name: "Pyynikin Sessio White IPA",
+		type: "Ale",
+		price: 3.62,
+		abv: 4.6,
+		vol: 0.33
+	},
+	{
+		serving: "bottle",
+		name: "Grimbergen Blanche",
+		type: "Vehnäolut",
+		price: 3.29,
+		abv: 6.0,
+		vol: 0.33
+	},
+	{
+		serving: "bottle",
+		name: "Sonnisaari Oranki",
+		type: "Ale",
+		price: 4.93,
+		abv: 5.7,
+		vol: 0.33
+	},
+	{
+		serving: "tap",
+		name: "BrewDog Punk IPA",
+		type: "Ale",
+		price: 6.30,
+		abv: 5.6,
+		vol: 0.4
+	},
+	{
+		serving: "bottle",
+		name: "Laitilan Savu IPA",
+		type: "Ale",
+		price: 3.99,
+		abv: 5.9,
+		vol: 0.33
+	},
+	{
+		serving: "bottle",
+		name: "Piraat Tripple Hop",
+		type: "Ale",
+		price: 4.70,
+		abv: 10.5,
+		vol: 0.33
+	},
+	{
+		serving: "tap",
+		name: "Olvi Tuplapukki",
+		type: "Vahva Lager",
+		price: 7.40,
+		abv: 8.5,
+		vol: 0.5
+	},
+	{
+		serving: "bottle",
+		name: "Fat Lizard Taspy Mary Double IPA",
+		type: "Ale",
+		price: 3.98,
+		abv: 8.0,
+		vol: 0.25
+	}
+	,
+	{
+		serving: "bottle",
+		name: "Corona Extra",
+		type: "Lager",
+		price: 4.90,
+		abv: 4.5,
+		vol: 0.355
+	},
+	{
+		serving: "bottle",
+		name: "Olvi Iisalmi IPA",
+		type: "Ale",
+		price: 3.45,
+		abv: 5.0,
+		vol: 0.5
+	}
+]
 
 window.onload = function(){
 	const priceSlider = document.getElementById('price-slider');
 	const alcoholSlider = document.getElementById('alcohol-slider');
 	const distanceSlider = document.getElementById('distance-slider');
-	const buttons = document.getElementsByClassName('directions-button');
+	const directionsButtons = document.getElementsByClassName('directions-button');
 	const handle = document.querySelector('.draggable');
 	const headerElement = document.querySelector('header');
 	const mapElement = document.getElementById('map');
 	const menuElement = document.getElementById('side-menu');
 	const restaurantCard = document.getElementById('restaurant-card');
 	const oof = document.getElementById('oof');
+	const theads = document.getElementsByTagName('th');
 	const directionsElement = document.getElementById('route');
 	const directionsService = new google.maps.DirectionsService;
     const directionsRenderer = new google.maps.DirectionsRenderer({suppressMarkers: true});
@@ -32,10 +245,11 @@ window.onload = function(){
     let mouseStartPos;
     let handleOffset;
     let directionsMaxHeight;
-    let mapMinHeight;
+	let mapMinHeight;
+	//beertable sorting order per column
     let servingAsc = false;
     let typeAsc = false;
-    let brandAsc = false;
+    let nameAsc = true;
     let volAsc = false;
     let abvAsc = false;
     let priceAsc = false;
@@ -57,259 +271,63 @@ window.onload = function(){
 
 	//showModal();
 
-	const barBeerList = [
-		{
-			serving: "tap",
-			brand: "karhu",
-			type: "lager",
-			price: 3.80,
-			abv: 4.7,
-			vol: 0.5
-		},
-		{
-			serving: "tap",
-			brand: "heineken",
-			type: "lager",
-			price: 4.50,
-			abv: 4.8,
-			vol: 0.4
-		},
-		{
-			serving: "bottle",
-			brand: "aura",
-			type: "lager",
-			price: 3.90,
-			abv: 4.7,
-			vol: 0.35
-		},
-		{
-			serving: "bottle",
-			brand: "Grimbergen Double-Ambree",
-			type: "tumma lager",
-			price: 4.95,
-			abv: 8.0,
-			vol: 0.33
-		},
-		{
-			serving: "bottle",
-			brand: "Laitilan IPA",
-			type: "Ale",
-			price: 4.30,
-			abv: 4.5,
-			vol: 0.568
-		},
-		{
-			serving: "bottle",
-			brand: "BrewDog Punk IPA",
-			type: "Ale",
-			price: 3.39,
-			abv: 5.6,
-			vol: 0.33
-		},
-		{
-			serving: "bottle",
-			brand: "Sandels Vahva",
-			type: "Vahva lager",
-			price: 2.49,
-			abv: 7.5,
-			vol: 0.33
-		},
-		{
-			serving: "bottle",
-			brand: "Saku Porter",
-			type: "Porter",
-			price: 3.69,
-			abv: 6.9,
-			vol: 0.5
-		},
-		{
-			serving: "bottle",
-			brand: "Moa Imperial Stout",
-			type: "Stout",
-			price: 7.91,
-			abv: 10.2,
-			vol: 0.5
-		},
-		{
-			serving: "bottle",
-			brand: "Pyynikin Black IPA",
-			type: "Ale",
-			price: 4.99,
-			abv: 8.5,
-			vol: 0.33
-		},
-		{
-			serving: "tap",
-			brand: "Weihenstephaner Pils",
-			type: "pils",
-			price: 3.68,
-			abv: 5.1,
-			vol: 0.5
-		},
-		{
-			serving: "bottle",
-			brand: "leffe Blonde",
-			type: "Ale",
-			price: 3.92,
-			abv: 6.6,
-			vol: 0.33
-		},
-		{
-			serving: "tap",
-			brand: "Krombacher Weizen",
-			type: "Vehnäolut",
-			price: 3.75,
-			abv: 5.3,
-			vol: 0.5
-		},
-		{
-			serving: "tap",
-			brand: "Olvi A",
-			type: "Lager",
-			price: 4.50,
-			abv: 5.2,
-			vol: 0.4
-		},
-		{
-			serving: "bottle",
-			brand: "Stadin Panimo South Pacific IPL",
-			type: "Lager",
-			price: 4.99,
-			abv: 5.3,
-			vol: 0.33
-		},
-		{
-			serving: "bottle",
-			brand: "Duvel",
-			type: "Ale",
-			price: 3.98,
-			abv: 8.5,
-			vol: 0.33
-		},
-		{
-			serving: "bottle",
-			brand: "Pyynikin Sessio White IPA",
-			type: "Ale",
-			price: 3.62,
-			abv: 4.6,
-			vol: 0.33
-		},
-		{
-			serving: "bottle",
-			brand: "Grimbergen Blanche",
-			type: "Vehnäolut",
-			price: 3.29,
-			abv: 6.0,
-			vol: 0.33
-		},
-		{
-			serving: "bottle",
-			brand: "Sonnisaari Oranki",
-			type: "Ale",
-			price: 4.93,
-			abv: 5.7,
-			vol: 0.33
-		},
-		{
-			serving: "tap",
-			brand: "BrewDog Punk IPA",
-			type: "Ale",
-			price: 6.30,
-			abv: 5.6,
-			vol: 0.4
-		},
-		{
-			serving: "bottle",
-			brand: "Laitilan Savu IPA",
-			type: "Ale",
-			price: 3.99,
-			abv: 5.9,
-			vol: 0.33
-		},
-		{
-			serving: "bottle",
-			brand: "Piraat Tripple Hop",
-			type: "Ale",
-			price: 4.70,
-			abv: 10.5,
-			vol: 0.33
-		},
-		{
-			serving: "tap",
-			brand: "Olvi Tuplapukki",
-			type: "Vahva Lager",
-			price: 7.40,
-			abv: 8.5,
-			vol: 0.5
-		},
-		{
-			serving: "bottle",
-			brand: "Fat Lizard Taspy Mary Double IPA",
-			type: "Ale",
-			price: 3.98,
-			abv: 8.0,
-			vol: 0.25
-		}
-		,
-		{
-			serving: "bottle",
-			brand: "Corona Extra",
-			type: "Lager",
-			price: 4.90,
-			abv: 4.5,
-			vol: 0.355
-		},
-		{
-			serving: "bottle",
-			brand: "Olvi Iisalmi IPA",
-			type: "Ale",
-			price: 3.45,
-			abv: 5.0,
-			vol: 0.5
-		}
-	]
-	createBeersTable(barBeerList);
-	updateTable(barBeerList.sort(sortBy("brand", true)));
+	createBeerTable();
 	
-	const theads = document.getElementsByTagName('th');
+
 	Array.from(theads).forEach((e) => e.addEventListener('click', function() {
 		const column = e.getAttribute('data-id');
+		const inactiveSortIcon = 'kgps_icons/sort-icon-inactive.png';
+		const ascSortIcon = 'kgps_icons/sort-icon-ascend.png';
+		const descSortIcon = 'kgps_icons/sort-icon-descend.png';
 		let sorteValues;
+		let activeSortIcon;
+		
 		switch(column) {
 			case 'serving':
 				servingAsc = !servingAsc;
-				sortedValues = barBeerList.sort(sortBy(column, servingAsc));
+				sortedValues = beerList.sort(sortBy(column, servingAsc));
 				updateTable(sortedValues);
+				activeSortIcon = servingAsc ? descSortIcon : ascSortIcon;
 				break;
-			case 'brand':
-				brandAsc = !brandAsc;
-				sortedValues = barBeerList.sort(sortBy(column, brandAsc));
+			case 'name':
+				nameAsc = !nameAsc;
+				sortedValues = beerList.sort(sortBy(column, nameAsc));
 				updateTable(sortedValues);
+				activeSortIcon = nameAsc ? descSortIcon : ascSortIcon;
 				break;
 			case 'type':
 				typeAsc = !typeAsc;
-				sortedValues = barBeerList.sort(sortBy(column, typeAsc));
+				sortedValues = beerList.sort(sortBy(column, typeAsc));
 				updateTable(sortedValues);
+				activeSortIcon = typeAsc ? descSortIcon : ascSortIcon;
 				break;
 			case 'abv':
 				abvAsc = !abvAsc;
-				sortedValues = barBeerList.sort(sortBy(column, abvAsc));
+				sortedValues = beerList.sort(sortBy(column, abvAsc));
 				updateTable(sortedValues);
+				activeSortIcon = abvAsc ? descSortIcon : ascSortIcon;
 				break;
 			case 'vol':
 				volAsc = !volAsc;
-				sortedValues = barBeerList.sort(sortBy(column, volAsc));
+				sortedValues = beerList.sort(sortBy(column, volAsc));
 				updateTable(sortedValues);
+				activeSortIcon = volAsc ? descSortIcon : ascSortIcon;
 				break;
 			case 'price':
 				priceAsc = !priceAsc;
-				sortedValues = barBeerList.sort(sortBy(column, priceAsc));
+				sortedValues = beerList.sort(sortBy(column, priceAsc));
 				updateTable(sortedValues);
+				activeSortIcon = priceAsc ? descSortIcon : ascSortIcon;
 				break;
 			default:
 				break;
 		}
 
+		for (let i = 0; i < theads.length; i++) {
+			if (theads[i].childNodes.length > 0) {
+				theads[i].childNodes[0].src = (theads[i] === e) ? activeSortIcon : inactiveSortIcon;
+			}
+		}
 	}));
 
 
@@ -342,11 +360,11 @@ window.onload = function(){
 	// kartan päällä olevan hakukentän suurennuslasi etsii osoitteen mukaan baarit jos osoite ei ole tyhjä
 	document.getElementById('search-button').addEventListener('click', function() {
 		const input = document.getElementById('searchbox');
-		if(input.value != '') {
+		const address = input.value;
+		if(address != '') {
 			directionsRenderer.setMap(null);
 			clearMarkers();
-			const {address, city} = handleInputAddress(input.value);
-			geocodeAddress(address, city, distance, infowindow);
+			geocodeAddress(address, distance, infowindow);
 			input.value = '';
 		}
 	});
@@ -355,12 +373,12 @@ window.onload = function(){
 	document.getElementById('searchbox').addEventListener('keyup', function(e) {
 		e.preventDefault();
 		const input = document.getElementById('searchbox');
-		if(e.keyCode == 13 && input.value != ''){ 
+		const distance = distanceSlider.noUiSlider.get();
+		const address = input.value;
+		if(e.keyCode == 13 && address != ''){ 
 			directionsRenderer.setMap(null);
 			clearMarkers();
-			const {address, city} = handleInputAddress(input.value);
-			const distance = distanceSlider.noUiSlider.get();
-			geocodeAddress(address, city, distance, infowindow);
+			geocodeAddress(address, distance, infowindow);
 			this.value = '';
 		}
 	});
@@ -368,13 +386,12 @@ window.onload = function(){
 	// menun suurennuslasi etsii osoitteen mukaan baarit jos osoite ei ole tyhjä
 	document.getElementById('menu-search-button').addEventListener('click', function() {
 		const input = document.getElementById('menu-searchbox');
-		if(input.value != '') {
+		const distance = distanceSlider.noUiSlider.get();
+		if(address != '') {
 			closeMenu();
 			clearMarkers();
 			directionsRenderer.setMap(null);
-			const {address, city} = handleInputAddress(input.value);
-			const distance = distanceSlider.noUiSlider.get();
-			geocodeAddress(address, city, distance, infowindow);
+			geocodeAddress(address, distance, infowindow);
 			input.value = '';
 		}
 	});
@@ -383,13 +400,13 @@ window.onload = function(){
 	document.getElementById('menu-searchbox').addEventListener('keyup', function(e) {
 		e.preventDefault();
 		const input = document.getElementById('menu-searchbox');
-		if(e.keyCode == 13 && input.value != ''){ 
+		const distance = distanceSlider.noUiSlider.get();
+		const address = input.value;
+		if(e.keyCode == 13 && address != ''){ 
 			closeMenu();
 			clearMarkers();
 			directionsRenderer.setMap(null);
-			const {address, city} = handleInputAddress(input.value);
-			const distance = distanceSlider.noUiSlider.get();
-			geocodeAddress(address, city, distance, infowindow);
+			geocodeAddress(address, distance, infowindow);
 			input.value = '';
 		}
 	});
@@ -439,7 +456,7 @@ window.onload = function(){
 				beerBrands = beerBrands.map(x => {return x.trim()});
 				createList(beerBrands, document.getElementById('brand-list'), "brands", searchVars);
 			})
-			.catch(err => {createList(["Error 404", "No beer found"], document.getElementById('brand-list'), "brands", searchVars);});
+			.catch(err => createList(["Error 404", "No beer found"], document.getElementById('brand-list'), "brands", searchVars));
 	});
 
 	// käyttäjän GPS paikannus
@@ -486,15 +503,6 @@ window.onload = function(){
 		directionsMaxHeight = document.querySelector('.adp').clientHeight  + routeOptionsHeight + 8;
 		mapMinHeight = windowHeight - headerHeight - directionsMaxHeight;
 	});
-	handle.addEventListener('touchstart', (e) => {
-		mouseDown = true;
-		mouseStartPos = {x: e.pageX, y: e.pageY};
-		handleOffset = mouseStartPos.y - handle.getBoundingClientRect().top;
-		const routeOptionsHeight = document.querySelector('.adp-list') != null ? document.querySelector('.adp-list').clientHeight : 0;
-		directionsMaxHeight = document.querySelector('.adp').clientHeight  + routeOptionsHeight + 8;
-		mapMinHeight = windowHeight - headerHeight - directionsMaxHeight;
-	});
-	window.addEventListener('touchend', () => mouseDown = false);
 	window.addEventListener('mouseleave', () => mouseDown = false);
 	window.addEventListener('mouseup', () => mouseDown = false);
 	window.addEventListener('mousemove', (e) => {
@@ -531,7 +539,11 @@ window.onload = function(){
 	});
 
 	// menun voi avata pyyhkäisemällä vasemmasta reunasta
-	mapElement.addEventListener('touchstart', (e) => mouseStartPos = {x: e.changedTouches[0].pageX, y: e.changedTouches[0].pageX});
+	mapElement.addEventListener('touchstart', (e) => {
+		const boolean = !(e.changedTouches[0].pageX < 25);
+		map.setOptions({ draggable: boolean});
+		mouseStartPos = {x: e.changedTouches[0].pageX, y: e.changedTouches[0].pageX};
+	});
 	mapElement.addEventListener('touchend', (e) => {
 		const moveAmount = e.changedTouches[0].pageX - mouseStartPos.x;
 		if(mouseStartPos.x < 25 && moveAmount > 50) {
@@ -557,8 +569,8 @@ window.onload = function(){
 		}
 	});
 
-	// reittiohjenapit asettaa kulkuneuvon napin ID:n mukaan
-	Array.from(buttons).forEach((e) => e.addEventListener('click', function() {
+	// reittiohjenapit asettaa reitin kulkuneuvon napin ID:n mukaan
+	Array.from(directionsButtons).forEach((e) => e.addEventListener('click', function() {
 		const endPoint = document.getElementById('bar-address').textContent;
 		const barName = document.getElementById('bar-name').textContent;
 		const mode = e.id.toUpperCase();
@@ -635,42 +647,49 @@ window.onload = function(){
 
 
 
-function createBeersTable(beers) {
+function createBeerTable() {
 	const table = document.querySelector('.beers-table');
-	const bottleIcon = "kgps_icons/beer-bottle.svg";
-	const tapIcon = "kgps_icons/beer-tap.svg"
-	let html = '';
-	html += `
+	let html = `
 	<thead>
 	<tr>
 		<th class="column-xs" data-id="serving"></th>
-		<th class="column-l" data-id="brand">  Nimi</th>
-		<th class="column-m" data-id="type">Tyyppi</th>
-		<th class="column-s" data-id="vol">Koko</th>
-		<th class="column-s" data-id="abv">Alk-%</th>
-		<th class="column-s" data-id="price">Hinta</th>
+		<th class="column-l" data-id="name"><img src="kgps_icons/sort-icon-descend.png"/>Nimi</th>
+		<th class="column-m" data-id="type"><img src="kgps_icons/sort-icon-inactive.png"/>Tyyppi</th>
+		<th class="column-s" data-id="vol"><img src="kgps_icons/sort-icon-inactive.png"/>Koko</th>
+		<th class="column-s" data-id="abv"><img src="kgps_icons/sort-icon-inactive.png"/>Alk-%</th>
+		<th class="column-s" data-id="price"><img src="kgps_icons/sort-icon-inactive.png"/>Hinta</th>
 	</tr>
 	</thead>
-	<tbody>`;
+	<tbody>
+	</tbody>`;
+
+	table.innerHTML = html;
+}
+
+function createBeerTableBody(beerList) {
+	const tableBody = document.querySelector('tbody');
+	let html = '';
 	
-	for(let i=0;i<beers.length;i++) {
-		const beer = beers[i];
-		const brand = capitalizeFirstLetter(beer.brand);
+	
+	for(let i=0;i<beerList.length;i++) {
+		const beer = beerList[i];
+		const name = capitalizeFirstLetter(beer.name);
 		const type = capitalizeFirstLetter(beer.type);
+		const bottleIcon = "kgps_icons/beer-bottle.svg";
+		const tapIcon = "kgps_icons/beer-tap.svg"
 		let src = '';
 		beer.serving === "tap" ? src=tapIcon : src=bottleIcon;
 		html += `
 		<tr>
 		<td class="column-xs"><img src=${src} alt="pullot"></td>
-		<td class="column-l">${brand}</td>
+		<td class="column-l">${name}</td>
 		<td class="column-m">${type}</td>
 		<td class="column-s">${beer.vol}</td>
 		<td class="column-s">${beer.abv}</td>
 		<td class="column-s">${beer.price}</td>
 		</tr>`;
 	}
-	html += '</tbody>'
-	table.innerHTML = html;
+	tableBody.innerHTML = html;
 	const rows = document.getElementsByTagName('tr');
 	for (let i=0; i<rows.length; i++) {
 		if(i % 2 !== 0) {
@@ -679,37 +698,39 @@ function createBeersTable(beers) {
 	}
 };
 
-function updateTable(barBeerList) {
+function updateTable(beerList) {
 	const rows = document.querySelector('tbody').rows;
 	const bottleIcon = "kgps_icons/beer-bottle.svg";
 	const tapIcon = "kgps_icons/beer-tap.svg"
-	for(let i = 0; i < rows.length; i++){
-		const icon = barBeerList[i].serving === "tap" ? tapIcon : bottleIcon;
+	for(let i = 0; i < beerList.length; i++){
+		const icon = beerList[i].serving === "tap" ? tapIcon : bottleIcon;
     	rows[i].cells[0].innerHTML = `<img src=${icon}>`;
-    	rows[i].cells[1].textContent = capitalizeFirstLetter(barBeerList[i].brand);
-    	rows[i].cells[2].textContent = capitalizeFirstLetter(barBeerList[i].type);
-    	rows[i].cells[3].textContent = barBeerList[i].vol + "l";
-    	rows[i].cells[4].textContent = barBeerList[i].abv + "%";
-    	rows[i].cells[5].textContent = barBeerList[i].price + "€";
+    	rows[i].cells[1].textContent = capitalizeFirstLetter(beerList[i].name);
+    	rows[i].cells[2].textContent = capitalizeFirstLetter(beerList[i].type);
+    	rows[i].cells[3].textContent = beerList[i].vol + "l";
+    	rows[i].cells[4].textContent = beerList[i].abv + "%";
+    	rows[i].cells[5].textContent = beerList[i].price + "€";
     }
 }
 
 
-function sortBy(col, ascend=true) {
+function sortBy(col, ascendingOrder=true) {
   	return function(a, b) {
 		const x = a[col];
 		const y = b[col];
 		if(typeof x === "string" && typeof y === "string") {
-			return ascend ? x.localeCompare(y) : y.localeCompare(x);
+			return ascendingOrder ? x.localeCompare(y) : y.localeCompare(x);
 		} else {
-			return ascend ? (parseFloat(x) - parseFloat(y)) : (parseFloat(y) - parseFloat(x));
+			return ascendingOrder ? (parseFloat(x) - parseFloat(y)) : (parseFloat(y) - parseFloat(x));
 		}    
   	};
 }
 
 // GET
 function getBarData(barName) {
-	return fetch("https://cors-anywhere.herokuapp.com/http://188.166.162.144:130/restaurant?name="+barName).then(response => response.json());
+	const url = "https://cors-anywhere.herokuapp.com/http://188.166.162.144:130/restaurant?name=" + barName;
+	console.log(url);
+	return fetch(url).then(response => response.status !== 500 ? response.json() : null);
 };
 
 // POST
@@ -890,7 +911,11 @@ function renderBarInfo(place) {
 	const service = new google.maps.places.PlacesService(map);
 	const response = getBarData(place.name);
 	response.then(data => {
-		console.log(data.tap);
+		console.log("data from DB:" + data);
+		beerList = data ? data : hardCodedBarBeerList;
+		createBeerTableBody(beerList);
+		updateTable(beerList.sort(sortBy("name", true)));
+		
 	});
 	barName.innerHTML = place.name;
 	setRating(place.rating);
@@ -1010,7 +1035,7 @@ function locateUser(distance, infowindow) {
 };
 
 // käyttäjän tekemä osoitehaku hakukentässä
-function geocodeAddress(address, searchCity, distance, infowindow) {
+function geocodeAddress(address, distance, infowindow) {
 	const geocoder = new google.maps.Geocoder();
 	const image = 'kgps_icons/yellow-marker.png';
 	geocoder.geocode(
@@ -1018,40 +1043,31 @@ function geocodeAddress(address, searchCity, distance, infowindow) {
 		componentRestrictions: {
 			country: 'FI'
 		}}, function(results, status) {
-		if (status == 'OK') {
-			let result = results[0];
-			if(searchCity) {
-				for(let i=0;i<results.length;i++) {
-					let resultCity = results[i].address_components[1].long_name;
-					if(resultCity.toUpperCase() === searchCity.toUpperCase()) {
-						result = results[i];
-					}
+			if (status == 'OK') {
+				const searchPos = results[0].geometry.location;
+				map.setCenter(searchPos);
+				
+				// jos etsitty paikka on baari/yökerho -> näyttää vain sen markerin, muuten etsii baarit lähistöltä normaalisti
+				if (results[0].types.filter(type => type === "bar" || type === "night_club").length > 0) {
+					searchNearby(searchPos, 1);
+				} else {
+					searchNearby(searchPos, distance);
+					const image = 'kgps_icons/yellow-marker.png';
+					const marker = new google.maps.Marker({
+						map: map,
+						position: searchPos,
+						icon : image,
+					});
+					markers.push(marker);
+					infowindow.setContent(results[0].formatted_address);
+					google.maps.event.addListener(marker, 'click', function() {
+						infowindow.open(map, marker);
+					}); 
 				}
-			}
-			const searchPos = result.geometry.location;
-			map.setCenter(searchPos);
-			
-			// jos etsitty paikka on baari/yökerho -> näyttää vain sen markerin, muuten etsii baarit lähistöltä normaalisti
-			if(result.types.filter(type => type === "bar" || type === "night_club").length > 0) {
-				searchNearby(searchPos, 1);
 			} else {
-				searchNearby(searchPos, distance);
-				const image = 'kgps_icons/yellow-marker.png';
-				const marker = new google.maps.Marker({
-					map: map,
-					position: searchPos,
-					icon : image,
-				});
-				markers.push(marker);
-				infowindow.setContent(result.formatted_address);
-		        google.maps.event.addListener(marker, 'click', function() {
-		        	infowindow.open(map, marker);
-		        }); 
+				alert('Paikannus ei onnistunut: ' + status);
 			}
-		} else {
-			alert('Paikannus ei onnistunut: ' + status);
-		}
-	})
+		})
 };
 
 // reitti käyttäjän lokaatiosta osoitteeseen
