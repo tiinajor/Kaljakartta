@@ -267,7 +267,7 @@ window.onload = function(){
 	markers = [];
 	directionsRenderer.setPanel(document.getElementById('route'));
 
-	document.querySelector('.title').innerHTML += ("<span class='version'>alpha</span>");
+	document.querySelector('.title-link').innerHTML += ("<sup class='version'>alpha</sup>");
 
 	//showModal();
 
