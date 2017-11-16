@@ -791,11 +791,11 @@ input[type="checkbox"] {
 
 	.title {
 		font-size: 2.2em;
+		align-items: flex-end;
 	}
 
 	.version {
 		font-size: 0.8em;
-		transform: translateY(-75%);
 	}
 	
 	.rating-icon {
