@@ -71,6 +71,7 @@ header {
 .title-link {
 	text-decoration: none;
 	display: flex;
+	height: 100%;
 	align-items: center;
 	color: var(--primary);
 	font-family: 'Bebas Neue', sans-serif;
@@ -88,8 +89,7 @@ header {
 .version {
 	font-size: 1em;
 	letter-spacing: 1px;
-	-ms-flex-item-align: flex-start;
-	    align-self: flex-start;
+	transform: translateY(-75%);
 }
 
 .header-icon {
