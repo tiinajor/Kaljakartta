@@ -68,22 +68,25 @@ header {
 	padding-right: 5px;
 }
 
-.title {
+.title-link {
+	text-decoration: none;
+	display: flex;
+	align-items: center;
 	color: var(--primary);
 	font-family: 'Bebas Neue', sans-serif;
+	
+}
+
+.title {
 	font-size: 2.9em;
+	height: 100%;
+	display: flex;
+	align-items: center;
 	letter-spacing: 2px;
-	text-decoration: none;
-	display:  -webkit-box;
-	display:  -ms-flexbox;
-	display:  flex;
-	-webkit-box-align: center;
-	    -ms-flex-align: center;
-	        align-items: center;
 }
 
 .version {
-	font-size: 0.35em;
+	font-size: 1em;
 	letter-spacing: 1px;
 	-ms-flex-item-align: flex-start;
 	    align-self: flex-start;
@@ -94,14 +97,7 @@ header {
 	padding: 0 5px;
 }
 
-#title-container {
-	display: -webkit-box;
-	display: -ms-flexbox;
-	display: flex;
-	height: 60px;
-	align-items: center;
-	min-width: 190px;
-}
+
 
 .header-button {
 	background-color: transparent;
@@ -402,13 +398,20 @@ header {
 
 .beers-table {
 	width: 100%;
+	overflow-y: auto;
+	display: flex;
+	flex-direction: column;
 }
 
 .beers-table th {
-	padding-bottom: 5px;
+	padding: 2px 0 5px 3px;
 	border-bottom: 2px solid #808080;
 	text-align: left;
 	cursor: pointer;
+}
+
+.beers-table th.column-xs {
+	width: 10px;
 }
 
 .beers-table th img {
@@ -423,6 +426,11 @@ header {
 
 .beers-table td {
 	padding: 2px 0 2px 3px;
+	line-height: 1.2em;
+}
+
+.beers-table td.column-s {
+	text-align: center;
 }
 
 .beers-table img {
@@ -434,22 +442,21 @@ header {
 }
 
 .column-xs {
-	flex: 1;
-	max-width: 18px;
+	width: 20px;
+	display: flex;
+	align-items: center;
 }
 
 .column-s {
-	flex: 1;
-	min-width: 45px;
-	text-align: center;
+	width: 66px;
 }
 
 .column-m {
-	flex: 2;
+	flex: 1;
 }
 
 .column-l {
-	flex: 3;
+	flex: 2;
 }
 
 .card-top-column {
@@ -462,17 +469,6 @@ header {
 	padding: 0;
 }
 
-#card-content {
-	margin: 0 0.3em;
-	flex: 1;
-	overflow-y: auto;
-	height: calc(100vh - 200px);
-}
-
-#card-content .card-top-column:first-child {
-	flex: 1;
-}
-
 #card-close-x {
 	left: 94%;
 }
@@ -481,6 +477,8 @@ header {
 	display: -webkit-box;
 	display: -ms-flexbox;
 	display: flex;
+	flex: 1;
+	padding-top: 0.3em;
 	-webkit-box-pack: justify;
 	    -ms-flex-pack: justify;
 	        justify-content: space-between;
@@ -513,7 +511,8 @@ header {
 #bar-info {
 	-webkit-box-flex: 1;
 	    -ms-flex: 1;
-	        flex: 1;
+			flex: 1;
+	margin-bottom: 1em;
 }
 
 #bar-name {
@@ -544,15 +543,25 @@ header {
 	font-size: 1.1em;
 }
 
+#card-content {
+	margin: 0 0.3em;
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	height: calc(100vh - 200px);
+}
+
+#card-content .card-top-column:first-child {
+	flex: 1;
+}
+
 #card-top-container {
-	min-height: 100px;
+	border-bottom: solid 2px #808080;
 	display: -webkit-box;
 	display: -ms-flexbox;
 	display: flex;
-	-webkit-box-pack: justify;
-	    -ms-flex-pack: justify;
-	        justify-content: space-between;
-	padding: 0.9em 0.4em 0 0.4em;
+	min-height: 100px;
+	padding: 0.9em 0.4em 0.5em 0.4em;
 }
 
 #restaurant-card {
@@ -784,6 +793,11 @@ input[type="checkbox"] {
 		font-size: 2.2em;
 	}
 
+	.version {
+		font-size: 0.8em;
+		transform: translateY(-75%);
+	}
+	
 	.rating-icon {
 		width: 30px;
 	}
