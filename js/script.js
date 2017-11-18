@@ -235,6 +235,7 @@ window.onload = function(){
 	const restaurantCard = document.getElementById('restaurant-card');
 	const oof = document.getElementById('oof');
 	const theads = document.getElementsByTagName('th');
+	const servingButtons = document.querySelectorAll('.serving-button');
 	const directionsElement = document.getElementById('route');
 	const directionsService = new google.maps.DirectionsService;
     const directionsRenderer = new google.maps.DirectionsRenderer({suppressMarkers: true});
@@ -272,6 +273,8 @@ window.onload = function(){
 	//showModal();
 
 	createBeerTable();
+	const servingBtnArr = Array.from(servingButtons);
+	servingBtnArr.forEach((e) => e.addEventListener('click', (e) => toggleServing(servingBtnArr, e.target)));
 	
 
 	Array.from(theads).forEach((e) => e.addEventListener('click', function() {
@@ -724,6 +727,12 @@ function sortBy(col, ascendingOrder=true) {
 			return ascendingOrder ? (parseFloat(x) - parseFloat(y)) : (parseFloat(y) - parseFloat(x));
 		}    
   	};
+}
+
+function toggleServing(buttons, el) {
+	console.log(buttons);
+	buttons.forEach((button) => button.classList.remove('serving-button-active'));
+	el.classList.add('serving-button-active');
 }
 
 // GET
