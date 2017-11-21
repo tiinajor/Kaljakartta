@@ -241,7 +241,8 @@ window.onload = function(){
     const directionsRenderer = new google.maps.DirectionsRenderer({suppressMarkers: true});
     let headerHeight = headerElement.clientHeight;
 	let windowHeight = window.innerHeight;
-    let serving = '';
+	let serving = '';
+	let language = "fi";
     let mouseDown = false;
     let mouseStartPos;
     let handleOffset;
@@ -275,6 +276,8 @@ window.onload = function(){
 	createBeerTable();
 	const servingBtnArr = Array.from(servingButtons);
 	servingBtnArr.forEach((e) => e.addEventListener('click', (e) => toggleServing(servingBtnArr, e.target)));
+
+	localizeContent(language);
 	
 
 	Array.from(theads).forEach((e) => e.addEventListener('click', function() {
@@ -956,6 +959,12 @@ function setRating(rating) {
 	}
 	document.getElementById('rating').innerHTML = html;
 };
+
+function localizeContent(language) {
+	locale = language === "fi" ? fi_FI : en_GB;
+	console.log(fi_FI.menu.searchOptionButtons.tapButton);
+	document.getElementById('tapButton').textContent = fi_FI.menu.searchOptionButtons.tapButton;
+}
 
 // apufunctio hillitsemään windowResize kutsumista
 function debounce(func, wait, immediate) {
