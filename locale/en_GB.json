@@ -1,21 +1,39 @@
 en_GB ={
     "menu": {
-        "search-option-buttons": {
+        "searchOptionButtons": {
             "tapButton": "Tap",
             "bottleButton": "Bottle"
         },
-        "search-option-sliders": {
+        "searchOptionSliders": {
             "priceText": "Price",
             "abvText": "Abv",
             "distanceText": "Distance"
         },
-        "lists-container": {
-            "brand-list-text": "Brand",
-            "type-list-text": "Type"
+        "listsContainer": {
+            "brandListText": "Brand",
+            "typeListText": "Type"
         },
-        "menu-buttons": {
-            "button-cancel": "Reset",
-            "button-submit": "Search"
+        "menuButtons": {
+            "buttonCancel": "Reset",
+            "buttonSubmit": "Search"
+        }
+    },
+    "searchContainer": {
+        "searchbox": "Search..."
+    },
+    "restaurantCard": {
+        "directionsButtons": {
+            "walk": "Walk",
+            "drive": "Car",
+            "transit": "Public Transport",
+            "bicycle": "Bicycle"
+        },
+        "beersTable": {
+            "name": "Name",
+            "type": "Type",
+            "vol": "Vol",
+            "abv": "Abv",
+            "price": "Price"
         }
     }
 }
