@@ -14,6 +14,8 @@
 	<link rel="stylesheet" href="css/style.css">
 	<link rel="stylesheet" href="css/nouislider.min.css">
 	<link rel="icon" type="image/png" sizes="32x32" href="kgps_icons/favicon-32x32.png">
+	<script src="locale/fi_FI.json"></script>
+	<script src="locale/en_GB.json"></script>
 	<script async src="js/script.js"></script>
 	<script async defer src="js/wNumb.js"></script>
 	<script async defer src="js/nouislider.min.js"></script>
@@ -32,46 +34,55 @@
 		
 			<div id="search-option-buttons" class="centered menu-block">
 				<button id="tapButton" class="search-option button">
-					<img class="icon" src="kgps_icons/beer-tap.svg" alt="hanat">Hanat
+					<img class="icon" src="kgps_icons/beer-tap.svg" alt="hanat">
+					<span id="tapButtonText">Hanat</span>
 				</button>
 				<button id="bottleButton" class="search-option button">
-					<img class="icon" src="kgps_icons/beer-bottle.svg" alt="pullot">Pullot
+					<img class="icon" src="kgps_icons/beer-bottle.svg" alt="pullot">
+					<span id="bottleButtonText">Pullot</span>
 				</button>
 			</div>
 
+			<!--
 			<div class="search-serving-buttons centered menu-block">
 				<span class="serving-button">Hanat</span>
 				<span class="serving-button serving-button-active">Molemmat</span>
 				<span class="serving-button">Pullot</span>
-			
 			</div>
+			-->
 			
 			<div id="search-option-sliders" class="centered menu-block">
 				<div class="slider-container">
-					<span>Hinta</span>
+					<span id="priceText">Hinta</span>
 					<span id="price" class="right"></span>
 					<div class="slider noUi-extended" id="price-slider"></div>
 				</div>
 				
 				<div class="slider-container">
-					<span>Vahvuus</span>
+					<span id="abvText">Vahvuus</span>
 					<span id="alcohol" class="right"></span>
 					<div class="slider noUi-extended" id="alcohol-slider"></div>
 				</div>
 
 				<div class="slider-container">
-					<span>Etäisyys</span>
+					<span id="distanceText">Etäisyys</span>
 					<span id="distance" class="right"></span>
 					<div class="slider noUi-extended" id="distance-slider"></div>
 				</div>
 			</div>
 			<div class="lists-container menu-block centered">			
 				<div id="brand-list" class="dropdown button">
-					<div>Olutmerkki<img class="dropdown-icon right" src="kgps_icons/sort-down.svg" alt="nuoli-alas"></div>
+					<div>
+						<span id="brandListText">Olutmerkki</span>
+						<img class="dropdown-icon right" src="kgps_icons/sort-down.svg" alt="nuoli-alas">
+					</div>
 				</div>
 
 				<div id="type-list" class="dropdown button">
-					<div>Oluttyyppi<img class="dropdown-icon right" src="kgps_icons/sort-down.svg" alt="nuoli-alas"></div>
+					<div>
+						<span id="typeListText">Oluttyyppi</span>
+						<img class="dropdown-icon right" src="kgps_icons/sort-down.svg" alt="nuoli-alas">
+					</div>
 				</div>
 			</div>
 		</div>

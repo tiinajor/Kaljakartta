@@ -1,0 +1,21 @@
+fi_FI = {
+    "menu": {
+        "searchOptionButtons": {
+            "tapButton": "Hanat",
+            "bottleButton": "Pullot"
+        },
+        "searchOptionSliders": {
+            "priceText": "Hinta",
+            "abvText": "Vahvuus",
+            "distanceText": "Etäisyys"
+        },
+        "listsContainer": {
+            "brandListText": "Olutmerkki",
+            "typeListText": "Oluttyyppi"
+        },
+        "menuButtons": {
+            "buttonCancel": "Tyhjennä",
+            "buttonSubmit": "Hae"
+        }
+    }
+}

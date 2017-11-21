@@ -1,0 +1,21 @@
+en_GB ={
+    "menu": {
+        "search-option-buttons": {
+            "tapButton": "Tap",
+            "bottleButton": "Bottle"
+        },
+        "search-option-sliders": {
+            "priceText": "Price",
+            "abvText": "Abv",
+            "distanceText": "Distance"
+        },
+        "lists-container": {
+            "brand-list-text": "Brand",
+            "type-list-text": "Type"
+        },
+        "menu-buttons": {
+            "button-cancel": "Reset",
+            "button-submit": "Search"
+        }
+    }
+}
