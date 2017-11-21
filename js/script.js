@@ -663,8 +663,11 @@ window.onload = function(){
 
 
 
-
-function createBeerTable(language) {
+/**
+ *  Creates the thead and an empty tbody to '.beers-table' element in the restaurant card.
+ * 
+ */
+function createBeerTable() {
 	const table = document.querySelector('.beers-table');
 	const locale = language === "en" ? en_GB : fi_FI;
 	let html = `
@@ -684,6 +687,11 @@ function createBeerTable(language) {
 	table.innerHTML = html;
 }
 
+/**
+ * Creates the content of the '.beers-table' element from the given list.
+ *
+ * @param {List} beerList List of the beers that the clicked bar has. 
+ */
 function createBeerTableBody(beerList) {
 	const tableBody = document.querySelector('tbody');
 	let html = '';
@@ -716,6 +724,11 @@ function createBeerTableBody(beerList) {
 	}
 };
 
+/**
+ * Updates the content of the '.beers-table' element from the given list.
+ *"
+ * @param {List} beerList Updated list of the beers that the clicked bar has. 
+ */
 function updateTable(beerList) {
 	const rows = document.querySelector('tbody').rows;
 	const bottleIcon = "kgps_icons/beer-bottle.svg";
@@ -732,6 +745,12 @@ function updateTable(beerList) {
 }
 
 
+/**
+ * Helper function to sorting a list. 
+ *"
+ * @param {String} col The column that the items should be sorted by.
+ * @param {boolean} ascendingOrder Determines if the items are sorted in ascending or descending order. Default value is true.
+ */
 function sortBy(col, ascendingOrder=true) {
   	return function(a, b) {
 		const x = a[col];
@@ -744,20 +763,21 @@ function sortBy(col, ascendingOrder=true) {
   	};
 }
 
-function toggleServing(buttons, el) {
-	console.log(buttons);
-	buttons.forEach((button) => button.classList.remove('serving-button-active'));
-	el.classList.add('serving-button-active');
-}
-
-// GET
+/**
+ * Gets the beerlist of the given bar from our API.
+ *
+ * @param {String} barName The name of the bar that you need the beerlist for.
+ * @returns {Object} Returns the beerlist as a JSON or return null if the request status is 500. 
+ */
 function getBarData(barName) {
 	const url = "https://cors-anywhere.herokuapp.com/http://188.166.162.144:130/restaurant?name=" + barName;
 	console.log(url);
 	return fetch(url).then(response => response.status !== 500 ? response.json() : null);
 };
 
-// POST
+/*
+ * Raw post method for sending data to our backend.
+ *
 function postJSON(url, param) {
 	let xhr = new XMLHttpRequest();
 	xhr.open("POST", url+param, true);
@@ -769,8 +789,16 @@ function postJSON(url, param) {
 		}
 	};
 }
+*/
 
-// luo listan divin sisään (aakkosjärjestyksessä)
+/**
+ * Creates a list inside the given element in alphabetical order.
+ *
+ * @param {List} list The list of items to be inserted to the parent element.
+ * @param {HTMLElement} parentDiv The parent element where the list will be created. 
+ * @param {string} id The ID that will be given to the list element.
+ * @param {Object} searchVars An object which contains the search variables.
+ */
 function createList(list, parentDiv, id, searchVars) {
 	const ul = document.createElement('ul');
 	ul.id = id;
@@ -783,28 +811,36 @@ function createList(list, parentDiv, id, searchVars) {
 		let li = document.createElement('li');
 		let content = document.createTextNode(list[i]);
 		li.appendChild(content);
-		li.addEventListener('click', function() {
-			this.classList.toggle('selected');
-			toggleInSearch(li, id, searchVars);
-		});
+		li.addEventListener('click', () => toggleInSearch(li, searchVars));
 		ul.appendChild(li);	
 	}
 	parentDiv.appendChild(ul);
 };
 
-// sulkee menun listan
+/**
+ * Closes the given list.
+ *
+ * @param {HTMLElement} div The div which contains the list element.
+ */
 function closeList(div) {
-	let otherList = div.children[1];
-	let otherDiv = div.children[0];
-	let icon = otherDiv.children[0];
+	const otherList = div.children[1];
+	const otherDiv = div.children[0];
+	const icon = otherDiv.children[0];
 	otherList.style.height = '0px';
-	let closed = true;
+	const closed = true;
 	icon.style.transform = "rotate(-90deg)";
 };
 
-// lisää/poistaa käyttäjän valitsemat olutmerkit ja -tyypit sekä baarityypit hakukriteereihin
-function toggleInSearch(li, parentID, searchVars) {
-	let text = li.textContent || li.innerText;
+/**
+ * Toggles the beer brands and types in the search variables as the user selects/deselects them.
+ *
+ * @param {HTMLElement} li The list item that was clicked.
+ * @param {Object} searchVars The search variables -object.
+ */
+function toggleInSearch(li, searchVars) {
+	const parentID = li.parentElement.id;
+	const text = li.textContent || li.innerText;
+	li.classList.toggle('selected');
 	if(parentID == "brands") {
 		if (searchVars.brands.indexOf(text) >= 0) {
 			searchVars.brands.splice(searchVars.brands.indexOf(text), 1);	
@@ -820,12 +856,17 @@ function toggleInSearch(li, parentID, searchVars) {
 	}
 };
 
+/*
 function handleInputAddress(searchText) {
 	const textParts = searchText.split(",");
 	return textParts.length === 1 ? {address: textParts[0], city: null} : {address: textParts[0].trim(), city: textParts[1].trim()};
 }
+*/
 
-//laskee elementeille uudet korkeudet kun ikkunan koko muuttuu
+/**
+ * Resizes the map, menu and restaurant card heights when the window is resized.
+ *
+ */
 function resizeElementHeights() {
 	const windowHeight = window.innerHeight;
 	const headerHeight = document.querySelector('header').clientHeight;
@@ -836,17 +877,33 @@ function resizeElementHeights() {
 	document.getElementById('map').style.height = mapHeight + "px";
 }
 
+/**
+ * Capitalizes the first letter of the given string.
+ *
+ * @param {string} string The string to be capitalized.
+ * @returns {String} The inputted string with a capitalized first letter.
+ */
 function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 };
 
+/**
+ * Removes duplicates from the given list.
+ *
+ * @param {list} array The list where the duplicates should be removed from.
+ * @returns {list} The same list without duplicates.
+ */
 function removeDuplicates(array) {
   	return array.filter(function(element, position, arr) {
 		return arr.indexOf(element) == position;
   	});
 };
 
-// avaa menun merkki- ja laatulistat niitä painettaessa
+/**
+ * Opens the beer brand and beer type lists in the menu when they are clicked.
+ *
+ * @param {HTMLElement} item The list element that should be made visible.
+ */
 function toggleVisible(item){
     if (item.style.height === '195px'){
         item.style.height = '0px';
@@ -855,7 +912,11 @@ function toggleVisible(item){
     }
 };
 
-// kääntää menun listojen "kolmio-iconit" kun lista avataan/suljetaan
+/**
+ * Rotates the given element.
+ *
+ * @param {HTMLElement} icon The element that needs to be rotated.
+ */
 function rotateIcon(icon) {
 	if (icon.style.transform === 'rotate(0deg)') {
 		icon.style.transform = 'rotate(-90deg)';
