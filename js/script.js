@@ -4,6 +4,8 @@ let pos;
 let infowindow;
 let markers;
 
+loadScript("https://maps.googleapis.com/maps/api/js?key=AIzaSyDuIpE10xbisU_de-Mg_xR4-OpmOVl3BxA&libraries=places&language=fi&region=FI", initMap);
+
 /* 
 - Reittiohjeiden klikkaaminen poistaa kaikki markerit ja näyttää vain lähtöpaikan sekä kohteen
 - Reittiohjeiden musta palkki ei liiku, kun reittiohjeita scrollataan
@@ -242,7 +244,7 @@ window.onload = function(){
     let headerHeight = headerElement.clientHeight;
 	let windowHeight = window.innerHeight;
 	let serving = '';
-	let language = "fi";
+	let language = window.localStorage.getItem('language');
     let mouseDown = false;
     let mouseStartPos;
     let handleOffset;
@@ -254,7 +256,9 @@ window.onload = function(){
     let nameAsc = true;
     let volAsc = false;
     let abvAsc = false;
-    let priceAsc = false;
+	let priceAsc = false;
+	
+	
 
     const searchVars = {
 		serving : serving,
@@ -272,13 +276,11 @@ window.onload = function(){
 	document.querySelector('.title-link').innerHTML += ("<sup class='version'>alpha</sup>");
 
 	//showModal();
-
-	createBeerTable();
-	const servingBtnArr = Array.from(servingButtons);
-	servingBtnArr.forEach((e) => e.addEventListener('click', (e) => toggleServing(servingBtnArr, e.target)));
-
 	localizeContent(language);
-	
+	createBeerTable(language);
+
+	const servingBtnArr = Array.from(servingButtons);
+	servingBtnArr.forEach((e) => e.addEventListener('click', (e) => toggleServing(servingBtnArr, e.target)));	
 
 	Array.from(theads).forEach((e) => e.addEventListener('click', function() {
 		const column = e.getAttribute('data-id');
@@ -336,6 +338,13 @@ window.onload = function(){
 		}
 	}));
 
+	document.querySelector('.button-cancel').addEventListener('click', function() {
+		console.log(this);
+		language = language === "en" ? "fi": "en" ;
+		window.localStorage.setItem('language', language);
+		window.location.reload();
+		localizeContent(language);
+	});
 
 
 	// asettaa kartan, menun, reittiohjeiden sekä baarikortin korkeuden ja korjaa niitä aina kun ikkunan koko muuttuu
@@ -389,7 +398,7 @@ window.onload = function(){
 		}
 	});
 
-	// menun suurennuslasi etsii osoitteen mukaan baarit jos osoite ei ole tyhjä
+	/* menun suurennuslasi etsii osoitteen mukaan baarit jos osoite ei ole tyhjä
 	document.getElementById('menu-search-button').addEventListener('click', function() {
 		const input = document.getElementById('menu-searchbox');
 		const distance = distanceSlider.noUiSlider.get();
@@ -401,6 +410,7 @@ window.onload = function(){
 			input.value = '';
 		}
 	});
+	
 
 	// menun hakukentässä enterin painaminen käynnistää haun myös
 	document.getElementById('menu-searchbox').addEventListener('keyup', function(e) {
@@ -416,6 +426,7 @@ window.onload = function(){
 			input.value = '';
 		}
 	});
+	*/
 
 	// avaa merkit-listan ja sulkee muut listat
 	document.getElementById('brand-list').children[0].addEventListener('click', function() {
@@ -653,17 +664,18 @@ window.onload = function(){
 
 
 
-function createBeerTable() {
+function createBeerTable(language) {
 	const table = document.querySelector('.beers-table');
+	const locale = language === "en" ? en_GB : fi_FI;
 	let html = `
 	<thead>
 	<tr>
 		<th class="column-xs" data-id="serving"></th>
-		<th class="column-l" data-id="name"><img src="kgps_icons/sort-icon-descend.png"/>Nimi</th>
-		<th class="column-m" data-id="type"><img src="kgps_icons/sort-icon-inactive.png"/>Tyyppi</th>
-		<th class="column-s" data-id="vol"><img src="kgps_icons/sort-icon-inactive.png"/>Koko</th>
-		<th class="column-s" data-id="abv"><img src="kgps_icons/sort-icon-inactive.png"/>Alk-%</th>
-		<th class="column-s" data-id="price"><img src="kgps_icons/sort-icon-inactive.png"/>Hinta</th>
+		<th class="column-l" data-id="name"><img src="kgps_icons/sort-icon-descend.png"/>${locale.restaurantCard.beersTable.name}</th>
+		<th class="column-m" data-id="type"><img src="kgps_icons/sort-icon-inactive.png"/>${locale.restaurantCard.beersTable.type}</th>
+		<th class="column-s" data-id="vol"><img src="kgps_icons/sort-icon-inactive.png"/>${locale.restaurantCard.beersTable.vol}</th>
+		<th class="column-s" data-id="abv"><img src="kgps_icons/sort-icon-inactive.png"/>${locale.restaurantCard.beersTable.abv}</th>
+		<th class="column-s" data-id="price"><img src="kgps_icons/sort-icon-inactive.png"/>${locale.restaurantCard.beersTable.price}</th>
 	</tr>
 	</thead>
 	<tbody>
@@ -961,9 +973,25 @@ function setRating(rating) {
 };
 
 function localizeContent(language) {
-	locale = language === "fi" ? fi_FI : en_GB;
-	console.log(fi_FI.menu.searchOptionButtons.tapButton);
-	document.getElementById('tapButton').textContent = fi_FI.menu.searchOptionButtons.tapButton;
+	const locale = language === "en" ? en_GB : fi_FI;
+	document.getElementById('tapButtonText').textContent = locale.menu.searchOptionButtons.tapButton;
+	document.getElementById('bottleButtonText').textContent = locale.menu.searchOptionButtons.bottleButton;
+	document.getElementById('priceText').textContent = locale.menu.searchOptionSliders.priceText;
+	document.getElementById('abvText').textContent = locale.menu.searchOptionSliders.abvText;
+	document.getElementById('distanceText').textContent = locale.menu.searchOptionSliders.distanceText;
+	document.getElementById('brandListText').textContent = locale.menu.listsContainer.brandListText;
+	document.getElementById('typeListText').textContent = locale.menu.listsContainer.typeListText;
+	document.querySelector('.button-cancel').textContent = locale.menu.menuButtons.buttonCancel;
+	document.querySelector('.button-submit').textContent = locale.menu.menuButtons.buttonSubmit;
+	document.getElementById('searchbox').placeholder = locale.searchContainer.searchbox;
+	document.querySelector('#walking img').alt = locale.restaurantCard.directionsButtons.walk;
+	document.querySelector('#walking img').title = locale.restaurantCard.directionsButtons.walk;
+	document.querySelector('#driving img').alt = locale.restaurantCard.directionsButtons.drive;
+	document.querySelector('#driving img').title = locale.restaurantCard.directionsButtons.drive;
+	document.querySelector('#transit img').alt = locale.restaurantCard.directionsButtons.transit;
+	document.querySelector('#transit img').title = locale.restaurantCard.directionsButtons.transit;
+	document.querySelector('#bicycling img').alt = locale.restaurantCard.directionsButtons.bicycle;
+	document.querySelector('#bicycling img').title = locale.restaurantCard.directionsButtons.bicycle;
 }
 
 // apufunctio hillitsemään windowResize kutsumista
@@ -1195,3 +1223,25 @@ function handleLocationError(browserHasGeolocation, infowindow, pos) {
 	                      'Error: Selaimesi ei tue paikannusta.');
 	infowindow.open(map);
 };
+
+function loadScript(url, callback) {
+	const script = document.createElement("script")
+	script.type = "text/javascript";
+	if (script.readyState) {  //IE
+		script.onreadystatechange = function() {
+			if (script.readyState === "loaded" || script.readyState === "complete") {
+				script.onreadystatechange = null;
+				callback();
+			}
+		};
+	} else {  //Others
+		script.onload = function() {
+			callback();
+		};
+	}
+
+	script.src = window.localStorage.getItem('language') === "en" ? 
+		"https://maps.googleapis.com/maps/api/js?key=AIzaSyDuIpE10xbisU_de-Mg_xR4-OpmOVl3BxA&libraries=places&language=en&region=FI"
+		: "https://maps.googleapis.com/maps/api/js?key=AIzaSyDuIpE10xbisU_de-Mg_xR4-OpmOVl3BxA&libraries=places&language=fi&region=FI";
+	document.getElementsByTagName("head")[0].appendChild(script);
+}

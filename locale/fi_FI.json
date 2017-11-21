@@ -17,5 +17,23 @@ fi_FI = {
             "buttonCancel": "Tyhjennä",
             "buttonSubmit": "Hae"
         }
+    },
+    "searchContainer": {
+        "searchbox": "Haku..."
+    },
+    "restaurantCard": {
+        "directionsButtons": {
+            "walk": "Kävely",
+            "drive": "Auto",
+            "transit": "Julkinen liikenne",
+            "bicycle": "Pyöräily"
+        },
+        "beersTable": {
+            "name": "Nimi",
+            "type": "Tyyppi",
+            "vol": "Koko",
+            "abv": "Alk-%",
+            "price": "Hinta"
+        }
     }
 }
