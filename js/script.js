@@ -33,7 +33,7 @@ let hardCodedBarBeerList = [
 	{
 		serving: "bottle",
 		name: "aura",
-		type: "lager",
+		type: "lager,UK lager",
 		price: 3.90,
 		abv: 4.7,
 		vol: 0.35
@@ -244,7 +244,7 @@ window.onload = function(){
     let headerHeight = headerElement.clientHeight;
 	let windowHeight = window.innerHeight;
 	let serving = '';
-	let language = window.localStorage.getItem('language');
+	let language = window.localStorage.getItem('language') || "fi";
     let mouseDown = false;
     let mouseStartPos;
     let handleOffset;
@@ -258,7 +258,7 @@ window.onload = function(){
     let abvAsc = false;
 	let priceAsc = false;
 	
-	
+	console.log(language);
 
     const searchVars = {
 		serving : serving,
@@ -284,6 +284,7 @@ window.onload = function(){
 
 	Array.from(theads).forEach((e) => e.addEventListener('click', function() {
 		const column = e.getAttribute('data-id');
+		const language = window.localStorage.getItem('language');
 		const inactiveSortIcon = 'kgps_icons/sort-icon-inactive.png';
 		const ascSortIcon = 'kgps_icons/sort-icon-ascend.png';
 		const descSortIcon = 'kgps_icons/sort-icon-descend.png';
@@ -294,37 +295,37 @@ window.onload = function(){
 			case 'serving':
 				servingAsc = !servingAsc;
 				sortedValues = beerList.sort(sortBy(column, servingAsc));
-				updateTable(sortedValues);
+				updateTable(sortedValues, language);
 				activeSortIcon = servingAsc ? descSortIcon : ascSortIcon;
 				break;
 			case 'name':
 				nameAsc = !nameAsc;
 				sortedValues = beerList.sort(sortBy(column, nameAsc));
-				updateTable(sortedValues);
+				updateTable(sortedValues, language);
 				activeSortIcon = nameAsc ? descSortIcon : ascSortIcon;
 				break;
 			case 'type':
 				typeAsc = !typeAsc;
 				sortedValues = beerList.sort(sortBy(column, typeAsc));
-				updateTable(sortedValues);
+				updateTable(sortedValues, language);
 				activeSortIcon = typeAsc ? descSortIcon : ascSortIcon;
 				break;
 			case 'abv':
 				abvAsc = !abvAsc;
 				sortedValues = beerList.sort(sortBy(column, abvAsc));
-				updateTable(sortedValues);
+				updateTable(sortedValues, language);
 				activeSortIcon = abvAsc ? descSortIcon : ascSortIcon;
 				break;
 			case 'vol':
 				volAsc = !volAsc;
 				sortedValues = beerList.sort(sortBy(column, volAsc));
-				updateTable(sortedValues);
+				updateTable(sortedValues, language);
 				activeSortIcon = volAsc ? descSortIcon : ascSortIcon;
 				break;
 			case 'price':
 				priceAsc = !priceAsc;
 				sortedValues = beerList.sort(sortBy(column, priceAsc));
-				updateTable(sortedValues);
+				updateTable(sortedValues, language);
 				activeSortIcon = priceAsc ? descSortIcon : ascSortIcon;
 				break;
 			default:
@@ -340,7 +341,7 @@ window.onload = function(){
 
 	document.querySelector('.button-cancel').addEventListener('click', function() {
 		console.log(this);
-		language = language === "en" ? "fi": "en" ;
+		language = language === "en" ? "fi": "en";
 		window.localStorage.setItem('language', language);
 		window.location.reload();
 		localizeContent(language);
@@ -384,6 +385,7 @@ window.onload = function(){
 		}
 	});
 
+
 	// hakukentässä enterin painaminen käynnistää haun myös
 	document.getElementById('searchbox').addEventListener('keyup', function(e) {
 		e.preventDefault();
@@ -397,36 +399,6 @@ window.onload = function(){
 			this.value = '';
 		}
 	});
-
-	/* menun suurennuslasi etsii osoitteen mukaan baarit jos osoite ei ole tyhjä
-	document.getElementById('menu-search-button').addEventListener('click', function() {
-		const input = document.getElementById('menu-searchbox');
-		const distance = distanceSlider.noUiSlider.get();
-		if(address != '') {
-			closeMenu();
-			clearMarkers();
-			directionsRenderer.setMap(null);
-			geocodeAddress(address, distance, infowindow);
-			input.value = '';
-		}
-	});
-	
-
-	// menun hakukentässä enterin painaminen käynnistää haun myös
-	document.getElementById('menu-searchbox').addEventListener('keyup', function(e) {
-		e.preventDefault();
-		const input = document.getElementById('menu-searchbox');
-		const distance = distanceSlider.noUiSlider.get();
-		const address = input.value;
-		if(e.keyCode == 13 && address != ''){ 
-			closeMenu();
-			clearMarkers();
-			directionsRenderer.setMap(null);
-			geocodeAddress(address, distance, infowindow);
-			input.value = '';
-		}
-	});
-	*/
 
 	// avaa merkit-listan ja sulkee muut listat
 	document.getElementById('brand-list').children[0].addEventListener('click', function() {
@@ -732,12 +704,25 @@ function createBeerTableBody(beerList) {
 function updateTable(beerList) {
 	const rows = document.querySelector('tbody').rows;
 	const bottleIcon = "kgps_icons/beer-bottle.svg";
-	const tapIcon = "kgps_icons/beer-tap.svg"
+	const tapIcon = "kgps_icons/beer-tap.svg";
 	for(let i = 0; i < beerList.length; i++){
 		const icon = beerList[i].serving === "tap" ? tapIcon : bottleIcon;
+		const vol = beerList[i].vol === 0 ? "?" : beerList[i].vol;
+		const abv = beerList[i].abv === 0 ? "?" : beerList[i].abv;
+		const price = beerList[i].price === 0 ? "?" : beerList[i].price;
+		let beerType = "?";
+		if(beerList[i].type !== 0) {
+			const typeLocales = (beerList[i].type.indexOf(",") > 0) ? beerList[i].type.split(",") : beerList[i].type;
+			if(typeof(typeLocales) === 'object') {
+				beerType = language === "fi" ? typeLocales[0] : typeLocales[1];
+			} else {
+				beerType = typeLocales;
+			}	
+		}	
+		
     	rows[i].cells[0].innerHTML = `<img src=${icon}>`;
     	rows[i].cells[1].textContent = capitalizeFirstLetter(beerList[i].name);
-    	rows[i].cells[2].textContent = capitalizeFirstLetter(beerList[i].type);
+		rows[i].cells[2].textContent = capitalizeFirstLetter(beerType);
     	rows[i].cells[3].textContent = beerList[i].vol + "l";
     	rows[i].cells[4].textContent = beerList[i].abv + "%";
     	rows[i].cells[5].textContent = beerList[i].price + "€";
@@ -770,7 +755,7 @@ function sortBy(col, ascendingOrder=true) {
  * @returns {Object} Returns the beerlist as a JSON or return null if the request status is 500. 
  */
 function getBarData(barName) {
-	const url = "https://cors-anywhere.herokuapp.com/http://188.166.162.144:130/restaurant?name=" + barName;
+	const url = "https://cors-anywhere.herokuapp.com/http://188.166.162.144:130/restaurant?name=" + barName.toLowerCase();
 	console.log(url);
 	return fetch(url).then(response => response.status !== 500 ? response.json() : null);
 };
@@ -995,11 +980,12 @@ function renderBarInfo(place) {
 	const barPhoto = document.getElementById('bar-photo');
 	const service = new google.maps.places.PlacesService(map);
 	const response = getBarData(place.name);
+	const language = window.localStorage.getItem('language') === "en" ? "en" : "fi";
 	response.then(data => {
 		console.log("data from DB:" + data);
 		beerList = data ? data : hardCodedBarBeerList;
 		createBeerTableBody(beerList);
-		updateTable(beerList.sort(sortBy("name", true)));
+		updateTable(beerList.sort(sortBy("name", true)), language);
 		
 	});
 	barName.innerHTML = place.name;
