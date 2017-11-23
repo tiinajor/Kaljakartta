@@ -257,8 +257,7 @@ window.onload = function(){
     let volAsc = false;
     let abvAsc = false;
 	let priceAsc = false;
-	
-	console.log(language);
+
 
     const searchVars = {
 		serving : serving,
@@ -639,7 +638,7 @@ window.onload = function(){
  *  Creates the thead and an empty tbody to '.beers-table' element in the restaurant card.
  * 
  */
-function createBeerTable() {
+function createBeerTable(language) {
 	const table = document.querySelector('.beers-table');
 	const locale = language === "en" ? en_GB : fi_FI;
 	let html = `
@@ -667,8 +666,6 @@ function createBeerTable() {
 function createBeerTableBody(beerList) {
 	const tableBody = document.querySelector('tbody');
 	let html = '';
-	
-	
 	for(let i=0;i<beerList.length;i++) {
 		const beer = beerList[i];
 		const name = capitalizeFirstLetter(beer.name);
@@ -701,15 +698,15 @@ function createBeerTableBody(beerList) {
  *"
  * @param {List} beerList Updated list of the beers that the clicked bar has. 
  */
-function updateTable(beerList) {
+function updateTable(beerList, language) {
 	const rows = document.querySelector('tbody').rows;
 	const bottleIcon = "kgps_icons/beer-bottle.svg";
 	const tapIcon = "kgps_icons/beer-tap.svg";
 	for(let i = 0; i < beerList.length; i++){
 		const icon = beerList[i].serving === "tap" ? tapIcon : bottleIcon;
-		const vol = beerList[i].vol === 0 ? "?" : beerList[i].vol;
-		const abv = beerList[i].abv === 0 ? "?" : beerList[i].abv;
-		const price = beerList[i].price === 0 ? "?" : beerList[i].price;
+		const vol = beerList[i].vol === 0 ? "?" : beerList[i].vol + "l";
+		const abv = beerList[i].abv === 0 ? "?" : beerList[i].abv + "%";
+		const price = beerList[i].price === 0 ? "?" : beerList[i].price + "€";
 		let beerType = "?";
 		if(beerList[i].type !== 0) {
 			const typeLocales = (beerList[i].type.indexOf(",") > 0) ? beerList[i].type.split(",") : beerList[i].type;
@@ -719,13 +716,14 @@ function updateTable(beerList) {
 				beerType = typeLocales;
 			}	
 		}	
+		console.log(beerType);
 		
     	rows[i].cells[0].innerHTML = `<img src=${icon}>`;
     	rows[i].cells[1].textContent = capitalizeFirstLetter(beerList[i].name);
 		rows[i].cells[2].textContent = capitalizeFirstLetter(beerType);
-    	rows[i].cells[3].textContent = beerList[i].vol + "l";
-    	rows[i].cells[4].textContent = beerList[i].abv + "%";
-    	rows[i].cells[5].textContent = beerList[i].price + "€";
+    	rows[i].cells[3].textContent = vol;
+    	rows[i].cells[4].textContent = abv;
+    	rows[i].cells[5].textContent = price;
     }
 }
 
@@ -983,10 +981,15 @@ function renderBarInfo(place) {
 	const language = window.localStorage.getItem('language') === "en" ? "en" : "fi";
 	response.then(data => {
 		console.log("data from DB:" + data);
-		beerList = data ? data : hardCodedBarBeerList;
-		createBeerTableBody(beerList);
-		updateTable(beerList.sort(sortBy("name", true)), language);
-		
+		const body = document.querySelector('tbody');
+		if(data.length === 0){
+			body.textContent = "Ei listatietoja saatavilla.";
+			body.classList.add('emptyTable');
+		} else {
+			body.classList.remove('emptyTable');
+			createBeerTableBody(data);
+			updateTable(data.sort(sortBy("name", true)), language);
+		}		
 	});
 	barName.innerHTML = place.name;
 	setRating(place.rating);
