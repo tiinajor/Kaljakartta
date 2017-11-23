@@ -4,6 +4,8 @@ let pos;
 let infowindow;
 let markers;
 
+loadScript("https://maps.googleapis.com/maps/api/js?key=AIzaSyDuIpE10xbisU_de-Mg_xR4-OpmOVl3BxA&libraries=places&language=fi&region=FI", initMap);
+
 /* 
 - Reittiohjeiden klikkaaminen poistaa kaikki markerit ja näyttää vain lähtöpaikan sekä kohteen
 - Reittiohjeiden musta palkki ei liiku, kun reittiohjeita scrollataan
@@ -235,12 +237,14 @@ window.onload = function(){
 	const restaurantCard = document.getElementById('restaurant-card');
 	const oof = document.getElementById('oof');
 	const theads = document.getElementsByTagName('th');
+	const servingButtons = document.querySelectorAll('.serving-button');
 	const directionsElement = document.getElementById('route');
 	const directionsService = new google.maps.DirectionsService;
     const directionsRenderer = new google.maps.DirectionsRenderer({suppressMarkers: true});
     let headerHeight = headerElement.clientHeight;
 	let windowHeight = window.innerHeight;
-    let serving = '';
+	let serving = '';
+	let language = window.localStorage.getItem('language');
     let mouseDown = false;
     let mouseStartPos;
     let handleOffset;
@@ -252,7 +256,9 @@ window.onload = function(){
     let nameAsc = true;
     let volAsc = false;
     let abvAsc = false;
-    let priceAsc = false;
+	let priceAsc = false;
+	
+	
 
     const searchVars = {
 		serving : serving,
@@ -270,9 +276,11 @@ window.onload = function(){
 	document.querySelector('.title-link').innerHTML += ("<sup class='version'>alpha</sup>");
 
 	//showModal();
+	localizeContent(language);
+	createBeerTable(language);
 
-	createBeerTable();
-	
+	const servingBtnArr = Array.from(servingButtons);
+	servingBtnArr.forEach((e) => e.addEventListener('click', (e) => toggleServing(servingBtnArr, e.target)));	
 
 	Array.from(theads).forEach((e) => e.addEventListener('click', function() {
 		const column = e.getAttribute('data-id');
@@ -330,6 +338,13 @@ window.onload = function(){
 		}
 	}));
 
+	document.querySelector('.button-cancel').addEventListener('click', function() {
+		console.log(this);
+		language = language === "en" ? "fi": "en" ;
+		window.localStorage.setItem('language', language);
+		window.location.reload();
+		localizeContent(language);
+	});
 
 
 	// asettaa kartan, menun, reittiohjeiden sekä baarikortin korkeuden ja korjaa niitä aina kun ikkunan koko muuttuu
@@ -383,7 +398,7 @@ window.onload = function(){
 		}
 	});
 
-	// menun suurennuslasi etsii osoitteen mukaan baarit jos osoite ei ole tyhjä
+	/* menun suurennuslasi etsii osoitteen mukaan baarit jos osoite ei ole tyhjä
 	document.getElementById('menu-search-button').addEventListener('click', function() {
 		const input = document.getElementById('menu-searchbox');
 		const distance = distanceSlider.noUiSlider.get();
@@ -395,6 +410,7 @@ window.onload = function(){
 			input.value = '';
 		}
 	});
+	
 
 	// menun hakukentässä enterin painaminen käynnistää haun myös
 	document.getElementById('menu-searchbox').addEventListener('keyup', function(e) {
@@ -410,6 +426,7 @@ window.onload = function(){
 			input.value = '';
 		}
 	});
+	*/
 
 	// avaa merkit-listan ja sulkee muut listat
 	document.getElementById('brand-list').children[0].addEventListener('click', function() {
@@ -646,18 +663,22 @@ window.onload = function(){
 
 
 
-
+/**
+ *  Creates the thead and an empty tbody to '.beers-table' element in the restaurant card.
+ * 
+ */
 function createBeerTable() {
 	const table = document.querySelector('.beers-table');
+	const locale = language === "en" ? en_GB : fi_FI;
 	let html = `
 	<thead>
 	<tr>
 		<th class="column-xs" data-id="serving"></th>
-		<th class="column-l" data-id="name"><img src="kgps_icons/sort-icon-descend.png"/>Nimi</th>
-		<th class="column-m" data-id="type"><img src="kgps_icons/sort-icon-inactive.png"/>Tyyppi</th>
-		<th class="column-s" data-id="vol"><img src="kgps_icons/sort-icon-inactive.png"/>Koko</th>
-		<th class="column-s" data-id="abv"><img src="kgps_icons/sort-icon-inactive.png"/>Alk-%</th>
-		<th class="column-s" data-id="price"><img src="kgps_icons/sort-icon-inactive.png"/>Hinta</th>
+		<th class="column-l" data-id="name"><img src="kgps_icons/sort-icon-descend.png"/>${locale.restaurantCard.beersTable.name}</th>
+		<th class="column-m" data-id="type"><img src="kgps_icons/sort-icon-inactive.png"/>${locale.restaurantCard.beersTable.type}</th>
+		<th class="column-s" data-id="vol"><img src="kgps_icons/sort-icon-inactive.png"/>${locale.restaurantCard.beersTable.vol}</th>
+		<th class="column-s" data-id="abv"><img src="kgps_icons/sort-icon-inactive.png"/>${locale.restaurantCard.beersTable.abv}</th>
+		<th class="column-s" data-id="price"><img src="kgps_icons/sort-icon-inactive.png"/>${locale.restaurantCard.beersTable.price}</th>
 	</tr>
 	</thead>
 	<tbody>
@@ -666,6 +687,11 @@ function createBeerTable() {
 	table.innerHTML = html;
 }
 
+/**
+ * Creates the content of the '.beers-table' element from the given list.
+ *
+ * @param {List} beerList List of the beers that the clicked bar has. 
+ */
 function createBeerTableBody(beerList) {
 	const tableBody = document.querySelector('tbody');
 	let html = '';
@@ -698,6 +724,11 @@ function createBeerTableBody(beerList) {
 	}
 };
 
+/**
+ * Updates the content of the '.beers-table' element from the given list.
+ *"
+ * @param {List} beerList Updated list of the beers that the clicked bar has. 
+ */
 function updateTable(beerList) {
 	const rows = document.querySelector('tbody').rows;
 	const bottleIcon = "kgps_icons/beer-bottle.svg";
@@ -714,6 +745,12 @@ function updateTable(beerList) {
 }
 
 
+/**
+ * Helper function to sorting a list. 
+ *"
+ * @param {String} col The column that the items should be sorted by.
+ * @param {boolean} ascendingOrder Determines if the items are sorted in ascending or descending order. Default value is true.
+ */
 function sortBy(col, ascendingOrder=true) {
   	return function(a, b) {
 		const x = a[col];
@@ -726,14 +763,21 @@ function sortBy(col, ascendingOrder=true) {
   	};
 }
 
-// GET
+/**
+ * Gets the beerlist of the given bar from our API.
+ *
+ * @param {String} barName The name of the bar that you need the beerlist for.
+ * @returns {Object} Returns the beerlist as a JSON or return null if the request status is 500. 
+ */
 function getBarData(barName) {
 	const url = "https://cors-anywhere.herokuapp.com/http://188.166.162.144:130/restaurant?name=" + barName;
 	console.log(url);
 	return fetch(url).then(response => response.status !== 500 ? response.json() : null);
 };
 
-// POST
+/*
+ * Raw post method for sending data to our backend.
+ *
 function postJSON(url, param) {
 	let xhr = new XMLHttpRequest();
 	xhr.open("POST", url+param, true);
@@ -745,8 +789,16 @@ function postJSON(url, param) {
 		}
 	};
 }
+*/
 
-// luo listan divin sisään (aakkosjärjestyksessä)
+/**
+ * Creates a list inside the given element in alphabetical order.
+ *
+ * @param {List} list The list of items to be inserted to the parent element.
+ * @param {HTMLElement} parentDiv The parent element where the list will be created. 
+ * @param {string} id The ID that will be given to the list element.
+ * @param {Object} searchVars An object which contains the search variables.
+ */
 function createList(list, parentDiv, id, searchVars) {
 	const ul = document.createElement('ul');
 	ul.id = id;
@@ -759,28 +811,36 @@ function createList(list, parentDiv, id, searchVars) {
 		let li = document.createElement('li');
 		let content = document.createTextNode(list[i]);
 		li.appendChild(content);
-		li.addEventListener('click', function() {
-			this.classList.toggle('selected');
-			toggleInSearch(li, id, searchVars);
-		});
+		li.addEventListener('click', () => toggleInSearch(li, searchVars));
 		ul.appendChild(li);	
 	}
 	parentDiv.appendChild(ul);
 };
 
-// sulkee menun listan
+/**
+ * Closes the given list.
+ *
+ * @param {HTMLElement} div The div which contains the list element.
+ */
 function closeList(div) {
-	let otherList = div.children[1];
-	let otherDiv = div.children[0];
-	let icon = otherDiv.children[0];
+	const otherList = div.children[1];
+	const otherDiv = div.children[0];
+	const icon = otherDiv.children[0];
 	otherList.style.height = '0px';
-	let closed = true;
+	const closed = true;
 	icon.style.transform = "rotate(-90deg)";
 };
 
-// lisää/poistaa käyttäjän valitsemat olutmerkit ja -tyypit sekä baarityypit hakukriteereihin
-function toggleInSearch(li, parentID, searchVars) {
-	let text = li.textContent || li.innerText;
+/**
+ * Toggles the beer brands and types in the search variables as the user selects/deselects them.
+ *
+ * @param {HTMLElement} li The list item that was clicked.
+ * @param {Object} searchVars The search variables -object.
+ */
+function toggleInSearch(li, searchVars) {
+	const parentID = li.parentElement.id;
+	const text = li.textContent || li.innerText;
+	li.classList.toggle('selected');
 	if(parentID == "brands") {
 		if (searchVars.brands.indexOf(text) >= 0) {
 			searchVars.brands.splice(searchVars.brands.indexOf(text), 1);	
@@ -796,12 +856,17 @@ function toggleInSearch(li, parentID, searchVars) {
 	}
 };
 
+/*
 function handleInputAddress(searchText) {
 	const textParts = searchText.split(",");
 	return textParts.length === 1 ? {address: textParts[0], city: null} : {address: textParts[0].trim(), city: textParts[1].trim()};
 }
+*/
 
-//laskee elementeille uudet korkeudet kun ikkunan koko muuttuu
+/**
+ * Resizes the map, menu and restaurant card heights when the window is resized.
+ *
+ */
 function resizeElementHeights() {
 	const windowHeight = window.innerHeight;
 	const headerHeight = document.querySelector('header').clientHeight;
@@ -812,17 +877,33 @@ function resizeElementHeights() {
 	document.getElementById('map').style.height = mapHeight + "px";
 }
 
+/**
+ * Capitalizes the first letter of the given string.
+ *
+ * @param {string} string The string to be capitalized.
+ * @returns {String} The inputted string with a capitalized first letter.
+ */
 function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 };
 
+/**
+ * Removes duplicates from the given list.
+ *
+ * @param {list} array The list where the duplicates should be removed from.
+ * @returns {list} The same list without duplicates.
+ */
 function removeDuplicates(array) {
   	return array.filter(function(element, position, arr) {
 		return arr.indexOf(element) == position;
   	});
 };
 
-// avaa menun merkki- ja laatulistat niitä painettaessa
+/**
+ * Opens the beer brand and beer type lists in the menu when they are clicked.
+ *
+ * @param {HTMLElement} item The list element that should be made visible.
+ */
 function toggleVisible(item){
     if (item.style.height === '195px'){
         item.style.height = '0px';
@@ -831,7 +912,11 @@ function toggleVisible(item){
     }
 };
 
-// kääntää menun listojen "kolmio-iconit" kun lista avataan/suljetaan
+/**
+ * Rotates the given element.
+ *
+ * @param {HTMLElement} icon The element that needs to be rotated.
+ */
 function rotateIcon(icon) {
 	if (icon.style.transform === 'rotate(0deg)') {
 		icon.style.transform = 'rotate(-90deg)';
@@ -947,6 +1032,28 @@ function setRating(rating) {
 	}
 	document.getElementById('rating').innerHTML = html;
 };
+
+function localizeContent(language) {
+	const locale = language === "en" ? en_GB : fi_FI;
+	document.getElementById('tapButtonText').textContent = locale.menu.searchOptionButtons.tapButton;
+	document.getElementById('bottleButtonText').textContent = locale.menu.searchOptionButtons.bottleButton;
+	document.getElementById('priceText').textContent = locale.menu.searchOptionSliders.priceText;
+	document.getElementById('abvText').textContent = locale.menu.searchOptionSliders.abvText;
+	document.getElementById('distanceText').textContent = locale.menu.searchOptionSliders.distanceText;
+	document.getElementById('brandListText').textContent = locale.menu.listsContainer.brandListText;
+	document.getElementById('typeListText').textContent = locale.menu.listsContainer.typeListText;
+	document.querySelector('.button-cancel').textContent = locale.menu.menuButtons.buttonCancel;
+	document.querySelector('.button-submit').textContent = locale.menu.menuButtons.buttonSubmit;
+	document.getElementById('searchbox').placeholder = locale.searchContainer.searchbox;
+	document.querySelector('#walking img').alt = locale.restaurantCard.directionsButtons.walk;
+	document.querySelector('#walking img').title = locale.restaurantCard.directionsButtons.walk;
+	document.querySelector('#driving img').alt = locale.restaurantCard.directionsButtons.drive;
+	document.querySelector('#driving img').title = locale.restaurantCard.directionsButtons.drive;
+	document.querySelector('#transit img').alt = locale.restaurantCard.directionsButtons.transit;
+	document.querySelector('#transit img').title = locale.restaurantCard.directionsButtons.transit;
+	document.querySelector('#bicycling img').alt = locale.restaurantCard.directionsButtons.bicycle;
+	document.querySelector('#bicycling img').title = locale.restaurantCard.directionsButtons.bicycle;
+}
 
 // apufunctio hillitsemään windowResize kutsumista
 function debounce(func, wait, immediate) {
@@ -1177,3 +1284,25 @@ function handleLocationError(browserHasGeolocation, infowindow, pos) {
 	                      'Error: Selaimesi ei tue paikannusta.');
 	infowindow.open(map);
 };
+
+function loadScript(url, callback) {
+	const script = document.createElement("script")
+	script.type = "text/javascript";
+	if (script.readyState) {  //IE
+		script.onreadystatechange = function() {
+			if (script.readyState === "loaded" || script.readyState === "complete") {
+				script.onreadystatechange = null;
+				callback();
+			}
+		};
+	} else {  //Others
+		script.onload = function() {
+			callback();
+		};
+	}
+
+	script.src = window.localStorage.getItem('language') === "en" ? 
+		"https://maps.googleapis.com/maps/api/js?key=AIzaSyDuIpE10xbisU_de-Mg_xR4-OpmOVl3BxA&libraries=places&language=en&region=FI"
+		: "https://maps.googleapis.com/maps/api/js?key=AIzaSyDuIpE10xbisU_de-Mg_xR4-OpmOVl3BxA&libraries=places&language=fi&region=FI";
+	document.getElementsByTagName("head")[0].appendChild(script);
+}

@@ -45,9 +45,14 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-thymeleaf</artifactId>
 		</dependency>
+<!-- 		<dependency> -->
+<!-- 			<groupId>org.json</groupId> -->
+<!-- 			<artifactId>json</artifactId> -->
+<!-- 		</dependency> -->
 		<dependency>
-			<groupId>org.json</groupId>
-			<artifactId>json</artifactId>
+    		<groupId>com.googlecode.json-simple</groupId>
+    		<artifactId>json-simple</artifactId>
+<!-- 		    <version>1.1.1</version> -->
 		</dependency>
 		<dependency>
 			<groupId>com.tinkerpop.gremlin</groupId>

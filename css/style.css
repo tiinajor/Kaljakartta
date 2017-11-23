@@ -118,6 +118,7 @@ header {
 
 
 /* ----- MENU ----- */
+
 .menu-block {
 	margin: 17px auto 17px 30px;
 	width: calc(100% - 60px);
@@ -127,7 +128,7 @@ header {
 	display: -webkit-box;
 	display: -ms-flexbox;
 	display: flex;
-	margin-top: 30px;
+	
 	margin-bottom: 25px;
 }
 
@@ -211,7 +212,21 @@ header {
 	margin: 10px 0;
 }
 
-.lists-container {
+.search-serving-buttons {
+	display: flex;
+}
+
+.serving-button {
+	flex: 1;
+	text-align: center;
+	border: solid 2px red;
+	transition: all 0.3s;
+}
+
+.serving-button-active {
+	flex: 1.5;
+	z-index: 2;
+	transform: scale(1.1);
 }
 
 .button-container {
@@ -353,6 +368,7 @@ header {
 }
 
 #search-option-buttons {
+	margin-top: 30px;
 	display: -webkit-box;
 	display: -ms-flexbox;
 	display: flex;
