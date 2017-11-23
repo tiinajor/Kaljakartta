@@ -400,11 +400,11 @@ public class Dao {
 
 	}
 
-	 public static void main(String[] args) {
-	 Dao dao = new Dao("remote:188.166.162.144:2424/KaljakarttaDB", "dao",
-	 "bakkiPassu");
-	  dao.parseBeers("F:/Downloads/beers2.json");
-//	 dao.linkRestaurants("F:/Downloads/restaurants.json");
-	 }
+//	 public static void main(String[] args) {
+//	 Dao dao = new Dao("remote:188.166.162.144:2424/KaljakarttaDB", "dao",
+//	 "bakkiPassu");
+//	  dao.parseBeers("F:/Downloads/beers2.json");
+////	 dao.linkRestaurants("F:/Downloads/restaurants.json");
+//	 }
 
 }
