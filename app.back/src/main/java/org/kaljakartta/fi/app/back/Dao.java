@@ -1,13 +1,20 @@
 package org.kaljakartta.fi.app.back;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-import org.json.JSONArray;
+import org.json.simple.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 import com.tinkerpop.blueprints.Direction;
 import com.tinkerpop.blueprints.Edge;
@@ -88,56 +95,98 @@ public class Dao {
 
 			// HashMap<String, Double> tapName = new HashMap();
 
-			while (tap.hasNext()) {
+			if (tap.hasNext()) {
 
-				JSONObject tapBev = new JSONObject();
+				while (tap.hasNext()) {
 
-				Edge e = tap.next();
-				double price = e.getProperty("price");
-				double vol = e.getProperty("vol");
-				Vertex bev = e.getVertex(Direction.OUT);
+					JSONObject tapBev = new JSONObject();
 
-				tapBev.put("name", bev.getProperty("name").toString());
-				tapBev.put("serving", "tap");
-				tapBev.put("price", price);
-				tapBev.put("vol", vol);
-				tapBev.put("abv", bev.getProperty("abv").toString());
-				tapBev.put("type", bev.getProperty("type").toString());
+					Edge e = tap.next();
+					Vertex bev = e.getVertex(Direction.OUT);
 
-				restaurantValues.put(tapBev);
+					tapBev.put("name", bev.getProperty("name").toString());
+					tapBev.put("serving", "tap");
+					try {
+						double price = e.getProperty("price");
+						tapBev.put("price", price);
+					} catch (Exception e1) {
+						System.out.println("No price found for: Tap - "+bev.getProperty("name"));
+					}
+					try {
+						double vol = e.getProperty("vol");
+						tapBev.put("vol", vol);
+					} catch (Exception e1) {
+						System.out.println("No vol found for: Tap - "+bev.getProperty("name"));
+					}
+					try {
+						tapBev.put("abv", bev.getProperty("abv").toString());
+					} catch (Exception e1) {
+						System.out.println("No abv found for: Tap - "+bev.getProperty("name"));
+					}
+					try {
+						tapBev.put("type", bev.getProperty("type").toString());
+					} catch (Exception e1) {
+						System.out.println("No type found for: Tap - "+bev.getProperty("name"));
+					}
 
-			}
+					restaurantValues.add(tapBev);
+
+				}
+
+			} else
+				System.out.println("No Tap beverages found for: " + name);
 
 			Iterator<Edge> bottle = graph.getVertices("Restaurant.name", name).iterator().next()
 					.getEdges(Direction.IN, "Bottle").iterator();
 
 			// HashMap<String, Double> botName = new HashMap();
 
-			while (bottle.hasNext()) {
+			if (bottle.hasNext()) {
 
-				JSONObject botBev = new JSONObject();
+				while (bottle.hasNext()) {
 
-				Edge e = bottle.next();
-				double price = e.getProperty("price");
-				double vol = e.getProperty("vol");
-				Vertex bev = e.getVertex(Direction.OUT);
+					JSONObject botBev = new JSONObject();
 
-				botBev.put("name", bev.getProperty("name").toString());
-				botBev.put("serving", "bottle");
-				botBev.put("price", price);
-				botBev.put("vol", vol);
-				botBev.put("abv", bev.getProperty("abv").toString());
-				botBev.put("type", bev.getProperty("type").toString());
+					Edge e = bottle.next();
+					Vertex bev = e.getVertex(Direction.OUT);
 
-				restaurantValues.put(botBev);
+					botBev.put("name", bev.getProperty("name").toString());
+					botBev.put("serving", "tap");
+					try {
+						double price = e.getProperty("price");
+						botBev.put("price", price);
+					} catch (Exception e1) {
+						System.out.println("No price found for: Bottle - "+bev.getProperty("name"));
+					}
+					try {
+						double vol = e.getProperty("vol");
+						botBev.put("vol", vol);
+					} catch (Exception e1) {
+						System.out.println("No vol found for: Bottle - "+bev.getProperty("name"));
+					}
+					try {
+						botBev.put("abv", bev.getProperty("abv").toString());
+					} catch (Exception e1) {
+						System.out.println("No abv found for: Bottle - "+bev.getProperty("name"));
+					}
+					try {
+						botBev.put("type", bev.getProperty("type").toString());
+					} catch (Exception e1) {
+						System.out.println("No type found for: Bottle - "+bev.getProperty("name"));
+					}
 
-			}
+					restaurantValues.add(botBev);
+
+				}
+
+			} else
+				System.out.println("No Bottle beverages found for: " + name);
 
 			return restaurantValues;
 
 		} catch (Exception e) {
-
-			return null;
+			e.printStackTrace();
+			return new JSONArray();
 		}
 
 	}
@@ -148,12 +197,8 @@ public class Dao {
 		HashMap restaurants = new HashMap();
 		HashMap keys = new HashMap();
 
-		params.keys().forEachRemaining(k -> {
-			try {
-				keys.put(k.toString(), params.get(k.toString()));
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
+		params.keySet().iterator().forEachRemaining(k -> {
+			keys.put(k.toString(), params.get(k.toString()));
 		});
 
 		List<Vertex> beers = new ArrayList();
@@ -229,5 +274,129 @@ public class Dao {
 		return restaurants;
 
 	}
+
+	public void parseBeers(String path) {
+
+		try {
+			JSONParser parser = new JSONParser();
+
+			JSONArray array = (JSONArray) parser.parse(new FileReader(path));
+
+			for (Object o : array) {
+
+				JSONObject json = (JSONObject) o;
+
+				// if (!json.get("Abv").equals("") && !json.get("Abv").toString().contains("?")
+				// && !json.get("Abv").toString().contains("-")) {
+				// String abv = json.get("Abv").toString();
+				// System.out.println(abv);
+				// String abv2 = abv.replace(',', '.');
+				// System.out.println(abv2);
+				// }
+				// Double abvCast = Double.parseDouble(abv);
+				// System.out.println(json.get("Brand") + ", " + json.get("Name")+", "+
+				// json.get("Type")+", "+json.get("Abv"));
+				// Double abv = Double.parseDouble(json.get("Abv").toString());
+				// System.out.println(abv);
+				// System.out.println(abvCast);
+				if (!graph.getVertices("Beer.name", json.get("Name")).iterator().hasNext())
+					graph.addVertex("class:Beer", "beer", true, "brand", json.get("Brand"), "type", json.get("Type"),
+							"abv", json.get("Abv"), "name", json.get("Name"));
+				else
+					System.out.println("Duplicate on: " + json.get("Name"));
+
+			}
+
+		} catch (IOException | ParseException e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	public void linkRestaurants(String path) {
+
+		JSONParser parser = new JSONParser();
+
+		try {
+
+			JSONArray restaurantArray = (JSONArray) parser.parse(new FileReader(path));
+
+			for (Object o : restaurantArray) {
+
+				JSONObject restaurantJson = (JSONObject) o;
+
+				Vertex restaurant;
+
+				if (graph.getVertices("Restaurant.name", restaurantJson.get("Name")).iterator().hasNext())
+					restaurant = graph.getVertices("Restaurant.name", restaurantJson.get("Name")).iterator().next();
+				else
+					restaurant = graph.addVertex("class:Restaurant", "name", restaurantJson.get("Name"));
+
+				JSONArray beverageArray = (JSONArray) restaurantJson.get("Beverages");
+
+				for (Object beverage : beverageArray) {
+
+					JSONObject beverageJson = (JSONObject) beverage;
+
+					ArrayList<String> beverages = new ArrayList<>();
+
+					graph.getVertices("Restaurant.name", restaurantJson.get("Name")).iterator().next()
+							.getEdges(Direction.IN, beverageJson.get("Serving").toString()).forEach(e -> {
+								beverages.add(e.getVertex(Direction.OUT).getProperty("name"));
+							});
+					;
+
+					if (graph.getVertices("Beer.name", beverageJson.get("Name")).iterator().hasNext()) {
+
+						if (!beverages.contains(beverageJson.get("Name"))) {
+							Edge edge = graph.addEdge(null,
+									graph.getVertices("Beer.name", beverageJson.get("Name")).iterator().next(),
+									restaurant, beverageJson.get("Serving").toString());
+
+							String price = beverageJson.get("Price").toString();
+
+							if (!beverageJson.get("Price").toString().contains("\"")) {
+								price = price.replaceAll("\"", "");
+								price = price.replace(',', '.');
+							} else
+								price = price.replace(',', '.');
+
+							if (!price.equals("") && !price.isEmpty())
+								edge.setProperty("price", Double.parseDouble(price));
+
+							String vol = beverageJson.get("Vol").toString();
+
+							if (!beverageJson.get("Vol").toString().contains("\"")) {
+								vol = vol.replaceAll("\"", "");
+								vol = vol.replace(',', '.');
+							} else
+								vol = vol.replace(',', '.');
+
+							if (!vol.equals("") && !vol.isEmpty())
+								edge.setProperty("vol", Double.parseDouble(vol));
+						} else
+							System.out.println("Duplicate on restaurant: " + restaurantJson.get("Name") + ", Beverage: "
+									+ beverageJson.get("Name"));
+					} else {
+						System.out.println("Couldn't find beverage " + beverageJson.get("Name")
+								+ " from DB, Restaurant: " + restaurantJson.get("Name"));
+					}
+				}
+			}
+
+		} catch (IOException |
+
+				ParseException e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	// public static void main(String[] args) {
+	// Dao dao = new Dao("remote:188.166.162.144:2424/KaljakarttaDB", "dao",
+	// "bakkiPassu");
+	// // dao.parseBeers("F:/Downloads/beers.json");
+	// dao.linkRestaurants("F:/Downloads/restaurants.json");
+	// }
 
 }
