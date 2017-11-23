@@ -155,7 +155,7 @@ public class Dao {
 					Vertex bev = e.getVertex(Direction.OUT);
 
 					botBev.put("name", bev.getProperty("name").toString());
-					botBev.put("serving", "tap");
+					botBev.put("serving", "bottle");
 					try {
 						double price = e.getProperty("price");
 						botBev.put("price", price);
@@ -400,11 +400,11 @@ public class Dao {
 
 	}
 
-	// public static void main(String[] args) {
-	// Dao dao = new Dao("remote:188.166.162.144:2424/KaljakarttaDB", "dao",
-	// "bakkiPassu");
-	// // dao.parseBeers("F:/Downloads/beers.json");
-	// dao.linkRestaurants("F:/Downloads/restaurants.json");
-	// }
+	 public static void main(String[] args) {
+	 Dao dao = new Dao("remote:188.166.162.144:2424/KaljakarttaDB", "dao",
+	 "bakkiPassu");
+	  dao.parseBeers("F:/Downloads/beers2.json");
+//	 dao.linkRestaurants("F:/Downloads/restaurants.json");
+	 }
 
 }
