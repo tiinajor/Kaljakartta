@@ -110,22 +110,26 @@ public class Dao {
 						double price = e.getProperty("price");
 						tapBev.put("price", price);
 					} catch (Exception e1) {
+						tapBev.put("price", 0);
 						System.out.println("No price found for: Tap - "+bev.getProperty("name"));
 					}
 					try {
 						double vol = e.getProperty("vol");
 						tapBev.put("vol", vol);
 					} catch (Exception e1) {
+						tapBev.put("vol", 0);
 						System.out.println("No vol found for: Tap - "+bev.getProperty("name"));
 					}
 					try {
 						tapBev.put("abv", bev.getProperty("abv").toString());
 					} catch (Exception e1) {
+						tapBev.put("abv", 0);
 						System.out.println("No abv found for: Tap - "+bev.getProperty("name"));
 					}
 					try {
 						tapBev.put("type", bev.getProperty("type").toString());
 					} catch (Exception e1) {
+						tapBev.put("type", 0);
 						System.out.println("No type found for: Tap - "+bev.getProperty("name"));
 					}
 
@@ -156,22 +160,26 @@ public class Dao {
 						double price = e.getProperty("price");
 						botBev.put("price", price);
 					} catch (Exception e1) {
+						botBev.put("price", 0);
 						System.out.println("No price found for: Bottle - "+bev.getProperty("name"));
 					}
 					try {
 						double vol = e.getProperty("vol");
 						botBev.put("vol", vol);
 					} catch (Exception e1) {
+						botBev.put("vol", 0);
 						System.out.println("No vol found for: Bottle - "+bev.getProperty("name"));
 					}
 					try {
 						botBev.put("abv", bev.getProperty("abv").toString());
 					} catch (Exception e1) {
+						botBev.put("abv", 0);
 						System.out.println("No abv found for: Bottle - "+bev.getProperty("name"));
 					}
 					try {
 						botBev.put("type", bev.getProperty("type").toString());
 					} catch (Exception e1) {
+						botBev.put("type", 0);
 						System.out.println("No type found for: Bottle - "+bev.getProperty("name"));
 					}
 
