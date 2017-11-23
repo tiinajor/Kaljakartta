@@ -453,6 +453,10 @@ header {
 	height: 18px;
 }
 
+.emptyTable {
+	text-align: center;
+}
+
 .odd-row {
 	background-color: #cccccc;
 }
