@@ -688,19 +688,25 @@ function createBeerTableBody(beerList) {
 	}
 };
 
-function updateTable(beerList) {
+function updateTable(beerList, language) {
 	const rows = document.querySelector('tbody').rows;
 	const bottleIcon = "kgps_icons/beer-bottle.svg";
 	const tapIcon = "kgps_icons/beer-tap.svg";
 	for(let i = 0; i < beerList.length; i++){
 		const icon = beerList[i].serving === "tap" ? tapIcon : bottleIcon;
-		const typeLocales = (beerList[i].type.indexOf(",") > 0) ? beerList[i].type.split(",") : beerList[i].type;
-		let beerType;
-		if(typeof(typeLocales) === 'object') {
-			beerType = language === "fi" ? typeLocales[0] : typeLocales[1];
-		} else {
-			beerType = typeLocales;
-		}		
+		const vol = beerList[i].vol === 0 ? "?" : beerList[i].vol;
+		const abv = beerList[i].abv === 0 ? "?" : beerList[i].abv;
+		const price = beerList[i].price === 0 ? "?" : beerList[i].price;
+		let beerType = "?";
+		if(beerList[i].type !== 0) {
+			const typeLocales = (beerList[i].type.indexOf(",") > 0) ? beerList[i].type.split(",") : beerList[i].type;
+			if(typeof(typeLocales) === 'object') {
+				beerType = language === "fi" ? typeLocales[0] : typeLocales[1];
+			} else {
+				beerType = typeLocales;
+			}	
+		}	
+		
     	rows[i].cells[0].innerHTML = `<img src=${icon}>`;
     	rows[i].cells[1].textContent = capitalizeFirstLetter(beerList[i].name);
 		rows[i].cells[2].textContent = capitalizeFirstLetter(beerType);
