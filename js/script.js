@@ -402,7 +402,7 @@ window.onload = function(){
 	// avaa merkit-listan ja sulkee muut listat
 	document.getElementById('brand-list').children[0].addEventListener('click', function() {
 		let ul = document.getElementById('brand-list').children[1];
-		let icon = this.children[0];
+		let icon = this.children[1];
 		toggleVisible(ul);
 		rotateIcon(icon);
 		closeList(document.getElementById('type-list'));
@@ -411,7 +411,8 @@ window.onload = function(){
 	// avaa oluttyypit-listan ja sulkee muut listat
 	document.getElementById('type-list').children[0].addEventListener('click', function() {
 		let ul = document.getElementById('type-list').children[1];
-		let icon = this.children[0];
+		let icon = this.children[1];
+		console.log(icon);
 		toggleVisible(ul);
 		rotateIcon(icon);
 		closeList(document.getElementById('brand-list'));
@@ -808,7 +809,7 @@ function createList(list, parentDiv, id, searchVars) {
 function closeList(div) {
 	const otherList = div.children[1];
 	const otherDiv = div.children[0];
-	const icon = otherDiv.children[0];
+	const icon = otherDiv.children[1];
 	otherList.style.height = '0px';
 	const closed = true;
 	icon.style.transform = "rotate(-90deg)";
