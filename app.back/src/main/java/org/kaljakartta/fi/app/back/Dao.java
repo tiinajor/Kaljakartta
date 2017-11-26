@@ -110,20 +110,20 @@ public class Dao {
 						double price = e.getProperty("price");
 						tapBev.put("price", price);
 					} catch (Exception e1) {
-						tapBev.put("price", 0);
+						tapBev.put("price", Double.MAX_VALUE);
 						System.out.println("No price found for: Tap - "+bev.getProperty("name"));
 					}
 					try {
 						double vol = e.getProperty("vol");
 						tapBev.put("vol", vol);
 					} catch (Exception e1) {
-						tapBev.put("vol", 0);
+						tapBev.put("vol", Double.MAX_VALUE);
 						System.out.println("No vol found for: Tap - "+bev.getProperty("name"));
 					}
 					try {
 						tapBev.put("abv", bev.getProperty("abv").toString());
 					} catch (Exception e1) {
-						tapBev.put("abv", 0);
+						tapBev.put("abv", Double.MAX_VALUE);
 						System.out.println("No abv found for: Tap - "+bev.getProperty("name"));
 					}
 					try {
@@ -160,20 +160,20 @@ public class Dao {
 						double price = e.getProperty("price");
 						botBev.put("price", price);
 					} catch (Exception e1) {
-						botBev.put("price", 0);
+						botBev.put("price", Double.MAX_VALUE);
 						System.out.println("No price found for: Bottle - "+bev.getProperty("name"));
 					}
 					try {
 						double vol = e.getProperty("vol");
 						botBev.put("vol", vol);
 					} catch (Exception e1) {
-						botBev.put("vol", 0);
+						botBev.put("vol", Double.MAX_VALUE);
 						System.out.println("No vol found for: Bottle - "+bev.getProperty("name"));
 					}
 					try {
 						botBev.put("abv", bev.getProperty("abv").toString());
 					} catch (Exception e1) {
-						botBev.put("abv", 0);
+						botBev.put("abv", Double.MAX_VALUE);
 						System.out.println("No abv found for: Bottle - "+bev.getProperty("name"));
 					}
 					try {
