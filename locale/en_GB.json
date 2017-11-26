@@ -1,4 +1,4 @@
-en_GB ={
+const en_GB ={
     "menu": {
         "searchOptionButtons": {
             "tapButton": "Tap",
