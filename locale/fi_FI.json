@@ -1,4 +1,4 @@
-fi_FI = {
+const fi_FI = {
     "menu": {
         "searchOptionButtons": {
             "tapButton": "Hanat",
