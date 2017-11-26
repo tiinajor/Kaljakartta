@@ -1,8 +1,7 @@
-let hki = {lat: 60.162786, lng: 24.932607};
 let map;
 let pos;
 let infowindow;
-let markers;
+let markers = [];
 
 loadScript("https://maps.googleapis.com/maps/api/js?key=AIzaSyDuIpE10xbisU_de-Mg_xR4-OpmOVl3BxA&libraries=places&language=fi&region=FI", initMap);
 
@@ -13,217 +12,6 @@ loadScript("https://maps.googleapis.com/maps/api/js?key=AIzaSyDuIpE10xbisU_de-Mg
 
 */
 let beerlist = [];
-let hardCodedBarBeerList = [
-	{
-		serving: "tap",
-		name: "karhu",
-		type: "lager",
-		price: 3.80,
-		abv: 4.7,
-		vol: 0.5
-	},
-	{
-		serving: "tap",
-		name: "heineken",
-		type: "lager",
-		price: 4.50,
-		abv: 4.8,
-		vol: 0.4
-	},
-	{
-		serving: "bottle",
-		name: "aura",
-		type: "lager,UK lager",
-		price: 3.90,
-		abv: 4.7,
-		vol: 0.35
-	},
-	{
-		serving: "bottle",
-		name: "Grimbergen Double-Ambree",
-		type: "tumma lager",
-		price: 4.95,
-		abv: 8.0,
-		vol: 0.33
-	},
-	{
-		serving: "bottle",
-		name: "Laitilan IPA",
-		type: "Ale",
-		price: 4.30,
-		abv: 4.5,
-		vol: 0.568
-	},
-	{
-		serving: "bottle",
-		name: "BrewDog Punk IPA",
-		type: "Ale",
-		price: 3.39,
-		abv: 5.6,
-		vol: 0.33
-	},
-	{
-		serving: "bottle",
-		name: "Sandels Vahva",
-		type: "Vahva lager",
-		price: 2.49,
-		abv: 7.5,
-		vol: 0.33
-	},
-	{
-		serving: "bottle",
-		name: "Saku Porter",
-		type: "Porter",
-		price: 3.69,
-		abv: 6.9,
-		vol: 0.5
-	},
-	{
-		serving: "bottle",
-		name: "Moa Imperial Stout",
-		type: "Stout",
-		price: 7.91,
-		abv: 10.2,
-		vol: 0.5
-	},
-	{
-		serving: "bottle",
-		name: "Pyynikin Black IPA",
-		type: "Ale",
-		price: 4.99,
-		abv: 8.5,
-		vol: 0.33
-	},
-	{
-		serving: "tap",
-		name: "Weihenstephaner Pils",
-		type: "pils",
-		price: 3.68,
-		abv: 5.1,
-		vol: 0.5
-	},
-	{
-		serving: "bottle",
-		name: "leffe Blonde",
-		type: "Ale",
-		price: 3.92,
-		abv: 6.6,
-		vol: 0.33
-	},
-	{
-		serving: "tap",
-		name: "Krombacher Weizen",
-		type: "Vehnäolut",
-		price: 3.75,
-		abv: 5.3,
-		vol: 0.5
-	},
-	{
-		serving: "tap",
-		name: "Olvi A",
-		type: "Lager",
-		price: 4.50,
-		abv: 5.2,
-		vol: 0.4
-	},
-	{
-		serving: "bottle",
-		name: "Stadin Panimo South Pacific IPL",
-		type: "Lager",
-		price: 4.99,
-		abv: 5.3,
-		vol: 0.33
-	},
-	{
-		serving: "bottle",
-		name: "Duvel",
-		type: "Ale",
-		price: 3.98,
-		abv: 8.5,
-		vol: 0.33
-	},
-	{
-		serving: "bottle",
-		name: "Pyynikin Sessio White IPA",
-		type: "Ale",
-		price: 3.62,
-		abv: 4.6,
-		vol: 0.33
-	},
-	{
-		serving: "bottle",
-		name: "Grimbergen Blanche",
-		type: "Vehnäolut",
-		price: 3.29,
-		abv: 6.0,
-		vol: 0.33
-	},
-	{
-		serving: "bottle",
-		name: "Sonnisaari Oranki",
-		type: "Ale",
-		price: 4.93,
-		abv: 5.7,
-		vol: 0.33
-	},
-	{
-		serving: "tap",
-		name: "BrewDog Punk IPA",
-		type: "Ale",
-		price: 6.30,
-		abv: 5.6,
-		vol: 0.4
-	},
-	{
-		serving: "bottle",
-		name: "Laitilan Savu IPA",
-		type: "Ale",
-		price: 3.99,
-		abv: 5.9,
-		vol: 0.33
-	},
-	{
-		serving: "bottle",
-		name: "Piraat Tripple Hop",
-		type: "Ale",
-		price: 4.70,
-		abv: 10.5,
-		vol: 0.33
-	},
-	{
-		serving: "tap",
-		name: "Olvi Tuplapukki",
-		type: "Vahva Lager",
-		price: 7.40,
-		abv: 8.5,
-		vol: 0.5
-	},
-	{
-		serving: "bottle",
-		name: "Fat Lizard Taspy Mary Double IPA",
-		type: "Ale",
-		price: 3.98,
-		abv: 8.0,
-		vol: 0.25
-	}
-	,
-	{
-		serving: "bottle",
-		name: "Corona Extra",
-		type: "Lager",
-		price: 4.90,
-		abv: 4.5,
-		vol: 0.355
-	},
-	{
-		serving: "bottle",
-		name: "Olvi Iisalmi IPA",
-		type: "Ale",
-		price: 3.45,
-		abv: 5.0,
-		vol: 0.5
-	}
-]
 
 window.onload = function(){
 	const priceSlider = document.getElementById('price-slider');
@@ -258,8 +46,7 @@ window.onload = function(){
     let abvAsc = false;
 	let priceAsc = false;
 
-
-    const searchVars = {
+	const searchVars = {
 		serving : serving,
 		price : 8.5,
 		abvMin : 2.8,
@@ -267,19 +54,15 @@ window.onload = function(){
 		brands : [],
 		types : []
 	};
-
+	directionsRenderer.setPanel(document.getElementById("route"));
 	infowindow = new google.maps.InfoWindow();
-	markers = [];
-	directionsRenderer.setPanel(document.getElementById('route'));
-
-	document.querySelector('.title-link').innerHTML += ("<sup class='version'>alpha</sup>");
+	document.querySelector(".title-link").innerHTML += ("<sup class='version'>alpha</sup>");
 
 	//showModal();
 	localizeContent(language);
 	createBeerTable(language);
 
-	const servingBtnArr = Array.from(servingButtons);
-	servingBtnArr.forEach((e) => e.addEventListener('click', (e) => toggleServing(servingBtnArr, e.target)));	
+	Array.from(servingButtons).forEach((e) => e.addEventListener("click", (e) => searchVars.serving = toggleServing(e.target)));	
 
 	Array.from(theads).forEach((e) => e.addEventListener('click', function() {
 		const column = e.getAttribute('data-id');
@@ -338,19 +121,17 @@ window.onload = function(){
 		}
 	}));
 
-	document.querySelector('.button-cancel').addEventListener('click', function() {
-		console.log(this);
-		language = language === "en" ? "fi": "en";
-		window.localStorage.setItem('language', language);
-		window.location.reload();
-		localizeContent(language);
-	});
+	document.querySelector(".button-cancel").addEventListener("click", swapLanguage);
+
+	document.getElementById("fi").addEventListener("click", (e) => swapLanguage(e.target.id));
+	document.getElementById("en").addEventListener("click", (e) => swapLanguage(e.target.id));
 
 
 	// asettaa kartan, menun, reittiohjeiden sekä baarikortin korkeuden ja korjaa niitä aina kun ikkunan koko muuttuu
 	resizeElementHeights();
 	window.addEventListener('resize', debounce(resizeElementHeights,100,false));
 
+	/*
 	// hanat mukana haussa kyllä/ei
 	document.getElementById('tapButton').addEventListener('click', function() {
 		this.classList.toggle('selected');
@@ -371,6 +152,7 @@ window.onload = function(){
 			searchVars.serving = '';
 		}
 	});
+	*/
 
 	// kartan päällä olevan hakukentän suurennuslasi etsii osoitteen mukaan baarit jos osoite ei ole tyhjä
 	document.getElementById('search-button').addEventListener('click', function() {
@@ -431,9 +213,8 @@ window.onload = function(){
 			.catch(err => console.log('Fetch Error: ', err));
 
 		// hakee menuun olutmerkit
-		fetch('https://cors-anywhere.herokuapp.com/http://188.166.162.144:130/brands')
+		setTimeout(() => {fetch("https://cors-anywhere.herokuapp.com/http://188.166.162.144:130/brands")
 			.then(response => {
-				console.log(response.ok);
 				if (!response.ok) {
 			      		throw Error(response.statusText);
 			    }
@@ -444,7 +225,8 @@ window.onload = function(){
 				beerBrands = beerBrands.map(x => {return x.trim()});
 				createList(beerBrands, document.getElementById('brand-list'), "brands", searchVars);
 			})
-			.catch(err => createList(["Error 404", "No beer found"], document.getElementById('brand-list'), "brands", searchVars));
+			.catch(err => createList(["Error 404", "No beer found", err], document.getElementById("brand-list"), "brands", searchVars))
+		},500);
 	});
 
 	// käyttäjän GPS paikannus
@@ -702,6 +484,7 @@ function updateTable(beerList, language) {
 		const vol = beerList[i].vol === 0 ? "?" : beerList[i].vol + "l";
 		const abv = beerList[i].abv === 0 ? "?" : beerList[i].abv + "%";
 		const price = beerList[i].price === 0 ? "?" : beerList[i].price + "€";
+
 		let beerType = "?";
 		if(beerList[i].type !== 0) {
 			const typeLocales = (beerList[i].type.indexOf(",") > 0) ? beerList[i].type.split(",") : beerList[i].type;
@@ -710,11 +493,9 @@ function updateTable(beerList, language) {
 			} else {
 				beerType = typeLocales;
 			}	
-		}	
-		console.log(beerType);
-		
-    	rows[i].cells[0].innerHTML = `<img src=${icon}>`;
-    	rows[i].cells[1].textContent = capitalizeFirstLetter(beerList[i].name);
+		}			
+		rows[i].cells[0].innerHTML = `<img src=${icon}>`;
+		rows[i].cells[1].textContent = capitalizeFirstLetter(beerList[i].name);
 		rows[i].cells[2].textContent = capitalizeFirstLetter(beerType);
     	rows[i].cells[3].textContent = vol;
     	rows[i].cells[4].textContent = abv;
@@ -723,10 +504,20 @@ function updateTable(beerList, language) {
 }
 
 
+/**
+ * Helper function to sorting the beerlist by a certain column. Takes two values from the list and compares them to each other.
+ * If the values are unknown (=0) they will be treated as 999 so that they are last in the sort.
+ *
+ * @param {String} col The column that the items should be sorted by.
+ * @param {boolean} ascendingOrder Determines if the items are sorted in ascending or descending order. Default value is true.
+ * @returns {number} Returns 0 if the values are the same, 1 if the first value is smaller and -1 if the second value is smaller. The return values are reversed when ascendingOrder is false.
+ */
 function sortBy(col, ascendingOrder=true) {
-  	return function(a, b) {
-		const x = a[col];
-		const y = b[col];
+	return function(a, b) {
+		let x = a[col];
+		let y = b[col];
+		if(x === 0) x = 999;
+		if(y === 0) y = 999;
 		if(typeof x === "string" && typeof y === "string") {
 			return ascendingOrder ? x.localeCompare(y) : y.localeCompare(x);
 		} else {
@@ -761,7 +552,19 @@ function postJSON(url, param) {
 	};
 }
 
-// luo listan divin sisään (aakkosjärjestyksessä)
+function swapLanguage(language) {
+	window.localStorage.setItem("language", language);
+	window.location.reload();
+}
+
+/**
+ * Creates a list inside the given element in alphabetical order.
+ *
+ * @param {List} list The list of items to be inserted to the parent element.
+ * @param {HTMLElement} parentDiv The parent element where the list will be created. 
+ * @param {string} id The ID that will be given to the list element.
+ * @param {Object} searchVars An object which contains the search variables.
+ */
 function createList(list, parentDiv, id, searchVars) {
 	const ul = document.createElement('ul');
 	ul.id = id;
@@ -816,7 +619,26 @@ function handleInputAddress(searchText) {
 	return textParts.length === 1 ? {address: textParts[0], city: null} : {address: textParts[0].trim(), city: textParts[1].trim()};
 }
 
-//laskee elementeille uudet korkeudet kun ikkunan koko muuttuu
+function toggleServing(el) {
+	const clicked = el.classList.contains('serving-button') ? el : el.parentElement;
+	console.log(clicked);
+	const parentElement = clicked.parentElement;
+	const buttons = parentElement.querySelectorAll('.serving-button');
+	buttons.forEach((button) => {
+		if(button === clicked) {
+			button.classList.add('serving-button-active');
+		} else {
+			button.classList.remove('serving-button-active');
+		}		
+	})
+	return clicked.id;
+}
+
+
+/**
+ * Resizes the map, menu and restaurant card heights when the window is resized.
+ *
+ */
 function resizeElementHeights() {
 	const windowHeight = window.innerHeight;
 	const headerHeight = document.querySelector('header').clientHeight;
@@ -918,6 +740,7 @@ function hideModal() {
 // lisää restaurant cardiin baarin tiedot
 function renderBarInfo(place) {
 	const date = new Date();
+	const language = window.localStorage.getItem("language") === "en" ? "en" : "fi";
 	const weekday = date.getDay() > 0 ? date.getDay()-1 : 6;
 	const barAddress = document.getElementById('bar-address');
 	const barName = document.getElementById('bar-name');
@@ -925,10 +748,9 @@ function renderBarInfo(place) {
 	const barPhoto = document.getElementById('bar-photo');
 	const service = new google.maps.places.PlacesService(map);
 	const response = getBarData(place.name);
-	const language = window.localStorage.getItem('language') === "en" ? "en" : "fi";
 	response.then(data => {
-		console.log("data from DB:" + data);
-		const body = document.querySelector('tbody');
+		console.log(data);
+		const body = document.querySelector("tbody");
 		if(data.length === 0){
 			body.textContent = "Ei listatietoja saatavilla.";
 			body.classList.add('emptyTable');
@@ -936,24 +758,26 @@ function renderBarInfo(place) {
 			body.classList.remove('emptyTable');
 			createBeerTableBody(data);
 			updateTable(data.sort(sortBy("name", true)), language);
-		}		
+		}	
+		beerList = data;	
 	});
 	barName.innerHTML = place.name;
 	setRating(place.rating);
 	
 	service.getDetails({
-  		placeId: place.place_id
-    }, function(data, status) {
-  		if (status === google.maps.places.PlacesServiceStatus.OK) {
-      		const address = data.formatted_address;
-      		const url = data.photos[0].getUrl({ 'maxWidth': 600 });
-      		barAddress.innerHTML = address.split(",",2).join(); 
-      		barOpen.innerHTML = capitalizeFirstLetter(data.opening_hours.weekday_text[weekday]);	
-      		barPhoto.style.backgroundSize = "cover";
- 	 		barPhoto.style.backgroundImage = "url("+url+")";
-  		}
-    });
-};
+		placeId: place.place_id
+	}, function(data, status) {
+		if (status === google.maps.places.PlacesServiceStatus.OK) {
+			const address = data.formatted_address;
+			const url = data.photos[0].getUrl({ "maxWidth": 600 });
+			barAddress.innerHTML = address.split(",",2).join(); 
+			barOpen.innerHTML = capitalizeFirstLetter(data.opening_hours.weekday_text[weekday]);	
+			barPhoto.style.backgroundSize = "cover";
+			barPhoto.style.backgroundImage = "url("+url+")";
+		}
+	});
+	
+}
 
 // asettaa baarin ratinging tuopin kuvina
 function setRating(rating) {
@@ -971,29 +795,40 @@ function setRating(rating) {
 
 function localizeContent(language) {
 	const locale = language === "en" ? en_GB : fi_FI;
-	document.getElementById('tapButtonText').textContent = locale.menu.searchOptionButtons.tapButton;
-	document.getElementById('bottleButtonText').textContent = locale.menu.searchOptionButtons.bottleButton;
-	document.getElementById('priceText').textContent = locale.menu.searchOptionSliders.priceText;
-	document.getElementById('abvText').textContent = locale.menu.searchOptionSliders.abvText;
-	document.getElementById('distanceText').textContent = locale.menu.searchOptionSliders.distanceText;
-	document.getElementById('brandListText').textContent = locale.menu.listsContainer.brandListText;
-	document.getElementById('typeListText').textContent = locale.menu.listsContainer.typeListText;
-	document.querySelector('.button-cancel').textContent = locale.menu.menuButtons.buttonCancel;
-	document.querySelector('.button-submit').textContent = locale.menu.menuButtons.buttonSubmit;
-	document.getElementById('searchbox').placeholder = locale.searchContainer.searchbox;
-	document.querySelector('#walking img').alt = locale.restaurantCard.directionsButtons.walk;
-	document.querySelector('#walking img').title = locale.restaurantCard.directionsButtons.walk;
-	document.querySelector('#driving img').alt = locale.restaurantCard.directionsButtons.drive;
-	document.querySelector('#driving img').title = locale.restaurantCard.directionsButtons.drive;
-	document.querySelector('#transit img').alt = locale.restaurantCard.directionsButtons.transit;
-	document.querySelector('#transit img').title = locale.restaurantCard.directionsButtons.transit;
-	document.querySelector('#bicycling img').alt = locale.restaurantCard.directionsButtons.bicycle;
-	document.querySelector('#bicycling img').title = locale.restaurantCard.directionsButtons.bicycle;
+	document.getElementById("tapButtonText").textContent = locale.menu.searchOptionButtons.tapButton;
+	document.getElementById("bothButtonText").textContent = locale.menu.searchOptionButtons.bothButton;
+	document.getElementById("bottleButtonText").textContent = locale.menu.searchOptionButtons.bottleButton;
+	document.getElementById("priceText").textContent = locale.menu.searchOptionSliders.priceText;
+	document.getElementById("abvText").textContent = locale.menu.searchOptionSliders.abvText;
+	document.getElementById("distanceText").textContent = locale.menu.searchOptionSliders.distanceText;
+	document.getElementById("brandListText").textContent = locale.menu.listsContainer.brandListText;
+	document.getElementById("typeListText").textContent = locale.menu.listsContainer.typeListText;
+	document.querySelector(".button-cancel").textContent = locale.menu.menuButtons.buttonCancel;
+	document.querySelector(".button-submit").textContent = locale.menu.menuButtons.buttonSubmit;
+	document.getElementById("searchbox").placeholder = locale.searchContainer.searchbox;
+	document.querySelector("#walking img").alt = locale.restaurantCard.directionsButtons.walk;
+	document.querySelector("#walking img").title = locale.restaurantCard.directionsButtons.walk;
+	document.querySelector("#driving img").alt = locale.restaurantCard.directionsButtons.drive;
+	document.querySelector("#driving img").title = locale.restaurantCard.directionsButtons.drive;
+	document.querySelector("#transit img").alt = locale.restaurantCard.directionsButtons.transit;
+	document.querySelector("#transit img").title = locale.restaurantCard.directionsButtons.transit;
+	document.querySelector("#bicycling img").alt = locale.restaurantCard.directionsButtons.bicycle;
+	document.querySelector("#bicycling img").title = locale.restaurantCard.directionsButtons.bicycle;
 }
 
-// apufunctio hillitsemään windowResize kutsumista
+/**
+ * Helperfunction. Mainly to control the window resize function's callback function.
+ * Stolen from {@link https://davidwalsh.name/javascript-debounce-function|David Walsh}
+ * 
+ * @param {function} func The function to be called.
+ * @param {number} wait Time in milliseconds between each time the function is fired.
+ * @param {boolean} immediate Should be function be triggered on the leading edge or the trailing edge. 
+ * 
+ * @returns {function} func Returns a new anonymous version of the same function and fires it as long as the function is triggered.
+ *
+ */
 function debounce(func, wait, immediate) {
-	var timeout;
+	let timeout = null;
 	return function() {
 		var context = this, args = arguments;
 		var later = function() {
