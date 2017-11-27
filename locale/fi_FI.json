@@ -1,7 +1,8 @@
-fi_FI = {
+const fi_FI = {
     "menu": {
         "searchOptionButtons": {
             "tapButton": "Hanat",
+            "bothButton": "Molemmat",
             "bottleButton": "Pullot"
         },
         "searchOptionSliders": {
