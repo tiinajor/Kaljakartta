@@ -25,26 +25,23 @@
 
 	<div id="side-menu">
 		<div class="menu-main-section">
-    		<span id="menu-close-x" class="closebtn button">x</span> 			
+			<span id="menu-close-x" class="closebtn button">x</span> 			
 			<div id="search-option-buttons" class="centered menu-block">
 				<button id="tapButton" class="search-option button">
 					<img class="icon" src="kgps_icons/beer-tap.svg" alt="hanat">
-					<span id="tapButtonText">Hanat</span>
+					<span >Hanat</span>
 				</button>
 				<button id="bottleButton" class="search-option button">
 					<img class="icon" src="kgps_icons/beer-bottle.svg" alt="pullot">
-					<span id="bottleButtonText">Pullot</span>
+					<span >Pullot</span>
 				</button>
 			</div>
-
-			<!--
 			
 			<div class="search-serving-buttons centered menu-block">
-				<span class="serving-button">Hanat</span>
-				<span class="serving-button serving-button-active">Molemmat</span>
-				<span class="serving-button">Pullot</span>
+				<span id="tap" class="serving-button clickable"><label id="tapButtonText">Hanat</label></span>
+				<span id="both" class="serving-button clickable serving-button-active middle"><label id="bothButtonText">Molemmat</label></span>
+				<span id="bottle" class="serving-button clickable"><label id="bottleButtonText">Pullot</label></span>
 			</div>
-			-->
 			
 			
 			<div id="search-option-sliders" class="centered menu-block">
@@ -97,7 +94,6 @@
 			<a id="card-close-x" class="closebtn button">x</a>
 		</div>
 
-
 		<div id="card-content">
 			<div id="card-top-container">
 				<div class="card-top-column">
@@ -145,17 +141,31 @@
 
 	<header>
 		<button id="hamburger-menu" class="header-button button"><img class="header-icon" src="kgps_icons/menu.svg" alt="menu"></button>
-		<a class="title-link" href="index.html">
+
+		<div class="title-container">
 			<img class="logo" src="kgps_icons/beer.svg" alt="logo">
-			<h1 class="title">Kaljakartta</h1>
-		</a>
+			<a class="title-link" href="index.html">
+				<h1 class="title">Kaljakartta</h1>
+			</a>
+			<div class="locale">
+				<img id="fi" src="kgps_icons/finnish.svg">
+				<img id="en" src="kgps_icons/english.svg">
+			</div>
+			
+		</div>
+
 		<button id="locate" class="header-button button"><img class="header-icon" src="kgps_icons/user-location.svg" alt="paikannus"></button>
 	</header>
 
 	<div id="map"></div>
-	<div id="route">
-		<div class="draggable"></div>
+	<div id="route-container">
+		<div class="draggable">
+			<img src="kgps_icons/drag.svg">
+		</div>
 		<a id="route-close-x" class="closebtn button">x</a>
+		<div id="route">
+		</div>
+		
 	</div>
 
 	<div id="search-container">

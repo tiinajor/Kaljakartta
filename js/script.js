@@ -1,7 +1,7 @@
 let map;
 let pos;
 let infowindow;
-let markers;
+let markers = [];
 
 loadScript("https://maps.googleapis.com/maps/api/js?key=AIzaSyDuIpE10xbisU_de-Mg_xR4-OpmOVl3BxA&libraries=places&language=fi&region=FI", initMap);
 
@@ -15,19 +15,19 @@ let beerlist = [];
 
 
 window.onload = function(){
-	const priceSlider = document.getElementById("price-slider");
-	const alcoholSlider = document.getElementById("alcohol-slider");
-	const distanceSlider = document.getElementById("distance-slider");
-	const directionsButtons = document.getElementsByClassName("directions-button");
-	const handle = document.querySelector(".draggable");
-	const headerElement = document.querySelector("header");
-	const mapElement = document.getElementById("map");
-	const menuElement = document.getElementById("side-menu");
-	const restaurantCard = document.getElementById("restaurant-card");
-	const oof = document.getElementById("oof");
-	const theads = document.getElementsByTagName("th");
-	const servingButtons = document.querySelectorAll(".serving-button");
-	const directionsElement = document.getElementById("route");
+	const priceSlider = document.getElementById('price-slider');
+	const alcoholSlider = document.getElementById('alcohol-slider');
+	const distanceSlider = document.getElementById('distance-slider');
+	const directionsButtons = document.getElementsByClassName('directions-button');
+	const handle = document.querySelector('.draggable');
+	const headerElement = document.querySelector('header');
+	const mapElement = document.getElementById('map');
+	const menuElement = document.getElementById('side-menu');
+	const restaurantCard = document.getElementById('restaurant-card');
+	const oof = document.getElementById('oof');
+	const theads = document.getElementsByTagName('th');
+	const servingButtons = document.querySelectorAll('.serving-button');
+	const directionsElement = document.getElementById('route-container');
 	const directionsService = new google.maps.DirectionsService;
 	const directionsRenderer = new google.maps.DirectionsRenderer({suppressMarkers: true});
 	let headerHeight = headerElement.clientHeight;
@@ -47,7 +47,6 @@ window.onload = function(){
 	let abvAsc = false;
 	let priceAsc = false;
 
-
 	const searchVars = {
 		serving : serving,
 		price : 8.5,
@@ -56,19 +55,15 @@ window.onload = function(){
 		brands : [],
 		types : []
 	};
-
-	infowindow = new google.maps.InfoWindow();
-	markers = [];
 	directionsRenderer.setPanel(document.getElementById("route"));
-
+	infowindow = new google.maps.InfoWindow();
 	document.querySelector(".title-link").innerHTML += ("<sup class='version'>alpha</sup>");
 
 	//showModal();
 	localizeContent(language);
 	createBeerTable(language);
 
-	const servingBtnArr = Array.from(servingButtons);
-	servingBtnArr.forEach((e) => e.addEventListener("click", (e) => toggleServing(servingBtnArr, e.target)));	
+	Array.from(servingButtons).forEach((e) => e.addEventListener("click", (e) => searchVars.serving = toggleServing(e.target)));	
 
 	Array.from(theads).forEach((e) => e.addEventListener("click", function() {
 		const column = e.getAttribute("data-id");
@@ -127,19 +122,17 @@ window.onload = function(){
 		}
 	}));
 
-	document.querySelector(".button-cancel").addEventListener("click", function() {
-		console.log(this);
-		language = language === "en" ? "fi": "en";
-		window.localStorage.setItem("language", language);
-		window.location.reload();
-		localizeContent(language);
-	});
+	document.querySelector(".button-cancel").addEventListener("click", swapLanguage);
+
+	document.getElementById("fi").addEventListener("click", (e) => swapLanguage(e.target.id));
+	document.getElementById("en").addEventListener("click", (e) => swapLanguage(e.target.id));
 
 
 	// asettaa kartan, menun, reittiohjeiden sekä baarikortin korkeuden ja korjaa niitä aina kun ikkunan koko muuttuu
 	resizeElementHeights();
 	window.addEventListener("resize", debounce(resizeElementHeights,100,false));
 
+	/*
 	// hanat mukana haussa kyllä/ei
 	document.getElementById("tapButton").addEventListener("click", function() {
 		this.classList.toggle("selected");
@@ -160,6 +153,7 @@ window.onload = function(){
 			searchVars.serving = "";
 		}
 	});
+	*/
 
 	// kartan päällä olevan hakukentän suurennuslasi etsii osoitteen mukaan baarit jos osoite ei ole tyhjä
 	document.getElementById("search-button").addEventListener("click", function() {
@@ -221,9 +215,8 @@ window.onload = function(){
 			.catch(err => console.log("Fetch Error: ", err));
 
 		// hakee menuun olutmerkit
-		fetch("https://cors-anywhere.herokuapp.com/http://188.166.162.144:130/brands")
+		setTimeout(() => {fetch("https://cors-anywhere.herokuapp.com/http://188.166.162.144:130/brands")
 			.then(response => {
-				console.log(response.ok);
 				if (!response.ok) {
 					throw Error(response.statusText);
 				}
@@ -234,13 +227,14 @@ window.onload = function(){
 				beerBrands = beerBrands.map(x => {return x.trim()});
 				createList(beerBrands, document.getElementById("brand-list"), "brands", searchVars);
 			})
-			.catch(err => createList(["Error 404", "No beer found", err], document.getElementById("brand-list"), "brands", searchVars));
+			.catch(err => createList(["Error 404", "No beer found", err], document.getElementById("brand-list"), "brands", searchVars))
+		},500);
 	});
 
 	// käyttäjän GPS paikannus
-	document.getElementById("locate").addEventListener("click", () => {
-		document.getElementById("route").style.height = 0+"px";
-		document.getElementById("search-container").style.position = "absolute";
+	document.getElementById('locate').addEventListener('click', () => {
+		document.getElementById('route-container').style.height = 0+"px";
+		document.getElementById('search-container').style.position = "absolute";
 		resizeElementHeights();
 		clearMarkers();
 		directionsRenderer.setMap(null);
@@ -273,12 +267,12 @@ window.onload = function(){
 	});
 
 	// reittioheiden koon muuttaminen koneella
-	handle.addEventListener("mousedown", (e) => {
+	handle.addEventListener('mousedown', (e) => {
+		mouseStartPos = { x: e.pageX, y: e.pageY };
 		mouseDown = true;
-		mouseStartPos = {x: e.pageX, y: e.pageY};
 		handleOffset = mouseStartPos.y - handle.getBoundingClientRect().top;
-		const routeOptionsHeight = document.querySelector(".adp-list") != null ? document.querySelector(".adp-list").clientHeight : 0;
-		directionsMaxHeight = document.querySelector(".adp").clientHeight  + routeOptionsHeight + 8;
+		const routeOptionsHeight = document.querySelector('.adp-list') != null ? document.querySelector('.adp-list').clientHeight : 0;
+		directionsMaxHeight = document.querySelector('.adp').clientHeight  + routeOptionsHeight + 24;
 		mapMinHeight = windowHeight - headerHeight - directionsMaxHeight;
 	});
 	window.addEventListener("mouseleave", () => mouseDown = false);
@@ -290,18 +284,20 @@ window.onload = function(){
 		const directionsHeight = windowHeight - handleTopPos;
 		const mapHeight = windowHeight - directionsHeight - headerHeight;		
 		mapElement.style.height = (mapHeight > mapMinHeight) ? mapHeight + "px" : mapMinHeight + "px";
-		directionsElement.style.height = (directionsHeight < directionsMaxHeight) ? directionsHeight + "px" : directionsMaxHeight + "px";
+		setTimeout(() => {
+			directionsElement.style.height = (directionsHeight < directionsMaxHeight) ? directionsHeight + "px" : directionsMaxHeight + "px";
+		}, 100);
+		
 	});
 
 	//reittiohjeiden koon muuttaminen mobiilissa
 	handle.addEventListener("touchstart", (e) => {
 		e.preventDefault();
-		mouseDown = true;
 		mouseStartPos = {x: e.touches[0].pageX, y: e.touches[0].pageY};
-		console.log(mouseStartPos);
+		mouseDown = true;
 		handleOffset = mouseStartPos.y - handle.getBoundingClientRect().top;
-		const routeOptionsHeight = document.querySelector(".adp-list") != null ? document.querySelector(".adp-list").clientHeight : 0;
-		directionsMaxHeight = document.querySelector(".adp").clientHeight  + routeOptionsHeight + 8;
+		const routeOptionsHeight = document.querySelector('.adp-list') !== null ? document.querySelector('.adp-list').clientHeight : 0;
+		directionsMaxHeight = document.querySelector('.adp').clientHeight  + routeOptionsHeight + 24;
 		mapMinHeight = windowHeight - headerHeight - directionsMaxHeight;
 	});
 	window.addEventListener("touchend", () => mouseDown = false);
@@ -313,7 +309,10 @@ window.onload = function(){
 		const directionsHeight = windowHeight - handleTopPos;
 		const mapHeight = windowHeight - directionsHeight - headerHeight;		
 		mapElement.style.height = (mapHeight > mapMinHeight) ? mapHeight + "px" : mapMinHeight + "px";
-		directionsElement.style.height = (directionsHeight < directionsMaxHeight) ? directionsHeight + "px" : directionsMaxHeight + "px";
+		setTimeout(() => {
+			directionsElement.style.height = (directionsHeight < directionsMaxHeight) ? directionsHeight + "px" : directionsMaxHeight + "px";
+		}, 150);
+		
 	});
 
 	// menun voi avata pyyhkäisemällä vasemmasta reunasta
@@ -497,6 +496,7 @@ function updateTable(beerList, language) {
 		const vol = beerList[i].vol === 0 ? "?" : beerList[i].vol + "l";
 		const abv = beerList[i].abv === 0 ? "?" : beerList[i].abv + "%";
 		const price = beerList[i].price === 0 ? "?" : beerList[i].price + "€";
+
 		let beerType = "?";
 		if(beerList[i].type !== 0) {
 			const typeLocales = (beerList[i].type.indexOf(",") > 0) ? beerList[i].type.split(",") : beerList[i].type;
@@ -505,9 +505,7 @@ function updateTable(beerList, language) {
 			} else {
 				beerType = typeLocales;
 			}	
-		}	
-		console.log(beerType);
-		
+		}			
 		rows[i].cells[0].innerHTML = `<img src=${icon}>`;
 		rows[i].cells[1].textContent = capitalizeFirstLetter(beerList[i].name);
 		rows[i].cells[2].textContent = capitalizeFirstLetter(beerType);
@@ -519,15 +517,19 @@ function updateTable(beerList, language) {
 
 
 /**
- * Helper function to sorting a list. 
- *"
+ * Helper function to sorting the beerlist by a certain column. Takes two values from the list and compares them to each other.
+ * If the values are unknown (=0) they will be treated as 999 so that they are last in the sort.
+ *
  * @param {String} col The column that the items should be sorted by.
  * @param {boolean} ascendingOrder Determines if the items are sorted in ascending or descending order. Default value is true.
+ * @returns {number} Returns 0 if the values are the same, 1 if the first value is smaller and -1 if the second value is smaller. The return values are reversed when ascendingOrder is false.
  */
 function sortBy(col, ascendingOrder=true) {
 	return function(a, b) {
-		const x = a[col];
-		const y = b[col];
+		let x = a[col];
+		let y = b[col];
+		if(x === 0) x = 999;
+		if(y === 0) y = 999;
 		if(typeof x === "string" && typeof y === "string") {
 			return ascendingOrder ? x.localeCompare(y) : y.localeCompare(x);
 		} else {
@@ -563,6 +565,11 @@ function postJSON(url, param) {
 	};
 }
 */
+
+function swapLanguage(language) {
+	window.localStorage.setItem("language", language);
+	window.location.reload();
+}
 
 /**
  * Creates a list inside the given element in alphabetical order.
@@ -628,6 +635,21 @@ function toggleInSearch(li, searchVars) {
 	}
 }
 
+function toggleServing(el) {
+	const clicked = el.classList.contains('serving-button') ? el : el.parentElement;
+	console.log(clicked);
+	const parentElement = clicked.parentElement;
+	const buttons = parentElement.querySelectorAll('.serving-button');
+	buttons.forEach((button) => {
+		if(button === clicked) {
+			button.classList.add('serving-button-active');
+		} else {
+			button.classList.remove('serving-button-active');
+		}		
+	})
+	return clicked.id;
+}
+
 
 /**
  * Resizes the map, menu and restaurant card heights when the window is resized.
@@ -635,8 +657,8 @@ function toggleInSearch(li, searchVars) {
  */
 function resizeElementHeights() {
 	const windowHeight = window.innerHeight;
-	const headerHeight = document.querySelector("header").clientHeight;
-	const routeHeight = document.getElementById("route").clientHeight;
+	const headerHeight = document.querySelector('header').clientHeight;
+	const routeHeight = document.getElementById('route-container').clientHeight;
 	const mapHeight = routeHeight > 0 ? (windowHeight - headerHeight - routeHeight) : (windowHeight - headerHeight); 
 	document.getElementById("side-menu").style.height = windowHeight + "px";
 	document.getElementById("restaurant-card").style.height = windowHeight + "px";
@@ -774,6 +796,7 @@ function hideModal() {
  */
 function renderBarInfo(place) {
 	const date = new Date();
+	const language = window.localStorage.getItem("language") === "en" ? "en" : "fi";
 	const weekday = date.getDay() > 0 ? date.getDay()-1 : 6;
 	const barAddress = document.getElementById("bar-address");
 	const barName = document.getElementById("bar-name");
@@ -781,9 +804,8 @@ function renderBarInfo(place) {
 	const barPhoto = document.getElementById("bar-photo");
 	const service = new google.maps.places.PlacesService(map);
 	const response = getBarData(place.name);
-	const language = window.localStorage.getItem("language") === "en" ? "en" : "fi";
 	response.then(data => {
-		console.log("data from DB:" + data);
+		console.log(data);
 		const body = document.querySelector("tbody");
 		if(data.length === 0){
 			body.textContent = "Ei listatietoja saatavilla.";
@@ -792,7 +814,8 @@ function renderBarInfo(place) {
 			body.classList.remove("emptyTable");
 			createBeerTableBody(data);
 			updateTable(data.sort(sortBy("name", true)), language);
-		}		
+		}	
+		beerList = data;	
 	});
 	barName.innerHTML = place.name;
 	setRating(place.rating);
@@ -809,6 +832,7 @@ function renderBarInfo(place) {
 			barPhoto.style.backgroundImage = "url("+url+")";
 		}
 	});
+	
 }
 
 /**
@@ -840,6 +864,7 @@ function setRating(rating) {
 function localizeContent(language) {
 	const locale = language === "en" ? en_GB : fi_FI;
 	document.getElementById("tapButtonText").textContent = locale.menu.searchOptionButtons.tapButton;
+	document.getElementById("bothButtonText").textContent = locale.menu.searchOptionButtons.bothButton;
 	document.getElementById("bottleButtonText").textContent = locale.menu.searchOptionButtons.bottleButton;
 	document.getElementById("priceText").textContent = locale.menu.searchOptionSliders.priceText;
 	document.getElementById("abvText").textContent = locale.menu.searchOptionSliders.abvText;
@@ -867,11 +892,11 @@ function localizeContent(language) {
  * @param {number} wait Time in milliseconds between each time the function is fired.
  * @param {boolean} immediate Should be function be triggered on the leading edge or the trailing edge. 
  * 
- * @returns {function} func Returns the same function and fires it as long as the function is triggered.
+ * @returns {function} func Returns a new anonymous version of the same function and fires it as long as the function is triggered.
  *
  */
 function debounce(func, wait, immediate) {
-	const timeout = null;
+	let timeout = null;
 	return function() {
 		const context = this, args = arguments;
 		const later = function() {
@@ -1019,15 +1044,15 @@ function geocodeAddress(address, distance, infowindow) {
  *
  */
 function calcRoute(directionsService, directionsRenderer, endPoint, mode) {
-	if (pos == undefined && navigator.geolocation) {
-		navigator.geolocation.getCurrentPosition(function(position) {
-			pos = {
-				lat: position.coords.latitude,
-				lng: position.coords.longitude
-			};
-		});
-	}
-	directionsRenderer.setMap(map);
+	if (pos === undefined && navigator.geolocation) {
+  		navigator.geolocation.getCurrentPosition(function(position) {
+	        pos = {
+	          	lat: position.coords.latitude,
+	          	lng: position.coords.longitude
+	        };
+    	});
+    };
+    directionsRenderer.setMap(map);
 	directionsService.route({
 		origin: pos,
 		destination: endPoint,
@@ -1046,8 +1071,8 @@ function calcRoute(directionsService, directionsRenderer, endPoint, mode) {
 		if (status === "OK") {
 			directionsRenderer.setDirections(response);
 			const windowHeight = window.innerHeight;
-			document.getElementById("route").style.height = windowHeight * 0.3 + "px";
-			document.getElementById("search-container").style.display = "none";
+			document.getElementById('route-container').style.height = windowHeight * 0.3 + "px";
+			document.getElementById('search-container').style.display = "none";
 			const marker = new google.maps.Marker({
 				map: map,
 				position: endPoint,
