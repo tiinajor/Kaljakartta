@@ -123,7 +123,6 @@ window.onload = function(){
 	}));
 
 	document.querySelector(".title").addEventListener("click", () => {window.location.reload(true)});
-
 	document.getElementById("fi").addEventListener("click", (e) => swapLanguage(e.target.id));
 	document.getElementById("en").addEventListener("click", (e) => swapLanguage(e.target.id));
 
