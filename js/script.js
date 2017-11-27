@@ -26,7 +26,7 @@ window.onload = function(){
 	const oof = document.getElementById('oof');
 	const theads = document.getElementsByTagName('th');
 	const servingButtons = document.querySelectorAll('.serving-button');
-	const directionsElement = document.getElementById('route');
+	const directionsElement = document.getElementById('route-container');
 	const directionsService = new google.maps.DirectionsService;
     const directionsRenderer = new google.maps.DirectionsRenderer({suppressMarkers: true});
     let headerHeight = headerElement.clientHeight;
@@ -231,7 +231,7 @@ window.onload = function(){
 
 	// käyttäjän GPS paikannus
 	document.getElementById('locate').addEventListener('click', () => {
-		document.getElementById('route').style.height = 0+"px";
+		document.getElementById('route-container').style.height = 0+"px";
 		document.getElementById('search-container').style.position = "absolute";
 		resizeElementHeights();
 		clearMarkers();
@@ -266,11 +266,11 @@ window.onload = function(){
 
 	// reittioheiden koon muuttaminen koneella
 	handle.addEventListener('mousedown', (e) => {
+		mouseStartPos = { x: e.pageX, y: e.pageY };
 		mouseDown = true;
-		mouseStartPos = {x: e.pageX, y: e.pageY};
 		handleOffset = mouseStartPos.y - handle.getBoundingClientRect().top;
 		const routeOptionsHeight = document.querySelector('.adp-list') != null ? document.querySelector('.adp-list').clientHeight : 0;
-		directionsMaxHeight = document.querySelector('.adp').clientHeight  + routeOptionsHeight + 8;
+		directionsMaxHeight = document.querySelector('.adp').clientHeight  + routeOptionsHeight + 24;
 		mapMinHeight = windowHeight - headerHeight - directionsMaxHeight;
 	});
 	window.addEventListener('mouseleave', () => mouseDown = false);
@@ -282,18 +282,20 @@ window.onload = function(){
 		const directionsHeight = windowHeight - handleTopPos;
 		const mapHeight = windowHeight - directionsHeight - headerHeight;		
 		mapElement.style.height = (mapHeight > mapMinHeight) ? mapHeight + "px" : mapMinHeight + "px";
-		directionsElement.style.height = (directionsHeight < directionsMaxHeight) ? directionsHeight + "px" : directionsMaxHeight + "px";
+		setTimeout(() => {
+			directionsElement.style.height = (directionsHeight < directionsMaxHeight) ? directionsHeight + "px" : directionsMaxHeight + "px";
+		}, 100);
+		
 	});
 
 	//reittiohjeiden koon muuttaminen mobiilissa
 	handle.addEventListener('touchstart', (e) => {
 		e.preventDefault();
-		mouseDown = true;
 		mouseStartPos = {x: e.touches[0].pageX, y: e.touches[0].pageY};
-		console.log(mouseStartPos);
+		mouseDown = true;
 		handleOffset = mouseStartPos.y - handle.getBoundingClientRect().top;
-		const routeOptionsHeight = document.querySelector('.adp-list') != null ? document.querySelector('.adp-list').clientHeight : 0;
-		directionsMaxHeight = document.querySelector('.adp').clientHeight  + routeOptionsHeight + 8;
+		const routeOptionsHeight = document.querySelector('.adp-list') !== null ? document.querySelector('.adp-list').clientHeight : 0;
+		directionsMaxHeight = document.querySelector('.adp').clientHeight  + routeOptionsHeight + 24;
 		mapMinHeight = windowHeight - headerHeight - directionsMaxHeight;
 	});
 	window.addEventListener('touchend', () => mouseDown = false);
@@ -305,7 +307,10 @@ window.onload = function(){
 		const directionsHeight = windowHeight - handleTopPos;
 		const mapHeight = windowHeight - directionsHeight - headerHeight;		
 		mapElement.style.height = (mapHeight > mapMinHeight) ? mapHeight + "px" : mapMinHeight + "px";
-		directionsElement.style.height = (directionsHeight < directionsMaxHeight) ? directionsHeight + "px" : directionsMaxHeight + "px";
+		setTimeout(() => {
+			directionsElement.style.height = (directionsHeight < directionsMaxHeight) ? directionsHeight + "px" : directionsMaxHeight + "px";
+		}, 150);
+		
 	});
 
 	// menun voi avata pyyhkäisemällä vasemmasta reunasta
@@ -642,7 +647,7 @@ function toggleServing(el) {
 function resizeElementHeights() {
 	const windowHeight = window.innerHeight;
 	const headerHeight = document.querySelector('header').clientHeight;
-	const routeHeight = document.getElementById('route').clientHeight;
+	const routeHeight = document.getElementById('route-container').clientHeight;
 	const mapHeight = routeHeight > 0 ? (windowHeight - headerHeight - routeHeight) : (windowHeight - headerHeight); 
 	document.getElementById('side-menu').style.height = windowHeight + "px";
 	document.getElementById('restaurant-card').style.height = windowHeight + "px";
@@ -950,7 +955,7 @@ function geocodeAddress(address, distance, infowindow) {
 
 // reitti käyttäjän lokaatiosta osoitteeseen
 function calcRoute(directionsService, directionsRenderer, endPoint, mode) {
-	if (pos == undefined && navigator.geolocation) {
+	if (pos === undefined && navigator.geolocation) {
   		navigator.geolocation.getCurrentPosition(function(position) {
 	        pos = {
 	          	lat: position.coords.latitude,
@@ -977,7 +982,7 @@ function calcRoute(directionsService, directionsRenderer, endPoint, mode) {
 		if (status === 'OK') {
 			directionsRenderer.setDirections(response);
 			const windowHeight = window.innerHeight;
-			document.getElementById('route').style.height = windowHeight * 0.3 + "px";
+			document.getElementById('route-container').style.height = windowHeight * 0.3 + "px";
 			document.getElementById('search-container').style.display = "none";
 			const marker = new google.maps.Marker({
 				map: map,

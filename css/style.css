@@ -738,7 +738,7 @@ input[type="checkbox"] {
 
 
 /* ----- ROUTE/NAVIGATION/DIRECTIONS ALKU ----- */
-#route {
+#route-container {
 	bottom: 0;
 	width: 100%;
 	z-index: 50;
@@ -748,8 +748,16 @@ input[type="checkbox"] {
 	overflow-x: hidden;
 }
 
+#route {
+	height: calc(100% - 15px);
+	margin-top: 15px;
+	overflow: auto;
+}
+
 #route-close-x {
 	margin-top: 15px;
+	position: absolute;
+	right: 0;
 }
 
 .draggable {
@@ -759,6 +767,14 @@ input[type="checkbox"] {
 	background-color: black;
 	width: 100vw;
 	cursor: pointer;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.draggable img {
+	height: 10px;
+	transform: rotate(90deg);
 }
 
 .warnbox-content {
