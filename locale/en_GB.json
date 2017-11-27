@@ -2,6 +2,7 @@ const en_GB ={
     "menu": {
         "searchOptionButtons": {
             "tapButton": "Tap",
+            "bothButton": "Both",
             "bottleButton": "Bottle"
         },
         "searchOptionSliders": {
