@@ -78,12 +78,19 @@ header {
 .title {
 	font-size: 2.9em;
 	height: 100%;
+	display: flex;
+	display: -webkit-flex;
 	letter-spacing: 2px;
+}
+
+.title span {
+	display: flex;
+	align-self: center;
 }
 
 .version {
 	font-size: 0.4em;
-	vertical-align: top;
+	align-self: flex-start;
 }
 
 .header-icon {
@@ -818,6 +825,14 @@ input[type="checkbox"] {
 
 	.title {
 		font-size: 2.2em;
+	}
+
+	.title span {
+		vertical-align: -webkit-baseline-middle;
+	}
+
+	.version {
+		vertical-align: middle;
 	}
 	
 	.rating-icon {
