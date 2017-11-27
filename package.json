@@ -1,0 +1,27 @@
+{
+  "name": "kgps",
+  "version": "1.0.0",
+  "description": "kaljakartta.fi",
+  "main": "script.js",
+  "scripts": {
+    "test": "jasmine"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Microwawe/KGPS.git"
+  },
+  "keywords": [
+    "kaljakartta",
+    "kalja",
+    "kartta"
+  ],
+  "author": "Mirko Nowak, Aki Saastamoinen, Ville Sutinen, Kimi Talvitie",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Microwawe/KGPS/issues"
+  },
+  "homepage": "https://github.com/Microwawe/KGPS#readme",
+  "devDependencies": {
+    "jsdoc": "^3.5.5"
+  }
+}
