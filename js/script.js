@@ -567,8 +567,11 @@ function postJSON(url, param) {
 */
 
 function swapLanguage(language) {
-	window.localStorage.setItem("language", language);
-	window.location.reload();
+	if(window.localStorage.getItem('language') !== language) {
+		window.localStorage.setItem("language", language);
+		window.location.reload();
+	}
+	
 }
 
 /**
@@ -582,7 +585,7 @@ function swapLanguage(language) {
 function createList(list, parentDiv, id, searchVars) {
 	const ul = document.createElement("ul");
 	ul.id = id;
-	for (var i = 0; i<list.length; i++) {
+	for (let i = 0; i<list.length; i++) {
 		list[i] = capitalizeFirstLetter(list[i]);
 	}
 	list = removeDuplicates(list);
@@ -844,7 +847,7 @@ function renderBarInfo(place) {
 function setRating(rating) {
 	let rounded = Math.round(rating);
 	let html = "";
-	for(var i=1;i<=5;i++) {
+	for(let i=1;i<=5;i++) {
 		if(i<=rating) {
 			html += "<img class=\"rating-icon\" src=\"kgps_icons/pint-rating.svg\">";
 		} else {
@@ -1122,7 +1125,7 @@ function processResults(results, status, pagination) {
 		if (pagination.hasNextPage) {
 			pagination.nextPage();
 		}
-		for (var i = 0; i < results.length; i++) {
+		for (let i = 0; i < results.length; i++) {
 			setTimeout((function(i){
 				return function(){
 					createMarker(results[i]);
@@ -1141,7 +1144,7 @@ function processResults(results, status, pagination) {
  *
  */
 function createMarker(place) {
-	var marker = new google.maps.Marker({
+	const marker = new google.maps.Marker({
 		map: map,
 		position: place.geometry.location,
 		animation: google.maps.Animation.DROP,
@@ -1158,7 +1161,7 @@ function createMarker(place) {
  * Clears all markers from the map.
  */
 function clearMarkers() {
-	for (var i = 0; i < markers.length; i++) {
+	for (let i = 0; i < markers.length; i++) {
 		markers[i].setMap(null);
 	}
 	markers = [];
