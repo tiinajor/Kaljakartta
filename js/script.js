@@ -57,7 +57,7 @@ window.onload = function(){
 	};
 	directionsRenderer.setPanel(document.getElementById("route"));
 	infowindow = new google.maps.InfoWindow();
-	document.querySelector(".title-link").innerHTML += ("<sup class='version'>alpha</sup>");
+	document.querySelector(".title").innerHTML += ("<sup class='version'>alpha</sup>");
 
 	//showModal();
 	localizeContent(language);
@@ -122,7 +122,7 @@ window.onload = function(){
 		}
 	}));
 
-	document.querySelector(".button-cancel").addEventListener("click", swapLanguage);
+	document.querySelector(".title").addEventListener("click", () => {window.location.reload(true)});
 
 	document.getElementById("fi").addEventListener("click", (e) => swapLanguage(e.target.id));
 	document.getElementById("en").addEventListener("click", (e) => swapLanguage(e.target.id));
