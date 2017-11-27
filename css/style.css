@@ -104,6 +104,7 @@ header {
 	display: flex;
 	flex-direction: column;
 	justify-content: space-around;
+	padding: 0 6px;
 }
 
 .locale img {
@@ -842,6 +843,10 @@ input[type="checkbox"] {
 
 	.draggable {
 		height: 25px;
+	}
+
+	#route-close-x {
+		margin-top: 25px;
 	}
 
 	header {
