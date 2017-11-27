@@ -12,6 +12,14 @@ loadScript("https://maps.googleapis.com/maps/api/js?key=AIzaSyDuIpE10xbisU_de-Mg
 
 */
 let beerlist = [];
+const searchVars = {
+	serving : "bottle",
+	price : 8.5,
+	abvMin : 2.8,
+	abvMax : 5.6,
+	brands : [],
+	types : []
+};
 
 
 window.onload = function(){
@@ -32,12 +40,11 @@ window.onload = function(){
 	const directionsRenderer = new google.maps.DirectionsRenderer({suppressMarkers: true});
 	let headerHeight = headerElement.clientHeight;
 	let windowHeight = window.innerHeight;
-	let serving = "";
-	let language = window.localStorage.getItem("language") || "fi";
-	let mouseDown = false;
-	let mouseStartPos;
-	let handleOffset;
-	let directionsMaxHeight;
+	let language = window.localStorage.getItem('language') || "fi";
+    let mouseDown = false;
+    let mouseStartPos;
+    let handleOffset;
+    let directionsMaxHeight;
 	let mapMinHeight;
 	//beertable sorting order per column
 	let servingAsc = false;
@@ -47,14 +54,7 @@ window.onload = function(){
 	let abvAsc = false;
 	let priceAsc = false;
 
-	const searchVars = {
-		serving : serving,
-		price : 8.5,
-		abvMin : 2.8,
-		abvMax : 5.6,
-		brands : [],
-		types : []
-	};
+
 	directionsRenderer.setPanel(document.getElementById("route"));
 	infowindow = new google.maps.InfoWindow();
 	document.querySelector(".title").innerHTML += ("<sup class='version'>alpha</sup>");
@@ -63,7 +63,8 @@ window.onload = function(){
 	localizeContent(language);
 	createBeerTable(language);
 
-	Array.from(servingButtons).forEach((e) => e.addEventListener("click", (e) => searchVars.serving = toggleServing(e.target)));	
+	for(let i=0;i<servingButtons.length;i++) {
+		servingButtons[i].addEventListener("click", () => searchVars.serving = toggleServing(servingButtons[i]))};	
 
 	Array.from(theads).forEach((e) => e.addEventListener("click", function() {
 		const column = e.getAttribute("data-id");
@@ -73,46 +74,46 @@ window.onload = function(){
 		const descSortIcon = "kgps_icons/sort-icon-descend.png";
 		let sortedValues;
 		let activeSortIcon;
-		
+		console.log(searchVars);
 		switch(column) {
-		case "serving":
-			servingAsc = !servingAsc;
-			sortedValues = beerList.sort(sortBy(column, servingAsc));
-			updateTable(sortedValues, language);
-			activeSortIcon = servingAsc ? descSortIcon : ascSortIcon;
-			break;
-		case "name":
-			nameAsc = !nameAsc;
-			sortedValues = beerList.sort(sortBy(column, nameAsc));
-			updateTable(sortedValues, language);
-			activeSortIcon = nameAsc ? descSortIcon : ascSortIcon;
-			break;
-		case "type":
-			typeAsc = !typeAsc;
-			sortedValues = beerList.sort(sortBy(column, typeAsc));
-			updateTable(sortedValues, language);
-			activeSortIcon = typeAsc ? descSortIcon : ascSortIcon;
-			break;
-		case "abv":
-			abvAsc = !abvAsc;
-			sortedValues = beerList.sort(sortBy(column, abvAsc));
-			updateTable(sortedValues, language);
-			activeSortIcon = abvAsc ? descSortIcon : ascSortIcon;
-			break;
-		case "vol":
-			volAsc = !volAsc;
-			sortedValues = beerList.sort(sortBy(column, volAsc));
-			updateTable(sortedValues, language);
-			activeSortIcon = volAsc ? descSortIcon : ascSortIcon;
-			break;
-		case "price":
-			priceAsc = !priceAsc;
-			sortedValues = beerList.sort(sortBy(column, priceAsc));
-			updateTable(sortedValues, language);
-			activeSortIcon = priceAsc ? descSortIcon : ascSortIcon;
-			break;
-		default:
-			break;
+			case 'serving':
+				servingAsc = !servingAsc;
+				sortedValues = beerList.sort(sortBy(column, servingAsc));
+				updateTable(sortedValues, language, searchVars);
+				activeSortIcon = servingAsc ? descSortIcon : ascSortIcon;
+				break;
+			case 'name':
+				nameAsc = !nameAsc;
+				sortedValues = beerList.sort(sortBy(column, nameAsc));
+				updateTable(sortedValues, language, searchVars);
+				activeSortIcon = nameAsc ? descSortIcon : ascSortIcon;
+				break;
+			case 'type':
+				typeAsc = !typeAsc;
+				sortedValues = beerList.sort(sortBy(column, typeAsc));
+				updateTable(sortedValues, language, searchVars);
+				activeSortIcon = typeAsc ? descSortIcon : ascSortIcon;
+				break;
+			case 'abv':
+				abvAsc = !abvAsc;
+				sortedValues = beerList.sort(sortBy(column, abvAsc));
+				updateTable(sortedValues, language, searchVars);
+				activeSortIcon = abvAsc ? descSortIcon : ascSortIcon;
+				break;
+			case 'vol':
+				volAsc = !volAsc;
+				sortedValues = beerList.sort(sortBy(column, volAsc));
+				updateTable(sortedValues, language, searchVars);
+				activeSortIcon = volAsc ? descSortIcon : ascSortIcon;
+				break;
+			case 'price':
+				priceAsc = !priceAsc;
+				sortedValues = beerList.sort(sortBy(column, priceAsc));
+				updateTable(sortedValues, language, searchVars);
+				activeSortIcon = priceAsc ? descSortIcon : ascSortIcon;
+				break;
+			default:
+				break;
 		}
 
 		for (let i = 0; i < theads.length; i++) {
@@ -392,29 +393,31 @@ window.onload = function(){
 	});
 
 	// slaidereiden liikuttaminen päivittää niihin liittyvät tekstit
-	priceSlider.noUiSlider.on("update", function() {
+  	priceSlider.noUiSlider.on('update', function() {
 		const value = priceSlider.noUiSlider.get();
-		document.getElementById("price").innerHTML = "0 - " + value + "€";
-	});
-	alcoholSlider.noUiSlider.on("update", function() {
+	    document.getElementById("price").innerHTML = "0 - " + value + "€";
+  	});
+  	alcoholSlider.noUiSlider.on('update', function() {
 		const value = alcoholSlider.noUiSlider.get();
-		document.getElementById("alcohol").innerHTML = value[0] + " - " + value[1] + "%";
-	});
-	distanceSlider.noUiSlider.on("update", function() {
+	    document.getElementById("alcohol").innerHTML = value[0] + " - " + value[1] + "%";
+  	});
+  	distanceSlider.noUiSlider.on('update', function() {
 		const value = distanceSlider.noUiSlider.get();
-		document.getElementById("distance").innerHTML = "< " + value + "m";
-	});
+	    document.getElementById("distance").innerHTML = "< " + value + "m";
+  	});
 
 	// slaidereiden siirtäminen päivittää hakukriteerit
-	priceSlider.noUiSlider.on("change", function() {
-		const value = priceSlider.noUiSlider.get();
-		searchVars.price = value[1];  
-	});
-	alcoholSlider.noUiSlider.on("change", function() {
-		const value = alcoholSlider.noUiSlider.get();
-		searchVars.alcohol.min = value[0];
+  	priceSlider.noUiSlider.on('change', function() {
+	    const value = priceSlider.noUiSlider.get();
+		searchVars.price = value;  
+		console.log(searchVars);
+  	});
+  	alcoholSlider.noUiSlider.on('change', function() {
+	    const value = alcoholSlider.noUiSlider.get();
+	    searchVars.alcohol.min = value[0];
 		searchVars.alcohol.max = value[1];
-	});
+		console.log(searchVars);
+  	});
 
 
 };
@@ -486,15 +489,20 @@ function createBeerTableBody(beerList) {
  *"
  * @param {List} beerList Updated list of the beers that the clicked bar has. 
  */
-function updateTable(beerList, language) {
-	const rows = document.querySelector("tbody").rows;
+function updateTable(beerList, language, searchVars) {
+	const rows = document.querySelector('tbody').rows;
 	const bottleIcon = "kgps_icons/beer-bottle.svg";
 	const tapIcon = "kgps_icons/beer-tap.svg";
+	console.log(searchVars);
 	for(let i = 0; i < beerList.length; i++){
+		if(beerList[i].serving !== searchVars.serving || beerList[i].price > searchVars.price || beerList[i].abv < searchVars.abvMin || beerList[i].abv > searchVars.abvMax) {
+			rows[i].classList.add('greyed-out');
+		}
 		const icon = beerList[i].serving === "tap" ? tapIcon : bottleIcon;
 		const vol = beerList[i].vol === 0 ? "?" : beerList[i].vol + "l";
 		const abv = beerList[i].abv === 0 ? "?" : beerList[i].abv + "%";
 		const price = beerList[i].price === 0 ? "?" : beerList[i].price + "€";
+		
 
 		let beerType = "?";
 		if(beerList[i].type !== 0) {
@@ -815,7 +823,7 @@ function renderBarInfo(place) {
 		} else {
 			body.classList.remove("emptyTable");
 			createBeerTableBody(data);
-			updateTable(data.sort(sortBy("name", true)), language);
+			updateTable(data.sort(sortBy("name", true)), language, searchVars);
 		}	
 		beerList = data;	
 	});

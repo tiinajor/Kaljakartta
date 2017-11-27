@@ -438,6 +438,10 @@ header {
 	padding: 2px 0;
 }
 
+.beers-table tr.greyed-out {
+	color: #808080;
+}
+
 .beers-table td {
 	padding: 2px 0 2px 3px;
 	line-height: 1.2em;
