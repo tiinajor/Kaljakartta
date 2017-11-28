@@ -110,20 +110,20 @@ public class Dao {
 						double price = e.getProperty("price");
 						tapBev.put("price", price);
 					} catch (Exception e1) {
-						tapBev.put("price", 0);
+						tapBev.put("price", Double.MAX_VALUE);
 						System.out.println("No price found for: Tap - "+bev.getProperty("name"));
 					}
 					try {
 						double vol = e.getProperty("vol");
 						tapBev.put("vol", vol);
 					} catch (Exception e1) {
-						tapBev.put("vol", 0);
+						tapBev.put("vol", Double.MAX_VALUE);
 						System.out.println("No vol found for: Tap - "+bev.getProperty("name"));
 					}
 					try {
 						tapBev.put("abv", bev.getProperty("abv").toString());
 					} catch (Exception e1) {
-						tapBev.put("abv", 0);
+						tapBev.put("abv", Double.MAX_VALUE);
 						System.out.println("No abv found for: Tap - "+bev.getProperty("name"));
 					}
 					try {
@@ -160,20 +160,20 @@ public class Dao {
 						double price = e.getProperty("price");
 						botBev.put("price", price);
 					} catch (Exception e1) {
-						botBev.put("price", 0);
+						botBev.put("price", Double.MAX_VALUE);
 						System.out.println("No price found for: Bottle - "+bev.getProperty("name"));
 					}
 					try {
 						double vol = e.getProperty("vol");
 						botBev.put("vol", vol);
 					} catch (Exception e1) {
-						botBev.put("vol", 0);
+						botBev.put("vol", Double.MAX_VALUE);
 						System.out.println("No vol found for: Bottle - "+bev.getProperty("name"));
 					}
 					try {
 						botBev.put("abv", bev.getProperty("abv").toString());
 					} catch (Exception e1) {
-						botBev.put("abv", 0);
+						botBev.put("abv", Double.MAX_VALUE);
 						System.out.println("No abv found for: Bottle - "+bev.getProperty("name"));
 					}
 					try {
@@ -200,77 +200,100 @@ public class Dao {
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public HashMap<String, Double[]> filterRestaurants(JSONObject params) {
+	public JSONArray filterRestaurants(JSONObject params) {
 
-		HashMap restaurants = new HashMap();
-		HashMap keys = new HashMap();
-
-		params.keySet().iterator().forEachRemaining(k -> {
-			keys.put(k.toString(), params.get(k.toString()));
-		});
+		JSONArray restaurants = new JSONArray();
+//		HashMap keys = new HashMap();
+//
+//		params.keySet().iterator().forEachRemaining(k -> {
+//			keys.put(k.toString(), params.get(k.toString()));
+//		});
 
 		List<Vertex> beers = new ArrayList();
-		beers = new GremlinPipeline(graph.getVertices("Beer.beer", true)).toList();
+		beers = new GremlinPipeline(graph.getVerticesOfClass("Beer")).toList();
+		
+		int i = 0;
+		int size = 0;
 
-		for (int i = 0; i < beers.size(); i++) {
+		List<Vertex> remove = new ArrayList();
+		
+		do  {
+			
+			JSONArray types = (JSONArray) params.get("type");
+			
+			for(Object o : types) {
+				
+//				if (keys.containsKey("type") && !beers.get(i).getProperty("type").equals(keys.get("type"))) {
+//
+//					beers.remove(beers.get(i));
+//
+//				}
 
-			if (keys.containsKey("type") && !beers.get(i).getProperty("type").equals(keys.get("type"))) {
+				
+				if (!beers.get(i).getProperty("type").equals(o.toString())) {
 
-				beers.remove(beers.get(i));
+					remove.add(beers.get(i));
 
+				}
+				
 			}
+			
+			JSONArray brands = (JSONArray) params.get("brand");
+			
+			for(Object o : brands) {
+				
+//				if (keys.containsKey("brand") && !beers.get(i).getProperty("brand").equals(keys.get("brand"))) {
+//
+//					beers.remove(beers.get(i));
+//
+//				}
+				
+				if (!beers.get(i).getProperty("brand").equals(o.toString())) {
 
-			if (keys.containsKey("brand") && !beers.get(i).getProperty("brand").equals(keys.get("brand"))) {
+					remove.add(beers.get(i));
 
-				beers.remove(beers.get(i));
-
+				}
+				
 			}
 
 			if (Double.parseDouble(beers.get(i).getProperty("abv").toString()) < Double
-					.parseDouble(keys.get("abvMin").toString())
+					.parseDouble(params.get("abvMin").toString())
 					&& Double.parseDouble(beers.get(i).getProperty("abv").toString()) > Double
-							.parseDouble(keys.get("abvMax").toString())) {
+							.parseDouble(params.get("abvMax").toString())) {
 
-				beers.remove(beers.get(i));
+				remove.add(beers.get(i));
 
 			}
+			
+			size = beers.size();
+			i++;
 
-		}
+		} while (i < size);
 
 		Iterator<Edge> edges;
 
 		for (Vertex v : beers) {
 
-			System.out.println("Alku: " + beers);
+			if (!params.get("serving").equals("both")) {
 
-			if (keys.containsKey("serving") && !keys.get("serving").equals("")) {
-
-				edges = v.getEdges(Direction.OUT, keys.get("serving").toString()).iterator();
+				edges = v.getEdges(Direction.OUT, params.get("serving").toString()).iterator();
 
 			} else {
 				edges = v.getEdges(Direction.OUT, "E").iterator();
 			}
 
-			System.out.println("Menossa Whileen: " + edges);
-
 			while (edges.hasNext()) {
 
 				Edge e = edges.next();
 
-				System.out.println(e);
-
-				System.out.println(e.getPropertyKeys());
-				System.out.println(e.getLabel());
-
-				if (Double.parseDouble(e.getProperty("price").toString()) <= Double
-						.parseDouble(keys.get("price").toString())) {
+				if (e.getPropertyKeys().contains("price") && !e.getProperty("price").toString().equals("")
+						&& Double.parseDouble(e.getProperty("price").toString()) <= Double
+						.parseDouble(params.get("price").toString())) {
 
 					Vertex restaurant = e.getVertex(Direction.IN);
 
-					Double[] coordinates = { Double.parseDouble(restaurant.getProperty("latitude").toString()),
-							Double.parseDouble(restaurant.getProperty("longitude").toString()) };
-
-					restaurants.put(restaurant.getProperty("name"), coordinates);
+					if(!restaurants.contains(restaurant.getProperty("name")))
+						restaurants.add(restaurant.getProperty("name"));
 
 				}
 
@@ -400,11 +423,31 @@ public class Dao {
 
 	}
 
-//	 public static void main(String[] args) {
-//	 Dao dao = new Dao("remote:188.166.162.144:2424/KaljakarttaDB", "dao",
-//	 "bakkiPassu");
+	 public static void main(String[] args) {
+	 Dao dao = new Dao("remote:188.166.162.144:2424/KaljakarttaDB", "dao",
+	 "bakkiPassu");
 //	  dao.parseBeers("F:/Downloads/beers2.json");
-////	 dao.linkRestaurants("F:/Downloads/restaurants.json");
-//	 }
+//	 dao.linkRestaurants("F:/Downloads/restaurants.json");
+	 JSONObject params = new JSONObject();
+	 JSONArray types = new JSONArray();
+	 JSONArray brands = new JSONArray();
+	 
+	 types.add("Lager");
+	 types.add("IPA");
+	 brands.add("Heineken");
+	 brands.add("Karhu");
+	 brands.add("Fullers");
+	 
+	 params.put("type", types);
+	 params.put("brand", brands);
+	 params.put("price", 8.0);
+	 params.put("abvMin", 3.0);
+	 params.put("abvMax", 15.0);
+	 params.put("serving", "both");
+	 
+	 System.out.println(params);
+
+	 System.out.println(dao.filterRestaurants(params));
+	 }
 
 }
