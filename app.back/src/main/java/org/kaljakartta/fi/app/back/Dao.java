@@ -360,30 +360,30 @@ public class Dao {
 
 	}
 
-	public static void main(String[] args) {
-		Dao dao = new Dao("remote:188.166.162.144:2424/KaljakarttaDB", "dao", "bakkiPassu");
-		// dao.parseBeers("F:/Downloads/beers2.json");
-		// dao.linkRestaurants("F:/Downloads/restaurants.json");
-		JSONObject params = new JSONObject();
-		JSONArray types = new JSONArray();
-		JSONArray brands = new JSONArray();
-
-		types.add("Lager,Lager");
-		types.add("IPA,IPA");
-		brands.add("Lapin Kulta");
-		brands.add("Karhu");
-		brands.add("Karjala");
-
-		params.put("types", types);
-		params.put("brands", brands);
-		params.put("price", 8.0);
-		params.put("abvMin", 3.0);
-		params.put("abvMax", 15.0);
-		params.put("serving", "Both");
-
-		System.out.println(params);
-
-		System.out.println(dao.findRestaurants(params));
-	}
+//	public static void main(String[] args) {
+//		Dao dao = new Dao("remote:188.166.162.144:2424/KaljakarttaDB", "dao", "bakkiPassu");
+//		// dao.parseBeers("F:/Downloads/beers2.json");
+//		// dao.linkRestaurants("F:/Downloads/restaurants.json");
+//		JSONObject params = new JSONObject();
+//		JSONArray types = new JSONArray();
+//		JSONArray brands = new JSONArray();
+//
+//		types.add("Lager,Lager");
+//		types.add("IPA,IPA");
+//		brands.add("Lapin Kulta");
+//		brands.add("Karhu");
+//		brands.add("Karjala");
+//
+//		params.put("types", "");
+//		params.put("brands", "");
+//		params.put("price", 8.0);
+//		params.put("abvMin", 3.0);
+//		params.put("abvMax", 15.0);
+//		params.put("serving", "Both");
+//
+//		System.out.println(params);
+//
+//		System.out.println(dao.findRestaurants(params));
+//	}
 
 }
