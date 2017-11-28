@@ -13,20 +13,20 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 
-@CrossOrigin(origins = "*")
 @Controller
 @RestController
 public class RESTController {
 
 	private Dao dao = new Dao("remote:188.166.162.144:2424/KaljakarttaDB", "dao", "bakkiPassu");
 
+	@CrossOrigin(origins = "*")
 	@RequestMapping(value = "/restaurant", method = RequestMethod.GET)
 	public @ResponseBody String passRestaurants(@RequestParam String name) {
 
 		return dao.getRestaurant(name).toString();
 
 	}
-
+	@CrossOrigin(origins = "*")
 	@RequestMapping(value = "/beertypes", method = RequestMethod.GET)
 	public @ResponseBody String passTypes() {
 
@@ -34,7 +34,7 @@ public class RESTController {
 		return ret;
 
 	}
-
+	@CrossOrigin(origins = "*")
 	@RequestMapping(value = "/brands", method = RequestMethod.GET)
 	public @ResponseBody String passBrands() {
 
@@ -42,7 +42,7 @@ public class RESTController {
 		return ret;
 
 	}
-
+	@CrossOrigin(origins = "*")
 	@RequestMapping(value = "/findrestaurants", method = RequestMethod.POST)
 	public @ResponseBody String findRestaurants(@RequestParam String keys) {
 
