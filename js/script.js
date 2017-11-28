@@ -51,14 +51,12 @@ window.onload = function(){
 		price : 8.5,
 		abvMin : 2.8,
 		abvMax : 5.6,
-		brands : [],
+		brands : ["Karhu"],
 		types : []
 	};
 	directionsRenderer.setPanel(document.getElementById("route"));
 	infowindow = new google.maps.InfoWindow();
 	document.querySelector(".title").innerHTML += ("<sup class='version'>alpha</sup>");
-
-	postJSON("https://cors-anywhere.herokuapp.com/http://188.166.162.144:130/findrestaurants", searchVars);
 
 	//showModal();
 	localizeContent(language);
@@ -165,6 +163,11 @@ window.onload = function(){
 			geocodeAddress(address, distance, infowindow);
 			input.value = "";
 		}
+	});
+
+	document.querySelector('.button-submit').addEventListener('click', () => {
+		console.log(searchVars);
+		postJSON("https://cors-anywhere.herokuapp.com/http://188.166.162.144:130/findrestaurants", searchVars);
 	});
 
 
@@ -614,16 +617,37 @@ function createList(list, parentDiv, id, searchVars) {
 	for (let i = 0; i<list.length; i++) {
 		list[i] = capitalizeFirstLetter(list[i]);
 	}
-	list = removeDuplicates(list);
-	list = list.sort();
-	for (let i = 0; i<list.length; i++) {
-		let li = document.createElement("li");
-		let content = document.createTextNode(list[i]);
-		li.appendChild(content);
-		li.addEventListener("click", () => toggleInSearch(li, searchVars));
-		ul.appendChild(li);	
+
+	if(id == "types") {
+		let newList = [];
+		for (let i = 0; i < list.length; i++) {
+			const type = list[i] + "," + list[i+1];
+			newList.push(type);
+			i++;
+		}
+		newList = newList.sort();
+		for (let i = 0; i<newList.length; i++) {
+			let li = document.createElement("li");
+			let locale = newList[i].split(",");
+			locale = locale.map(x => { return x.trim() });
+			let content = document.createTextNode(locale[0]);
+			li.appendChild(content);
+			li.dataset.type = newList[i];
+			li.addEventListener("click", () => toggleInSearch(li, searchVars));
+			ul.appendChild(li);	
+		}
+		parentDiv.appendChild(ul);
+	} else {
+		list = removeDuplicates(list);
+		list = list.sort();
+		for (let i = 0; i < list.length; i++) {
+			let li = document.createElement("li");
+			let content = document.createTextNode(list[i]);
+			li.appendChild(content);
+			li.addEventListener("click", () => toggleInSearch(li, searchVars));
+			ul.appendChild(li); 
+		}
 	}
-	parentDiv.appendChild(ul);
 }
 
 /**
@@ -632,6 +656,7 @@ function createList(list, parentDiv, id, searchVars) {
  * @param {HTMLElement} div The div which contains the list element.
  */
 function closeList(div) {
+	console.log(div);
 	const otherList = div.children[1];
 	const otherDiv = div.children[0];
 	const icon = otherDiv.children[1];
@@ -647,7 +672,7 @@ function closeList(div) {
  */
 function toggleInSearch(li, searchVars) {
 	const parentID = li.parentElement.id;
-	const text = li.textContent || li.innerText;
+	const text = li.dataset.type;
 	li.classList.toggle("selected");
 	if(parentID == "brands") {
 		if (searchVars.brands.indexOf(text) >= 0) {
