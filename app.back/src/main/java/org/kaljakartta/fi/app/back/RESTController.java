@@ -2,6 +2,9 @@ package org.kaljakartta.fi.app.back;
 
 import org.springframework.web.bind.annotation.RestController;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -38,10 +41,17 @@ public class RESTController {
 	}
 
 	@RequestMapping(value = "/findrestaurants", method = RequestMethod.GET)
-	public @ResponseBody String findRestaurants(@RequestParam JSONObject keys) {
+	public @ResponseBody String findRestaurants(@RequestParam String keys) {
 
-		String ret = dao.filterRestaurants(keys).toString();
-		return ret;
+		JSONParser parser = new JSONParser();
+		
+		String ret;
+		try {
+			return dao.filterRestaurants((JSONObject) parser.parse(keys)).toString();
+		} catch (ParseException e) {
+			e.printStackTrace();
+			return HttpStatus.I_AM_A_TEAPOT.toString();
+		}
 	}
 
 }
