@@ -5,6 +5,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,7 +44,7 @@ public class RESTController {
 
 	}
 
-	@RequestMapping(value = "/findrestaurants", method = RequestMethod.POST, produces="application/json")
+	@RequestMapping(value = "/findrestaurants", method = RequestMethod.POST, consumes={MediaType.APPLICATION_JSON_VALUE})
 	public @ResponseBody String findRestaurants(@RequestParam String keys) {
 
 		JSONParser parser = new JSONParser();
