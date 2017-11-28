@@ -40,14 +40,12 @@ public class RESTController {
 
 	}
 
-	@RequestMapping(value = "/findrestaurants", method = RequestMethod.GET)
+	@RequestMapping(value = "/findrestaurants", method = RequestMethod.POST)
 	public @ResponseBody String findRestaurants(@RequestParam String keys) {
 
 		JSONParser parser = new JSONParser();
-		
-		String ret;
 		try {
-			return dao.filterRestaurants((JSONObject) parser.parse(keys)).toString();
+			return dao.findRestaurants((JSONObject) parser.parse(keys)).toString();
 		} catch (ParseException e) {
 			e.printStackTrace();
 			return HttpStatus.I_AM_A_TEAPOT.toString();
