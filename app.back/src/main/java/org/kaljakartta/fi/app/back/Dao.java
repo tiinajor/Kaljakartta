@@ -322,6 +322,8 @@ public class Dao {
 	public ArrayList findRestaurants(JSONObject params) {
 
 		ArrayList restaurants = new ArrayList();
+		
+		System.out.println(params.toString());
 
 		try {
 			if (params.get("types").toString().isEmpty())
