@@ -10,7 +10,7 @@ window.onload = function() {
 	button.addEventListener('click', (e) => {
 		e.preventDefault();
 		console.log("click");
-		
+
 		if(usernameField.checkValidity()) {
 			username = usernameField.value;
 			usernameErrorField.innerHTML = '';
@@ -23,7 +23,7 @@ window.onload = function() {
 		if(passwordField.checkValidity()) {
 			password = passwordField.value;
 			passwordErrorField.innerHTML = '';
-			passowrdField.classList.remove('invalid');
+			passwordField.classList.remove('invalid');
 		} else {
 			passwordErrorField.innerHTML = passwordField.validationMessage;
 			passwordField.classList.add('invalid');
@@ -31,4 +31,4 @@ window.onload = function() {
 
 		console.log({username, password});
 	})
-} 
+}

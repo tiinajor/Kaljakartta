@@ -9,6 +9,7 @@
 
 html {
  	height: 100%;
+	background-color: whitesmoke;
 }
 
 header {
@@ -35,6 +36,23 @@ input {
 	border-radius: 0.25em;
 	outline: none;
 	border: 2px solid var(--bg-dark);
+}
+
+.forgot-pass-block{
+	display: flex;
+	align-self: center;
+	font-family: 'Bebas Neue', sans-serif;
+	padding:1.2em 0 0 0;
+	letter-spacing: 0.15em;
+}
+a{
+	text-decoration: none;
+	font-size: 1.2em;
+	color:whitesmoke;
+}
+a:hover{
+	font-size: 1.25em;
+	color:white;
 }
 
 .input-block {
@@ -103,7 +121,7 @@ input {
 	-webkit-box-shadow: none;
 	-moz-box-shadow: none;
 	box-shadow: none;
-	margin-top: 1em;
+	margin-top: 0.2em;
 }
 
 
