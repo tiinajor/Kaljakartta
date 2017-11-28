@@ -32,7 +32,6 @@ window.onload = function(){
 	const directionsRenderer = new google.maps.DirectionsRenderer({suppressMarkers: true});
 	let headerHeight = headerElement.clientHeight;
 	let windowHeight = window.innerHeight;
-	let serving = "";
 	let language = window.localStorage.getItem("language") || "fi";
 	let mouseDown = false;
 	let mouseStartPos;
@@ -48,7 +47,7 @@ window.onload = function(){
 	let priceAsc = false;
 
 	const searchVars = {
-		serving : serving,
+		serving : "Both",
 		price : 8.5,
 		abvMin : 2.8,
 		abvMax : 5.6,
@@ -58,6 +57,8 @@ window.onload = function(){
 	directionsRenderer.setPanel(document.getElementById("route"));
 	infowindow = new google.maps.InfoWindow();
 	document.querySelector(".title").innerHTML += ("<sup class='version'>alpha</sup>");
+
+	postJSON("https://cors-anywhere.herokuapp.com/http://188.166.162.144:130/findrestaurants", searchVars);
 
 	//showModal();
 	localizeContent(language);
@@ -214,7 +215,8 @@ window.onload = function(){
 			.catch(err => console.log("Fetch Error: ", err));
 
 		// hakee menuun olutmerkit
-		setTimeout(() => {fetch("https://cors-anywhere.herokuapp.com/http://188.166.162.144:130/brands")
+		setTimeout(() => {
+			fetch("https://cors-anywhere.herokuapp.com/http://188.166.162.144:130/brands")
 			.then(response => {
 				if (!response.ok) {
 					throw Error(response.statusText);
@@ -408,12 +410,14 @@ window.onload = function(){
 	// slaidereiden siirtäminen päivittää hakukriteerit
 	priceSlider.noUiSlider.on("change", function() {
 		const value = priceSlider.noUiSlider.get();
-		searchVars.price = value[1];  
+		searchVars.price = value;  
+		console.log(searchVars);
 	});
 	alcoholSlider.noUiSlider.on("change", function() {
 		const value = alcoholSlider.noUiSlider.get();
-		searchVars.alcohol.min = value[0];
-		searchVars.alcohol.max = value[1];
+		searchVars.abvmin = value[0];
+		searchVars.abvmax = value[1];
+		console.log(searchVars);
 	});
 
 
@@ -549,21 +553,23 @@ function getBarData(barName) {
 	return fetch(url).then(response => response.status !== 500 ? response.json() : null);
 }
 
-/*
+/**
  * Raw post method for sending data to our backend.
- *
-function postJSON(url, param) {
+ */
+function postJSON(url, data) {
 	let xhr = new XMLHttpRequest();
-	xhr.open("POST", url+param, true);
+	xhr.open("POST", url, true);
 	xhr.setRequestHeader("Content-Type", "application/json");
-	xhr.send(); 
 	xhr.onreadystatechange = function () {
 		if (xhr.readyState == 4 && xhr.status == 200) {
-			//console.log(xhr.responseText);               
+			console.log(xhr.responseText);               
 		}
 	};
+	console.log(JSON.stringify(data));
+	console.log(data);
+	xhr.send(JSON.stringify(data));
 }
-*/
+
 
 function swapLanguage(language) {
 	if(window.localStorage.getItem('language') !== language) {
