@@ -2,6 +2,7 @@ let map;
 let pos;
 let infowindow;
 let markers = [];
+let bars = [];
 
 loadScript("https://maps.googleapis.com/maps/api/js?key=AIzaSyDuIpE10xbisU_de-Mg_xR4-OpmOVl3BxA&libraries=places&language=fi&region=FI", initMap);
 
@@ -168,6 +169,7 @@ window.onload = function(){
 	document.querySelector('.button-submit').addEventListener('click', () => {
 		console.log(searchVars);
 		postJSON("https://cors-anywhere.herokuapp.com/http://188.166.162.144:130/findrestaurants", searchVars);
+
 	});
 
 
@@ -544,6 +546,17 @@ function sortBy(col, ascendingOrder=true) {
 	};
 }
 
+function titleCase(str) {
+	const splitStr = str.toLowerCase().split(' ');
+	for (let i = 0; i < splitStr.length; i++) {
+		// You do not need to check if i is larger than splitStr length, as your for does that for you
+		// Assign it back to the array
+		splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);
+	}
+	// Directly return the joined string
+	return splitStr.join(' ');
+}
+
 /**
  * Gets the beerlist of the given bar from our API.
  *
@@ -590,7 +603,7 @@ function postJSON(url, data) {
 		return res.json()
 	})
 	.then(data => {
-		console.log(data);
+		bars = data;
 	})
 }
 
@@ -1195,6 +1208,9 @@ function processResults(results, status, pagination) {
  *
  */
 function createMarker(place) {
+	bars = bars.map(bar => titleCase(bar));
+	console.log(bars, place.name);
+	if(bars.indexOf(place.name) === -1) return;
 	const marker = new google.maps.Marker({
 		map: map,
 		position: place.geometry.location,
