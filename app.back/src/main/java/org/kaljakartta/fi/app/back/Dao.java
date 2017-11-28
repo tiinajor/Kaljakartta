@@ -373,18 +373,25 @@ public class Dao {
 //		JSONArray types = new JSONArray();
 //		JSONArray brands = new JSONArray();
 //
-//		types.add("Lager,Lager");
-//		types.add("IPA,IPA");
-//		brands.add("Lapin Kulta");
-//		brands.add("Karhu");
-//		brands.add("Karjala");
+//		types.put("Lager,Lager");
+//		types.put("IPA,IPA");
+//		brands.put("Lapin Kulta");
+//		brands.put("Karhu");
+//		brands.put("Karjala");
 //
-//		params.put("types", "");
+//		try {
+//			params.put("types", "");
+//		
 //		params.put("brands", "");
 //		params.put("price", 8.0);
 //		params.put("abvMin", 3.0);
 //		params.put("abvMax", 15.0);
 //		params.put("serving", "Both");
+//		
+//		} catch (JSONException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 //
 //		System.out.println(params);
 //
