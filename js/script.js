@@ -561,6 +561,7 @@ function postJSON(url, data) {
 	xhr.open("POST", url, true);
 	xhr.setRequestHeader("Content-Type", "application/json");
 	xhr.onreadystatechange = function () {
+		console.log(xhr.readyState, xhr.status);
 		if (xhr.readyState == 4 && xhr.status == 200) {
 			console.log(xhr.responseText);               
 		}
