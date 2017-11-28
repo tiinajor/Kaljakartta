@@ -44,7 +44,7 @@ public class RESTController {
 
 	}
 
-	@RequestMapping(value = "/findrestaurants", method = RequestMethod.POST, consumes={MediaType.APPLICATION_JSON_VALUE})
+	@RequestMapping(value = "/findrestaurants", method = RequestMethod.POST, consumes="application/json")
 	public @ResponseBody String findRestaurants(@RequestParam String keys) {
 
 		JSONParser parser = new JSONParser();
