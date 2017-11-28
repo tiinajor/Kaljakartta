@@ -8,9 +8,8 @@ import java.util.List;
 
 //import org.json.simple.JSONArray;
 //import org.json.simple.JSONObject;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -134,7 +133,7 @@ public class Dao {
 						System.out.println("No type found for: Tap - " + bev.getProperty("name"));
 					}
 
-					restaurantValues.put(tapBev);
+					restaurantValues.add(tapBev);
 
 				}
 
@@ -184,7 +183,7 @@ public class Dao {
 						System.out.println("No type found for: Bottle - " + bev.getProperty("name"));
 					}
 
-					restaurantValues.put(botBev);
+					restaurantValues.add(botBev);
 
 				}
 
@@ -201,134 +200,130 @@ public class Dao {
 	}
 
 
-//	public void parseBeers(String path) {
-//
-//		try {
-//			JSONParser parser = new JSONParser();
-//
-//			JSONArray array = (JSONArray) parser.parse(new FileReader(path));
-//
-//			for (Object o : array) {
-//
-//				JSONObject json = (JSONObject) o;
-//
-//				// if (!json.get("Abv").equals("") && !json.get("Abv").toString().contains("?")
-//				// && !json.get("Abv").toString().contains("-")) {
-//				// String abv = json.get("Abv").toString();
-//				// System.out.println(abv);
-//				// String abv2 = abv.replace(',', '.');
-//				// System.out.println(abv2);
-//				// }
-//				// Double abvCast = Double.parseDouble(abv);
-//				// System.out.println(json.get("Brand") + ", " + json.get("Name")+", "+
-//				// json.get("Type")+", "+json.get("Abv"));
-//				// Double abv = Double.parseDouble(json.get("Abv").toString());
-//				// System.out.println(abv);
-//				// System.out.println(abvCast);
-//				if (!graph.getVertices("Beer.name", json.get("Name")).iterator().hasNext())
-//					graph.addVertex("class:Beer", "beer", true, "brand", json.get("Brand"), "type", json.get("Type"),
-//							"abv", json.get("Abv"), "name", json.get("Name"));
-//				else
-//					System.out.println("Duplicate on: " + json.get("Name"));
-//
-//			}
-//
-//		} catch (IOException | ParseException e) {
-//			e.printStackTrace();
-//		}
-//
-//	}
-//
-//	public void linkRestaurants(String path) {
-//
-//		JSONParser parser = new JSONParser();
-//
-//		try {
-//
-//			JSONArray restaurantArray = (JSONArray) parser.parse(new FileReader(path));
-//
-//			for (Object o : restaurantArray) {
-//
-//				JSONObject restaurantJson = (JSONObject) o;
-//
-//				Vertex restaurant;
-//
-//				if (graph.getVertices("Restaurant.name", restaurantJson.get("Name")).iterator().hasNext())
-//					restaurant = graph.getVertices("Restaurant.name", restaurantJson.get("Name")).iterator().next();
-//				else
-//					restaurant = graph.addVertex("class:Restaurant", "name", restaurantJson.get("Name"));
-//
-//				JSONArray beverageArray = (JSONArray) restaurantJson.get("Beverages");
-//
-//				for (Object beverage : beverageArray) {
-//
-//					JSONObject beverageJson = (JSONObject) beverage;
-//
-//					ArrayList<String> beverages = new ArrayList<>();
-//
-//					graph.getVertices("Restaurant.name", restaurantJson.get("Name")).iterator().next()
-//							.getEdges(Direction.IN, beverageJson.get("Serving").toString()).forEach(e -> {
-//								beverages.add(e.getVertex(Direction.OUT).getProperty("name"));
-//							});
-//					;
-//
-//					if (graph.getVertices("Beer.name", beverageJson.get("Name")).iterator().hasNext()) {
-//
-//						if (!beverages.contains(beverageJson.get("Name"))) {
-//							Edge edge = graph.addEdge(null,
-//									graph.getVertices("Beer.name", beverageJson.get("Name")).iterator().next(),
-//									restaurant, beverageJson.get("Serving").toString());
-//
-//							String price = beverageJson.get("Price").toString();
-//
-//							if (!beverageJson.get("Price").toString().contains("\"")) {
-//								price = price.replaceAll("\"", "");
-//								price = price.replace(',', '.');
-//							} else
-//								price = price.replace(',', '.');
-//
-//							if (!price.equals("") && !price.isEmpty())
-//								edge.setProperty("price", Double.parseDouble(price));
-//
-//							String vol = beverageJson.get("Vol").toString();
-//
-//							if (!beverageJson.get("Vol").toString().contains("\"")) {
-//								vol = vol.replaceAll("\"", "");
-//								vol = vol.replace(',', '.');
-//							} else
-//								vol = vol.replace(',', '.');
-//
-//							if (!vol.equals("") && !vol.isEmpty())
-//								edge.setProperty("vol", Double.parseDouble(vol));
-//						} else
-//							System.out.println("Duplicate on restaurant: " + restaurantJson.get("Name") + ", Beverage: "
-//									+ beverageJson.get("Name"));
-//					} else {
-//						System.out.println("Couldn't find beverage " + beverageJson.get("Name")
-//								+ " from DB, Restaurant: " + restaurantJson.get("Name"));
-//					}
-//				}
-//			}
-//
-//		} catch (IOException |
-//
-//				ParseException e) {
-//			e.printStackTrace();
-//		}
-//
-//	}
-
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public ArrayList findRestaurants(JSONObject params) {
-
-		ArrayList restaurants = new ArrayList();
-		
-		System.out.println(params.toString());
+	public void parseBeers(String path) {
 
 		try {
-			if (params.get("types").toString().isEmpty())
-				params.put("types", this.getBeerTypes());
+			JSONParser parser = new JSONParser();
 
+			JSONArray array = (JSONArray) parser.parse(new FileReader(path));
+
+			for (Object o : array) {
+
+				JSONObject json = (JSONObject) o;
+
+				// if (!json.get("Abv").equals("") && !json.get("Abv").toString().contains("?")
+				// && !json.get("Abv").toString().contains("-")) {
+				// String abv = json.get("Abv").toString();
+				// System.out.println(abv);
+				// String abv2 = abv.replace(',', '.');
+				// System.out.println(abv2);
+				// }
+				// Double abvCast = Double.parseDouble(abv);
+				// System.out.println(json.get("Brand") + ", " + json.get("Name")+", "+
+				// json.get("Type")+", "+json.get("Abv"));
+				// Double abv = Double.parseDouble(json.get("Abv").toString());
+				// System.out.println(abv);
+				// System.out.println(abvCast);
+				if (!graph.getVertices("Beer.name", json.get("Name")).iterator().hasNext())
+					graph.addVertex("class:Beer", "beer", true, "brand", json.get("Brand"), "type", json.get("Type"),
+							"abv", json.get("Abv"), "name", json.get("Name"));
+				else
+					System.out.println("Duplicate on: " + json.get("Name"));
+
+			}
+
+		} catch (IOException | ParseException e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	public void linkRestaurants(String path) {
+
+		JSONParser parser = new JSONParser();
+
+		try {
+
+			JSONArray restaurantArray = (JSONArray) parser.parse(new FileReader(path));
+
+			for (Object o : restaurantArray) {
+
+				JSONObject restaurantJson = (JSONObject) o;
+
+				Vertex restaurant;
+
+				if (graph.getVertices("Restaurant.name", restaurantJson.get("Name")).iterator().hasNext())
+					restaurant = graph.getVertices("Restaurant.name", restaurantJson.get("Name")).iterator().next();
+				else
+					restaurant = graph.addVertex("class:Restaurant", "name", restaurantJson.get("Name"));
+
+				JSONArray beverageArray = (JSONArray) restaurantJson.get("Beverages");
+
+				for (Object beverage : beverageArray) {
+
+					JSONObject beverageJson = (JSONObject) beverage;
+
+					ArrayList<String> beverages = new ArrayList<>();
+
+					graph.getVertices("Restaurant.name", restaurantJson.get("Name")).iterator().next()
+							.getEdges(Direction.IN, beverageJson.get("Serving").toString()).forEach(e -> {
+								beverages.add(e.getVertex(Direction.OUT).getProperty("name"));
+							});
+					;
+
+					if (graph.getVertices("Beer.name", beverageJson.get("Name")).iterator().hasNext()) {
+
+						if (!beverages.contains(beverageJson.get("Name"))) {
+							Edge edge = graph.addEdge(null,
+									graph.getVertices("Beer.name", beverageJson.get("Name")).iterator().next(),
+									restaurant, beverageJson.get("Serving").toString());
+
+							String price = beverageJson.get("Price").toString();
+
+							if (!beverageJson.get("Price").toString().contains("\"")) {
+								price = price.replaceAll("\"", "");
+								price = price.replace(',', '.');
+							} else
+								price = price.replace(',', '.');
+
+							if (!price.equals("") && !price.isEmpty())
+								edge.setProperty("price", Double.parseDouble(price));
+
+							String vol = beverageJson.get("Vol").toString();
+
+							if (!beverageJson.get("Vol").toString().contains("\"")) {
+								vol = vol.replaceAll("\"", "");
+								vol = vol.replace(',', '.');
+							} else
+								vol = vol.replace(',', '.');
+
+							if (!vol.equals("") && !vol.isEmpty())
+								edge.setProperty("vol", Double.parseDouble(vol));
+						} else
+							System.out.println("Duplicate on restaurant: " + restaurantJson.get("Name") + ", Beverage: "
+									+ beverageJson.get("Name"));
+					} else {
+						System.out.println("Couldn't find beverage " + beverageJson.get("Name")
+								+ " from DB, Restaurant: " + restaurantJson.get("Name"));
+					}
+				}
+			}
+
+		} catch (IOException |
+
+				ParseException e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public JSONArray findRestaurants(JSONObject params) {
+
+		JSONArray restaurants = new JSONArray();
+
+		if (params.get("types").toString().isEmpty())
+			params.put("types", this.getBeerTypes());
 
 		if (params.get("brands").toString().isEmpty())
 			params.put("brands", this.getBrands());
@@ -357,11 +352,6 @@ public class Dao {
 					restaurants.add(v.getProperty("name").toString());
 			}
 		}
-		
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 
 		return restaurants;
 
@@ -375,25 +365,15 @@ public class Dao {
 //		JSONArray types = new JSONArray();
 //		JSONArray brands = new JSONArray();
 //
-//		types.put("Lager,Lager");
-//		types.put("IPA,IPA");
-//		brands.put("Lapin Kulta");
-//		brands.put("Karhu");
-//		brands.put("Karjala");
+//		types.add("Lager,Lager");
+//		brands.add("Karhu");
 //
-//		try {
-//			params.put("types", "");
-//		
-//		params.put("brands", "");
+//		params.put("types", types);
+//		params.put("brands", brands);
 //		params.put("price", 8.0);
 //		params.put("abvMin", 3.0);
 //		params.put("abvMax", 15.0);
 //		params.put("serving", "Both");
-//		
-//		} catch (JSONException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
 //
 //		System.out.println(params);
 //
