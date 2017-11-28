@@ -52,7 +52,7 @@ window.onload = function(){
 		price : 8.5,
 		abvMin : 2.8,
 		abvMax : 5.6,
-		brands : ["Karhu"],
+		brands : [],
 		types : []
 	};
 	directionsRenderer.setPanel(document.getElementById("route"));
@@ -158,7 +158,7 @@ window.onload = function(){
 	document.getElementById("search-button").addEventListener("click", function() {
 		const input = document.getElementById("searchbox");
 		const address = input.value;
-		if(address != "") {
+		if(address !== "") {
 			directionsRenderer.setMap(null);
 			clearMarkers();
 			geocodeAddress(address, distance, infowindow);
@@ -166,20 +166,13 @@ window.onload = function(){
 		}
 	});
 
-	document.querySelector('.button-submit').addEventListener('click', () => {
-		console.log(searchVars);
-		postJSON("https://cors-anywhere.herokuapp.com/http://188.166.162.144:130/findrestaurants", searchVars);
-
-	});
-
-
 	// hakukentässä enterin painaminen käynnistää haun myös
 	document.getElementById("searchbox").addEventListener("keyup", function(e) {
 		e.preventDefault();
-		const input = document.getElementById("searchbox");
+		const input = e.target;
 		const distance = distanceSlider.noUiSlider.get();
 		const address = input.value;
-		if(e.keyCode == 13 && address != ""){ 
+		if(e.keyCode === 13 && address !== ""){ 
 			directionsRenderer.setMap(null);
 			clearMarkers();
 			geocodeAddress(address, distance, infowindow);
@@ -189,7 +182,7 @@ window.onload = function(){
 
 	// avaa merkit-listan ja sulkee muut listat
 	document.getElementById("brand-list").children[0].addEventListener("click", function() {
-		let ul = document.getElementById("brand-list").children[1];
+		let ul = document.getElementById("brands");
 		let icon = this.children[1];
 		toggleVisible(ul);
 		rotateIcon(icon);
@@ -198,9 +191,8 @@ window.onload = function(){
 
 	// avaa oluttyypit-listan ja sulkee muut listat
 	document.getElementById("type-list").children[0].addEventListener("click", function() {
-		let ul = document.getElementById("type-list").children[1];
+		let ul = document.getElementById("types");
 		let icon = this.children[1];
-		console.log(icon);
 		toggleVisible(ul);
 		rotateIcon(icon);
 		closeList(document.getElementById("brand-list"));
@@ -215,26 +207,22 @@ window.onload = function(){
 			.then(data => {
 				let beerTypes = data.slice(1,-1).split(",");
 				beerTypes = beerTypes.map(x => {return x.trim()});
-				createList(beerTypes, document.getElementById("type-list"), "types", searchVars)
+				createList(beerTypes, document.getElementById("type-list"), "types", searchVars);
 			})
 			.catch(err => console.log("Fetch Error: ", err));
 
 		// hakee menuun olutmerkit
 		setTimeout(() => {
 			fetch("https://cors-anywhere.herokuapp.com/http://188.166.162.144:130/brands")
-			.then(response => {
-				if (!response.ok) {
-					throw Error(response.statusText);
-				}
-				return response.text();
+			.then(response => {return response.text();
 			})
 			.then(data => {
 				let beerBrands = data.slice(1,-1).split(",");
 				beerBrands = beerBrands.map(x => {return x.trim()});
 				createList(beerBrands, document.getElementById("brand-list"), "brands", searchVars);
 			})
-			.catch(err => createList(["Error 404", "No beer found", err], document.getElementById("brand-list"), "brands", searchVars))
-		},500);
+			.catch(err => console.log("Fetch Error: ", err));
+		},100);
 	});
 
 	// käyttäjän GPS paikannus
@@ -245,6 +233,13 @@ window.onload = function(){
 		clearMarkers();
 		directionsRenderer.setMap(null);
 		locateUser(distanceSlider.noUiSlider.get(), infowindow);
+	});
+
+	// hae-nappi hakee baarit, joista löytyy hakukriteereitä vastaavia juomia
+	document.querySelector('.button-submit').addEventListener('click', () => {
+		console.log(searchVars);
+		postJSON("https://cors-anywhere.herokuapp.com/http://188.166.162.144:130/findrestaurants", searchVars);
+		closeMenu();
 	});
 
 	// menun sulkeminen
@@ -414,14 +409,14 @@ window.onload = function(){
 
 	// slaidereiden siirtäminen päivittää hakukriteerit
 	priceSlider.noUiSlider.on("change", function() {
-		const value = priceSlider.noUiSlider.get();
-		searchVars.price = value;  
+		const value = parseFloat(priceSlider.noUiSlider.get());
+		searchVars.price = parseFloat(value.toFixed(2)); 
 		console.log(searchVars);
 	});
 	alcoholSlider.noUiSlider.on("change", function() {
 		const value = alcoholSlider.noUiSlider.get();
-		searchVars.abvmin = value[0];
-		searchVars.abvmax = value[1];
+		searchVars.abvMin = parseFloat(value[0]).toFixed(1);
+		searchVars.abvMax = parseFloat(value[1]).toFixed(1);
 		console.log(searchVars);
 	});
 
@@ -546,15 +541,12 @@ function sortBy(col, ascendingOrder=true) {
 	};
 }
 
-function titleCase(str) {
-	const splitStr = str.toLowerCase().split(' ');
-	for (let i = 0; i < splitStr.length; i++) {
-		// You do not need to check if i is larger than splitStr length, as your for does that for you
-		// Assign it back to the array
-		splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);
+function capitalizeEveryWord(text) {
+	const words = text.toLowerCase().split(' ');
+	for (let i = 0; i < words.length; i++) {
+		words[i] = words[i].charAt(0).toUpperCase() + words[i].substring(1);
 	}
-	// Directly return the joined string
-	return splitStr.join(' ');
+	return words.join(' ');
 }
 
 /**
@@ -569,40 +561,22 @@ function getBarData(barName) {
 	return fetch(url).then(response => response.status !== 500 ? response.json() : null);
 }
 
-/**
- * Raw post method for sending data to our backend.
- 
-function postJSON(url, data) {
-	let xhr = new XMLHttpRequest();
-	xhr.open("POST", url, true);
-	xhr.setRequestHeader("Content-Type", "application/json");
-	xhr.onreadystatechange = function () {
-		console.log(xhr.readyState, xhr.status);
-		if (xhr.readyState == 4 && xhr.status == 200) {
-			console.log(xhr.responseText);               
-		}
-	};
-	console.log(JSON.stringify(data));
-	console.log(data);
-	xhr.send(JSON.stringify(data));
-}
-*/
-
 function postJSON(url, data) {
 	fetch(url, {
 		method: "POST",
 		body: JSON.stringify(data),
 		headers: { "content-type": "application/json" },
 	})
-	.then(res => {
-		if (res.ok) { // ok if status is 2xx
-			console.log('OK ' + res.statusText);
+	.then(response => {
+		if (response.ok) { // ok if status is 2xx
+			console.log('Status: ' + response.statusText);
 		} else {
-			console.log('Request failed.  Returned status of ' + res.status);
+			console.log('Request failed. Returned status of ' + response.status);
 		}
-		return res.json()
+		return response.json();
 	})
 	.then(data => {
+		console.log(data);
 		bars = data;
 	})
 }
@@ -630,8 +604,8 @@ function createList(list, parentDiv, id, searchVars) {
 	for (let i = 0; i<list.length; i++) {
 		list[i] = capitalizeFirstLetter(list[i]);
 	}
-
-	if(id == "types") {
+	
+	if(id === "types") {
 		let newList = [];
 		for (let i = 0; i < list.length; i++) {
 			const type = list[i] + "," + list[i+1];
@@ -649,7 +623,6 @@ function createList(list, parentDiv, id, searchVars) {
 			li.addEventListener("click", () => toggleInSearch(li, searchVars));
 			ul.appendChild(li);	
 		}
-		parentDiv.appendChild(ul);
 	} else {
 		list = removeDuplicates(list);
 		list = list.sort();
@@ -661,6 +634,7 @@ function createList(list, parentDiv, id, searchVars) {
 			ul.appendChild(li); 
 		}
 	}
+	parentDiv.appendChild(ul);
 }
 
 /**
@@ -669,7 +643,6 @@ function createList(list, parentDiv, id, searchVars) {
  * @param {HTMLElement} div The div which contains the list element.
  */
 function closeList(div) {
-	console.log(div);
 	const otherList = div.children[1];
 	const otherDiv = div.children[0];
 	const icon = otherDiv.children[1];
@@ -685,15 +658,16 @@ function closeList(div) {
  */
 function toggleInSearch(li, searchVars) {
 	const parentID = li.parentElement.id;
-	const text = li.dataset.type;
 	li.classList.toggle("selected");
-	if(parentID == "brands") {
+	if(parentID === "brands") {
+		const text = li.textContent || li.innerText;
 		if (searchVars.brands.indexOf(text) >= 0) {
 			searchVars.brands.splice(searchVars.brands.indexOf(text), 1);	
 		} else {
 			searchVars.brands.push(text);
 		}
-	} else if(parentID == "types") {
+	} else if(parentID === "types") {
+		const text = li.dataset.type;
 		if (searchVars.types.indexOf(text) >= 0) {
 			searchVars.types.splice(searchVars.types.indexOf(text), 1);
 		} else {
@@ -702,9 +676,14 @@ function toggleInSearch(li, searchVars) {
 	}
 }
 
+/**
+ * Toggles the beer serving (tap-bottle-both) in the search variables when the buttons are clicked in menu.
+ * 
+ * @param {HTMLElement} el The element that was clicked.
+ * @returns {string} The id of the clicked element.
+ */
 function toggleServing(el) {
 	const clicked = el.classList.contains('serving-button') ? el : el.parentElement;
-	console.log(clicked);
 	const parentElement = clicked.parentElement;
 	const buttons = parentElement.querySelectorAll('.serving-button');
 	buttons.forEach((button) => {
@@ -716,7 +695,6 @@ function toggleServing(el) {
 	})
 	return clicked.id;
 }
-
 
 /**
  * Resizes the map, menu and restaurant card heights when the window is resized.
@@ -1208,14 +1186,14 @@ function processResults(results, status, pagination) {
  *
  */
 function createMarker(place) {
-	bars = bars.map(bar => titleCase(bar));
-	console.log(bars, place.name);
-	if(bars.indexOf(place.name) === -1) return;
+	bars = bars.map(name => capitalizeEveryWord(name));
+	const customIcon = bars.indexOf(place.name) > -1 ? "kgps_icons/beer-marker.png" : "";
+	console.log(place.name);
 	const marker = new google.maps.Marker({
 		map: map,
 		position: place.geometry.location,
 		animation: google.maps.Animation.DROP,
-		//icon: "kgps_icons/favicon-32x32.png",
+		icon: customIcon,
 	});
 	markers.push(marker);
 	google.maps.event.addListener(marker, "click", function() {
