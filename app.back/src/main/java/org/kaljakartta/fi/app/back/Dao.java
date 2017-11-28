@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -15,12 +16,14 @@ import org.json.JSONException;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.springframework.util.SystemPropertyUtils;
 
 import com.tinkerpop.blueprints.Direction;
 import com.tinkerpop.blueprints.Edge;
 import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.blueprints.impls.orient.OrientGraphFactory;
 import com.tinkerpop.blueprints.impls.orient.OrientGraphNoTx;
+import com.tinkerpop.gremlin.Tokens.T;
 import com.tinkerpop.gremlin.java.GremlinPipeline;
 
 public class Dao {
@@ -111,26 +114,26 @@ public class Dao {
 						tapBev.put("price", price);
 					} catch (Exception e1) {
 						tapBev.put("price", Double.MAX_VALUE);
-						System.out.println("No price found for: Tap - "+bev.getProperty("name"));
+						System.out.println("No price found for: Tap - " + bev.getProperty("name"));
 					}
 					try {
 						double vol = e.getProperty("vol");
 						tapBev.put("vol", vol);
 					} catch (Exception e1) {
 						tapBev.put("vol", Double.MAX_VALUE);
-						System.out.println("No vol found for: Tap - "+bev.getProperty("name"));
+						System.out.println("No vol found for: Tap - " + bev.getProperty("name"));
 					}
 					try {
 						tapBev.put("abv", bev.getProperty("abv").toString());
 					} catch (Exception e1) {
 						tapBev.put("abv", Double.MAX_VALUE);
-						System.out.println("No abv found for: Tap - "+bev.getProperty("name"));
+						System.out.println("No abv found for: Tap - " + bev.getProperty("name"));
 					}
 					try {
 						tapBev.put("type", bev.getProperty("type").toString());
 					} catch (Exception e1) {
 						tapBev.put("type", 0);
-						System.out.println("No type found for: Tap - "+bev.getProperty("name"));
+						System.out.println("No type found for: Tap - " + bev.getProperty("name"));
 					}
 
 					restaurantValues.add(tapBev);
@@ -161,26 +164,26 @@ public class Dao {
 						botBev.put("price", price);
 					} catch (Exception e1) {
 						botBev.put("price", Double.MAX_VALUE);
-						System.out.println("No price found for: Bottle - "+bev.getProperty("name"));
+						System.out.println("No price found for: Bottle - " + bev.getProperty("name"));
 					}
 					try {
 						double vol = e.getProperty("vol");
 						botBev.put("vol", vol);
 					} catch (Exception e1) {
 						botBev.put("vol", Double.MAX_VALUE);
-						System.out.println("No vol found for: Bottle - "+bev.getProperty("name"));
+						System.out.println("No vol found for: Bottle - " + bev.getProperty("name"));
 					}
 					try {
 						botBev.put("abv", bev.getProperty("abv").toString());
 					} catch (Exception e1) {
 						botBev.put("abv", Double.MAX_VALUE);
-						System.out.println("No abv found for: Bottle - "+bev.getProperty("name"));
+						System.out.println("No abv found for: Bottle - " + bev.getProperty("name"));
 					}
 					try {
 						botBev.put("type", bev.getProperty("type").toString());
 					} catch (Exception e1) {
 						botBev.put("type", 0);
-						System.out.println("No type found for: Bottle - "+bev.getProperty("name"));
+						System.out.println("No type found for: Bottle - " + bev.getProperty("name"));
 					}
 
 					restaurantValues.add(botBev);
@@ -199,112 +202,6 @@ public class Dao {
 
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public JSONArray filterRestaurants(JSONObject params) {
-
-		JSONArray restaurants = new JSONArray();
-//		HashMap keys = new HashMap();
-//
-//		params.keySet().iterator().forEachRemaining(k -> {
-//			keys.put(k.toString(), params.get(k.toString()));
-//		});
-
-		List<Vertex> beers = new ArrayList();
-		beers = new GremlinPipeline(graph.getVerticesOfClass("Beer")).toList();
-		
-		int i = 0;
-		int size = 0;
-
-		List<Vertex> remove = new ArrayList();
-		
-		do  {
-			
-			JSONArray types = (JSONArray) params.get("type");
-			
-			for(Object o : types) {
-				
-//				if (keys.containsKey("type") && !beers.get(i).getProperty("type").equals(keys.get("type"))) {
-//
-//					beers.remove(beers.get(i));
-//
-//				}
-
-				
-				if (!beers.get(i).getProperty("type").equals(o.toString())) {
-
-					remove.add(beers.get(i));
-
-				}
-				
-			}
-			
-			JSONArray brands = (JSONArray) params.get("brand");
-			
-			for(Object o : brands) {
-				
-//				if (keys.containsKey("brand") && !beers.get(i).getProperty("brand").equals(keys.get("brand"))) {
-//
-//					beers.remove(beers.get(i));
-//
-//				}
-				
-				if (!beers.get(i).getProperty("brand").equals(o.toString())) {
-
-					remove.add(beers.get(i));
-
-				}
-				
-			}
-
-			if (Double.parseDouble(beers.get(i).getProperty("abv").toString()) < Double
-					.parseDouble(params.get("abvMin").toString())
-					&& Double.parseDouble(beers.get(i).getProperty("abv").toString()) > Double
-							.parseDouble(params.get("abvMax").toString())) {
-
-				remove.add(beers.get(i));
-
-			}
-			
-			size = beers.size();
-			i++;
-
-		} while (i < size);
-
-		Iterator<Edge> edges;
-
-		for (Vertex v : beers) {
-
-			if (!params.get("serving").equals("both")) {
-
-				edges = v.getEdges(Direction.OUT, params.get("serving").toString()).iterator();
-
-			} else {
-				edges = v.getEdges(Direction.OUT, "E").iterator();
-			}
-
-			while (edges.hasNext()) {
-
-				Edge e = edges.next();
-
-				if (e.getPropertyKeys().contains("price") && !e.getProperty("price").toString().equals("")
-						&& Double.parseDouble(e.getProperty("price").toString()) <= Double
-						.parseDouble(params.get("price").toString())) {
-
-					Vertex restaurant = e.getVertex(Direction.IN);
-
-					if(!restaurants.contains(restaurant.getProperty("name")))
-						restaurants.add(restaurant.getProperty("name"));
-
-				}
-
-			}
-
-		}
-
-		System.out.println("Success!\n");
-		return restaurants;
-
-	}
 
 	public void parseBeers(String path) {
 
@@ -423,31 +320,70 @@ public class Dao {
 
 	}
 
-//	 public static void main(String[] args) {
-//	 Dao dao = new Dao("remote:188.166.162.144:2424/KaljakarttaDB", "dao",
-//	 "bakkiPassu");
-////	  dao.parseBeers("F:/Downloads/beers2.json");
-////	 dao.linkRestaurants("F:/Downloads/restaurants.json");
-//	 JSONObject params = new JSONObject();
-//	 JSONArray types = new JSONArray();
-//	 JSONArray brands = new JSONArray();
-//	 
-//	 types.add("Lager");
-//	 types.add("IPA");
-//	 brands.add("Heineken");
-//	 brands.add("Karhu");
-//	 brands.add("Fullers");
-//	 
-//	 params.put("type", types);
-//	 params.put("brand", brands);
-//	 params.put("price", 8.0);
-//	 params.put("abvMin", 3.0);
-//	 params.put("abvMax", 15.0);
-//	 params.put("serving", "both");
-//	 
-//	 System.out.println(params);
-//
-//	 System.out.println(dao.filterRestaurants(params));
-//	 }
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public JSONArray findRestaurants(JSONObject params) {
+
+		JSONArray restaurants = new JSONArray();
+
+		if (params.get("types").toString().isEmpty())
+			params.put("types", this.getBeerTypes());
+
+		if (params.get("brands").toString().isEmpty())
+			params.put("brands", this.getBrands());
+
+		if (params.get("serving".toString()).equals("Both")) {
+			System.out.println("Both");
+			List<Vertex> beers = new GremlinPipeline(graph.getVertices("Beer.beer", true))
+					.has("type", T.in, params.get("types")).has("brand", T.in, params.get("brands"))
+					.has("abv", T.gte, params.get("abvMin")).has("abv", T.lte, params.get("abvMax"))
+					.outE().has("price", T.lte, params.get("price")).inV().toList();
+
+			for (Vertex v : beers) {
+				if(!restaurants.contains(v.getProperty("name").toString()))
+					restaurants.add(v.getProperty("name").toString());
+			}
+			
+		} else {
+			System.out.println(params.get("serving").toString());
+			List<Vertex> beers = new GremlinPipeline(graph.getVertices("Beer.beer", true))
+					.has("type", T.in, params.get("types")).has("brand", T.in, params.get("brands"))
+					.has("abv", T.gte, params.get("abvMin")).has("abv", T.lte, params.get("abvMax"))
+					.outE(params.get("serving").toString()).has("price", T.lte, params.get("price")).inV().toList();
+			
+			for (Vertex v : beers) {
+				if(!restaurants.contains(v.getProperty("name").toString()))
+					restaurants.add(v.getProperty("name").toString());
+			}
+		}
+
+		return restaurants;
+
+	}
+
+	public static void main(String[] args) {
+		Dao dao = new Dao("remote:188.166.162.144:2424/KaljakarttaDB", "dao", "bakkiPassu");
+		// dao.parseBeers("F:/Downloads/beers2.json");
+		// dao.linkRestaurants("F:/Downloads/restaurants.json");
+		JSONObject params = new JSONObject();
+		JSONArray types = new JSONArray();
+		JSONArray brands = new JSONArray();
+
+		types.add("Lager,Lager");
+		types.add("IPA,IPA");
+		brands.add("Lapin Kulta");
+		brands.add("Karhu");
+		brands.add("Karjala");
+
+		params.put("types", types);
+		params.put("brands", brands);
+		params.put("price", 8.0);
+		params.put("abvMin", 3.0);
+		params.put("abvMax", 15.0);
+		params.put("serving", "Both");
+
+		System.out.println(params);
+
+		System.out.println(dao.findRestaurants(params));
+	}
 
 }
