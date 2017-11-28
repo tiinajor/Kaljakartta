@@ -44,10 +44,10 @@ public class RESTController {
 	}
 //	@CrossOrigin(origins = "*")
 	@RequestMapping(value = "/findrestaurants", method = RequestMethod.POST)
-	public @ResponseBody String findRestaurants(@RequestParam JSONObject keys) {
+	public @ResponseBody String findRestaurants(@RequestParam JSONObject params) {
 
 //		JSONParser parser = new JSONParser();
-		return dao.findRestaurants(keys).toString();
+		return dao.findRestaurants(params).toString();
 	}
 
 }
