@@ -555,7 +555,7 @@ function getBarData(barName) {
 
 /**
  * Raw post method for sending data to our backend.
- */
+ 
 function postJSON(url, data) {
 	let xhr = new XMLHttpRequest();
 	xhr.open("POST", url, true);
@@ -569,6 +569,26 @@ function postJSON(url, data) {
 	console.log(JSON.stringify(data));
 	console.log(data);
 	xhr.send(JSON.stringify(data));
+}
+*/
+
+function postJSON(url, data) {
+	fetch(url, {
+		method: "POST",
+		body: JSON.stringify(data),
+		headers: { "content-type": "application/json" },
+	})
+	.then(res => {
+		if (res.ok) { // ok if status is 2xx
+			console.log('OK ' + res.statusText);
+		} else {
+			console.log('Request failed.  Returned status of ' + res.status);
+		}
+		return res.json()
+	})
+	.then(data => {
+		console.log(data);
+	})
 }
 
 
