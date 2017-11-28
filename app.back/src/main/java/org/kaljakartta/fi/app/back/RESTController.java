@@ -1,7 +1,7 @@
 package org.kaljakartta.fi.app.back;
 
 
-import org.json.JSONObject;
+import org.json.simple.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
