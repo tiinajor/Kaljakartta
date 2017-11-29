@@ -199,31 +199,33 @@ window.onload = function(){
 	});
 
 	// menun avaus
-	document.getElementById("hamburger-menu").addEventListener("click", () => {
-		openMenu();
-		// hakee menuun oluttyypit
-		fetch("https://cors-anywhere.herokuapp.com/http://188.166.162.144:130/beertypes")
-			.then(response => {return response.text()})
-			.then(data => {
-				let beerTypes = data.slice(1,-1).split(",");
-				beerTypes = beerTypes.map(x => {return x.trim()});
-				createList(beerTypes, document.getElementById("type-list"), "types", searchVars);
-			})
-			.catch(err => console.log("Fetch Error: ", err));
+	document.getElementById("hamburger-menu").addEventListener("click", () => openMenu());
 
-		// hakee menuun olutmerkit
-		setTimeout(() => {
-			fetch("https://cors-anywhere.herokuapp.com/http://188.166.162.144:130/brands")
-			.then(response => {return response.text();
+	// hakee menuun oluttyypit
+	fetch("https://cors-anywhere.herokuapp.com/http://188.166.162.144:130/beertypes")
+		.then(response => { return response.text() })
+		.then(data => {
+			let beerTypes = data.slice(1, -1).split(",");
+			beerTypes = beerTypes.map(x => { return x.trim() });
+			createList(beerTypes, document.getElementById("type-list"), "types", searchVars);
+			console.log("beertypes loaded");
+		})
+		.catch(err => console.log("Fetch Error: ", err));
+
+	// hakee menuun olutmerkit
+	setTimeout(() => {
+		fetch("https://cors-anywhere.herokuapp.com/http://188.166.162.144:130/brands")
+			.then(response => {
+				return response.text();
 			})
 			.then(data => {
-				let beerBrands = data.slice(1,-1).split(",");
-				beerBrands = beerBrands.map(x => {return x.trim()});
+				let beerBrands = data.slice(1, -1).split(",");
+				beerBrands = beerBrands.map(x => { return x.trim() });
 				createList(beerBrands, document.getElementById("brand-list"), "brands", searchVars);
+				console.log("beer brands loaded");
 			})
 			.catch(err => console.log("Fetch Error: ", err));
-		},100);
-	});
+	}, 500);
 
 	// käyttäjän GPS paikannus
 	document.getElementById('locate').addEventListener('click', () => {
@@ -239,6 +241,12 @@ window.onload = function(){
 	document.querySelector('.button-submit').addEventListener('click', () => {
 		console.log(searchVars);
 		postJSON("https://cors-anywhere.herokuapp.com/http://188.166.162.144:130/findrestaurants", searchVars);
+		document.getElementById('route-container').style.height = 0 + "px";
+		document.getElementById('search-container').style.position = "absolute";
+		resizeElementHeights();
+		clearMarkers();
+		directionsRenderer.setMap(null);
+		locateUser(distanceSlider.noUiSlider.get(), infowindow);
 		closeMenu();
 	});
 
@@ -496,12 +504,12 @@ function updateTable(beerList, language) {
 	const tapIcon = "kgps_icons/beer-tap.svg";
 	for(let i = 0; i < beerList.length; i++){
 		const icon = beerList[i].serving === "tap" ? tapIcon : bottleIcon;
-		const vol = beerList[i].vol === 0 ? "?" : beerList[i].vol + "l";
-		const abv = beerList[i].abv === 0 ? "?" : beerList[i].abv + "%";
-		const price = beerList[i].price === 0 ? "?" : beerList[i].price + "€";
+		const vol = beerList[i].vol === Number.MAX_VALUE ? "?" : beerList[i].vol + "l";
+		const abv = beerList[i].abv === Number.MAX_VALUE ? "?" : beerList[i].abv + "%";
+		const price = beerList[i].price === Number.MAX_VALUE ? "?" : beerList[i].price + "€";
 
 		let beerType = "?";
-		if(beerList[i].type !== 0) {
+		if(beerList[i].type !== Number.MAX_VALUE) {
 			const typeLocales = (beerList[i].type.indexOf(",") > 0) ? beerList[i].type.split(",") : beerList[i].type;
 			if(typeof(typeLocales) === "object") {
 				beerType = language === "fi" ? typeLocales[0] : typeLocales[1];
@@ -541,10 +549,26 @@ function sortBy(col, ascendingOrder=true) {
 	};
 }
 
+/**
+ * Capitalizes the first letter of the given string.
+ *
+ * @param {string} string The string to be capitalized.
+ * @returns {String} The inputted string with a capitalized first letter.
+ */
+function capitalizeFirstLetter(string) {
+	return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+/**
+ * Capitalizes the first letter of every word in the given text.
+ *
+ * @param {string} text The text where every word needs to be capitalized.
+ * @returns {String} The same text with every word capitalized.
+ */
 function capitalizeEveryWord(text) {
 	const words = text.toLowerCase().split(' ');
 	for (let i = 0; i < words.length; i++) {
-		words[i] = words[i].charAt(0).toUpperCase() + words[i].substring(1);
+		words[i] = words[i].charAt(0).toUpperCase() + words[i].slice(1);
 	}
 	return words.join(' ');
 }
@@ -561,6 +585,12 @@ function getBarData(barName) {
 	return fetch(url).then(response => response.status !== 500 ? response.json() : null);
 }
 
+/**
+ * Sends a post request to the url using fetch API and sends the data as the request body. If successful saves the response content to global variable bars.
+ *
+ * @param {string} url The url where the request is sent.
+ * @param {*} data The data which will be sent in the request.
+ */
 function postJSON(url, data) {
 	fetch(url, {
 		method: "POST",
@@ -581,7 +611,11 @@ function postJSON(url, data) {
 	})
 }
 
-
+/**
+ * Saves the websites language to localStorage so that the user's choice is saved even when the browser is closed.
+ * 
+ * @param {string} language The language to be saved in localStorage.
+ */
 function swapLanguage(language) {
 	if(window.localStorage.getItem('language') !== language) {
 		window.localStorage.setItem("language", language);
@@ -708,16 +742,6 @@ function resizeElementHeights() {
 	document.getElementById("side-menu").style.height = windowHeight + "px";
 	document.getElementById("restaurant-card").style.height = windowHeight + "px";
 	document.getElementById("map").style.height = mapHeight + "px";
-}
-
-/**
- * Capitalizes the first letter of the given string.
- *
- * @param {string} string The string to be capitalized.
- * @returns {String} The inputted string with a capitalized first letter.
- */
-function capitalizeFirstLetter(string) {
-	return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
 /**
@@ -1053,6 +1077,7 @@ function geocodeAddress(address, distance, infowindow) {
 				country: "FI"
 			}}, function(results, status) {
 			if (status == "OK") {
+				console.log(results);
 				const searchPos = results[0].geometry.location;
 				map.setCenter(searchPos);
 				
