@@ -246,7 +246,9 @@ window.onload = function(){
 		resizeElementHeights();
 		clearMarkers();
 		directionsRenderer.setMap(null);
-		locateUser(distanceSlider.noUiSlider.get(), infowindow);
+		setTimeout(() => {
+			locateUser(distanceSlider.noUiSlider.get(), infowindow);
+		}, 250);
 		closeMenu();
 	});
 
@@ -366,7 +368,7 @@ window.onload = function(){
 
 	//slaiderien luonti
 	noUiSlider.create(priceSlider, {
-		start: 8.5,
+		start: 24.5,
 		connect: [true, false],
 		step: 0.5,
 		range: {
@@ -378,7 +380,7 @@ window.onload = function(){
 		})
 	});
 	noUiSlider.create(alcoholSlider, {
-		start: [ 2.8, 5.6 ],
+		start: [ 0.5, 11.5 ],
 		connect: true,
 		range: {
 			"min": [ 0 ],
@@ -418,13 +420,13 @@ window.onload = function(){
 	// slaidereiden siirtäminen päivittää hakukriteerit
 	priceSlider.noUiSlider.on("change", function() {
 		const value = parseFloat(priceSlider.noUiSlider.get());
-		searchVars.price = parseFloat(value.toFixed(2)); 
+		searchVars.price = parseFloat(value.toFixed(1)); 
 		console.log(searchVars);
 	});
 	alcoholSlider.noUiSlider.on("change", function() {
 		const value = alcoholSlider.noUiSlider.get();
-		searchVars.abvMin = parseFloat(value[0]).toFixed(1);
-		searchVars.abvMax = parseFloat(value[1]).toFixed(1);
+		searchVars.abvMin = parseFloat(value[0]);
+		searchVars.abvMax = parseFloat(value[1]);
 		console.log(searchVars);
 	});
 
@@ -894,11 +896,13 @@ function renderBarInfo(place) {
 	}, function(data, status) {
 		if (status === google.maps.places.PlacesServiceStatus.OK) {
 			const address = data.formatted_address;
-			const url = data.photos[0].getUrl({ "maxWidth": 600 });
 			barAddress.innerHTML = address.split(",",2).join(); 
 			barOpen.innerHTML = capitalizeFirstLetter(data.opening_hours.weekday_text[weekday]);	
-			barPhoto.style.backgroundSize = "cover";
-			barPhoto.style.backgroundImage = "url("+url+")";
+			if(data.photos) {
+				const url = data.photos[0].getUrl({ "maxWidth": 600 });
+				barPhoto.style.backgroundSize = "cover";
+				barPhoto.style.backgroundImage = "url(" + url + ")";
+			}
 		}
 	});
 	
