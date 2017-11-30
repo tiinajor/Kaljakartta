@@ -19,14 +19,14 @@
 	<script async src="js/script.js"></script>
 	<script async defer src="js/wNumb.js"></script>
 	<script async defer src="js/nouislider.min.js"></script>
-	
+
 </head>
 <body>
 
 	<div id="side-menu">
 		<div class="menu-main-section">
-			<span id="menu-close-x" class="closebtn button">x</span> 	
-			<!--		
+			<span id="menu-close-x" class="closebtn button">x</span>
+			<!--
 			<div id="search-option-buttons" class="centered menu-block">
 				<button id="tapButton" class="search-option button">
 					<img class="icon" src="kgps_icons/beer-tap.svg" alt="hanat">
@@ -38,21 +38,21 @@
 				</button>
 			</div>
 			-->
-			
+
 			<div class="search-serving-buttons centered menu-block">
 				<span id="tap" class="serving-button clickable"><label id="tapButtonText">Hanat</label></span>
 				<span id="both" class="serving-button clickable serving-button-active middle"><label id="bothButtonText">Molemmat</label></span>
 				<span id="bottle" class="serving-button clickable"><label id="bottleButtonText">Pullot</label></span>
 			</div>
-			
-			
+
+
 			<div id="search-option-sliders" class="centered menu-block">
 				<div class="slider-container">
 					<span id="priceText">Hinta</span>
 					<span id="price" class="right"></span>
 					<div class="slider noUi-extended" id="price-slider"></div>
 				</div>
-				
+
 				<div class="slider-container">
 					<span id="abvText">Vahvuus</span>
 					<span id="alcohol" class="right"></span>
@@ -65,7 +65,12 @@
 					<div class="slider noUi-extended" id="distance-slider"></div>
 				</div>
 			</div>
-			<div class="lists-container menu-block centered">			
+
+			<div class="slider-container menu-block centered" >
+					<input id="menu-searchbox" class="search" type="text" placeholder="Rajaa alue..">
+			</div>
+
+			<div class="lists-container menu-block centered">
 				<div id="brand-list" class="dropdown button">
 					<div>
 						<span id="brandListText">Olutmerkki</span>
@@ -91,7 +96,7 @@
 	</div>
 
 	<div id="restaurant-card">
-		
+
 		<div id="bar-photo" class="hero-image">
 			<a id="card-close-x" class="closebtn button">x</a>
 		</div>
@@ -116,7 +121,7 @@
 				</div>
 			</div>
 			<div id="drinks-container">
-				<table class="beers-table">			
+				<table class="beers-table">
 				</table>
 			</div>
 		</div>
@@ -153,7 +158,7 @@
 				<img id="fi" src="kgps_icons/finnish.svg">
 				<img id="en" src="kgps_icons/english.svg">
 			</div>
-			
+
 		</div>
 
 		<button id="locate" class="header-button button"><img class="header-icon" src="kgps_icons/user-location.svg" alt="paikannus"></button>
@@ -167,7 +172,7 @@
 		<a id="route-close-x" class="closebtn button">x</a>
 		<div id="route">
 		</div>
-		
+
 	</div>
 
 	<div id="search-container">
