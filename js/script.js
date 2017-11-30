@@ -14,6 +14,10 @@ const googleshit = {
 	userPos: null
 };
 
+const globalVars = {
+	search : false
+}
+
 loadScript("https://maps.googleapis.com/maps/api/js?key=AIzaSyDuIpE10xbisU_de-Mg_xR4-OpmOVl3BxA&libraries=places&language=fi&region=FI", initMap);
 
 /* 
@@ -57,9 +61,9 @@ window.onload = function(){
 
 	const searchVars = {
 		serving : "Both",
-		price : 8.5,
-		abvMin : 2.8,
-		abvMax : 5.6,
+		price : 25,
+		abvMin : 0,
+		abvMax : 12,
 		brands : [],
 		types : []
 	};
@@ -167,7 +171,8 @@ window.onload = function(){
 		if(address !== "") {
 			googleshit.directionsRenderer.setMap(null);
 			clearMarkers();
-			geocodeAddress(address, distance, googleshit.infowindow);
+			globalVars.search = false;
+			geocodeAddress(address, distance);
 			input.value = "";
 		}
 	});
@@ -181,7 +186,8 @@ window.onload = function(){
 		if(e.keyCode === 13 && address !== ""){ 
 			googleshit.directionsRenderer.setMap(null);
 			clearMarkers();
-			geocodeAddress(address, distance, googleshit.infowindow);
+			globalVars.search = false;
+			geocodeAddress(address, distance);
 			this.value = "";
 		}
 	});
@@ -208,7 +214,7 @@ window.onload = function(){
 	document.getElementById("hamburger-menu").addEventListener("click", () => openMenu());
 
 	// hakee menuun oluttyypit
-	fetch("https://cors-anywhere.herokuapp.com/http://188.166.162.144:130/beertypes")
+	fetch("https://cors-anywhere.herokuapp.com/http://188.166.162.144:130/beveragetypes")
 		.then(response => { return response.text() })
 		.then(data => {
 			let beerTypes = data.slice(1, -1).split(",");
@@ -240,18 +246,19 @@ window.onload = function(){
 		resizeElementHeights();
 		clearMarkers();
 		googleshit.directionsRenderer.setMap(null);
+		globalVars.search = false;
 		locateUser(distanceSlider.noUiSlider.get());
 	});
 
 	// hae-nappi hakee baarit, joista löytyy hakukriteereitä vastaavia juomia
 	document.querySelector('.button-submit').addEventListener('click', () => {
-		console.log(searchVars);
 		postJSON("https://cors-anywhere.herokuapp.com/http://188.166.162.144:130/findrestaurants", searchVars);
 		document.getElementById('route-container').style.height = 0 + "px";
 		document.getElementById('search-container').style.position = "absolute";
 		resizeElementHeights();
 		clearMarkers();
 		googleshit.directionsRenderer.setMap(null);
+		globalVars.search = true;
 		setTimeout(() => {
 			locateUser(distanceSlider.noUiSlider.get());
 		}, 250);
@@ -374,7 +381,7 @@ window.onload = function(){
 
 	//slaiderien luonti
 	noUiSlider.create(priceSlider, {
-		start: 24.5,
+		start: 25,
 		connect: [true, false],
 		step: 0.5,
 		range: {
@@ -386,7 +393,7 @@ window.onload = function(){
 		})
 	});
 	noUiSlider.create(alcoholSlider, {
-		start: [ 0.5, 11.5 ],
+		start: [ 0, 12 ],
 		connect: true,
 		range: {
 			"min": [ 0 ],
@@ -397,7 +404,7 @@ window.onload = function(){
 		})
 	});
 	noUiSlider.create(distanceSlider, {
-		start: 500,
+		start: 1000,
 		connect: [true, false],
 		range: {
 			"min": [  0, 50 ],
@@ -629,7 +636,6 @@ function swapLanguage(language) {
 		window.localStorage.setItem("language", language);
 		window.location.reload();
 	}
-	
 }
 
 /**
@@ -1053,7 +1059,6 @@ function locateUser(distance) {
 				lat: position.coords.latitude,
 				lng: position.coords.longitude
 			};
-			console.log(googleshit.userPos);
 			if (googleshit.userPos != null) {
 				googleshit.map.panTo(googleshit.userPos);
 				const image = "kgps_icons/yellow-marker.png";
@@ -1063,6 +1068,7 @@ function locateUser(distance) {
 					icon : image,
 				});
 				globalLists.markers.push(marker);
+				globalLists.bars = globalLists.bars.map(name => capitalizeEveryWord(name));
 				searchNearby(googleshit.userPos, distance);
 			}
 		}, function() {
@@ -1085,7 +1091,6 @@ function locateUser(distance) {
  *
  */
 function geocodeAddress(address, distance) {
-	const image = "kgps_icons/yellow-marker.png";
 	googleshit.geocoder.geocode(
 		{"address": address,
 			componentRestrictions: {
@@ -1094,7 +1099,7 @@ function geocodeAddress(address, distance) {
 			if (status == "OK") {
 				const searchPos = results[0].geometry.location;
 				googleshit.map.setCenter(searchPos);
-				
+				globalLists.bars = globalLists.bars.map(name => capitalizeEveryWord(name));
 				// jos etsitty paikka on baari/yökerho -> näyttää vain sen markerin, muuten etsii baarit lähistöltä normaalisti
 				if (results[0].types.filter(type => type === "bar" || type === "night_club").length > 0) {
 					searchNearby(searchPos, 1);
@@ -1222,14 +1227,13 @@ function processResults(results, status, pagination) {
  *
  */
 function createMarker(place) {
-	globalLists.bars = globalLists.bars.map(name => capitalizeEveryWord(name));
-	const customIcon = globalLists.bars.indexOf(place.name) > -1 ? "kgps_icons/beer-marker-small.png" : "";
-	console.log(place.name);
+	console.log(globalVars.search);
+	if(globalVars.search && globalLists.bars.indexOf(place.name) === -1) return;
 	const marker = new google.maps.Marker({
 		map: googleshit.map,
 		position: place.geometry.location,
 		animation: google.maps.Animation.DROP,
-		icon: customIcon,
+		icon: "kgps_icons/kaljakartta_map_arrow.svg"
 	});
 	globalLists.markers.push(marker);
 	google.maps.event.addListener(marker, "click", function() {
