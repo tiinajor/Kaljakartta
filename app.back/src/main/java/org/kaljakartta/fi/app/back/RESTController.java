@@ -1,6 +1,7 @@
 package org.kaljakartta.fi.app.back;
 
 import org.json.simple.JSONObject;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -31,6 +32,7 @@ public class RESTController {
 	 * @param name - Name of the restaurant
 	 * @return An array containing the restaurants product list with beverages and details.
 	 */
+	@Async
 	@RequestMapping(value = "/restaurant", method = RequestMethod.GET)
 	public @ResponseBody String passRestaurants(@RequestParam String name) {
 
@@ -44,6 +46,7 @@ public class RESTController {
 	 * 
 	 * @return An array containing a list of all beverage types found in the database.
 	 */
+	@Async
 	@RequestMapping(value = "/beveragetypes", method = RequestMethod.GET)
 	public @ResponseBody String passTypes() {
 
@@ -58,6 +61,7 @@ public class RESTController {
 	 * 
 	 * @return An array containing a list of all beverage types found in the database
 	 */
+	@Async
 	@RequestMapping(value = "/brands", method = RequestMethod.GET)
 	public @ResponseBody String passBrands() {
 
@@ -73,6 +77,7 @@ public class RESTController {
 	 * @param params - Search parameters as a JSONObject, with keys: 'types', 'brands', 'serving', 'abvMin', 'abvMax', 'price'.
 	 * @return An array containing the names of matching restaurants.
 	 */
+	@Async
 	@RequestMapping(value = "/findrestaurants", method = RequestMethod.POST, consumes = "application/json")
 	public @ResponseBody String findRestaurants(@RequestBody JSONObject params) {
 
