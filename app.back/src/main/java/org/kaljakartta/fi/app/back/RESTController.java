@@ -29,7 +29,7 @@ public class RESTController {
 	@RequestMapping(value = "/beertypes", method = RequestMethod.GET)
 	public @ResponseBody String passTypes() {
 
-		String ret = dao.getBeerTypes().toString();
+		String ret = dao.getBeverageTypes().toString();
 		return ret;
 
 	}
