@@ -1,0 +1,40 @@
+const fi_FI = {
+    "menu": {
+        "searchOptionButtons": {
+            "tapButton": "Hanat",
+            "bothButton": "Molemmat",
+            "bottleButton": "Pullot"
+        },
+        "searchOptionSliders": {
+            "priceText": "Hinta",
+            "abvText": "Vahvuus",
+            "distanceText": "Etäisyys"
+        },
+        "listsContainer": {
+            "brandListText": "Olutmerkki",
+            "typeListText": "Oluttyyppi"
+        },
+        "menuButtons": {
+            "buttonCancel": "Tyhjennä",
+            "buttonSubmit": "Hae"
+        }
+    },
+    "searchContainer": {
+        "searchbox": "Haku..."
+    },
+    "restaurantCard": {
+        "directionsButtons": {
+            "walk": "Kävely",
+            "drive": "Auto",
+            "transit": "Julkinen liikenne",
+            "bicycle": "Pyöräily"
+        },
+        "beersTable": {
+            "name": "Nimi",
+            "type": "Tyyppi",
+            "vol": "Koko",
+            "abv": "Alk-%",
+            "price": "Hinta"
+        }
+    }
+}

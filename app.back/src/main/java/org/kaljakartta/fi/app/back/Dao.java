@@ -1,19 +1,25 @@
 package org.kaljakartta.fi.app.back;
 
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+//import org.json.simple.JSONArray;
+//import org.json.simple.JSONObject;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 import com.tinkerpop.blueprints.Direction;
 import com.tinkerpop.blueprints.Edge;
 import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.blueprints.impls.orient.OrientGraphFactory;
 import com.tinkerpop.blueprints.impls.orient.OrientGraphNoTx;
+import com.tinkerpop.gremlin.Tokens.T;
 import com.tinkerpop.gremlin.java.GremlinPipeline;
 
 public class Dao {
@@ -29,6 +35,13 @@ public class Dao {
 
 	}
 
+	/**
+	 * 
+	 * Queries the database for all beverage brands.
+	 * 
+	 * @return An array containing a list of all beverage types found in the
+	 *         database
+	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public ArrayList<String> getBrands() {
 
@@ -50,8 +63,15 @@ public class Dao {
 
 	}
 
+	/**
+	 * 
+	 * Queries the database for all beverage types.
+	 * 
+	 * @return An array containing a list of all beverage types found in the
+	 *         database
+	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public ArrayList<String> getBeerTypes() {
+	public ArrayList<String> getBeverageTypes() {
 
 		ArrayList<String> types = new ArrayList();
 
@@ -71,161 +91,296 @@ public class Dao {
 
 	}
 
+	/**
+	 * 
+	 * Takes in the name of the restaurant as parameter, and queries the beverages
+	 * from the database.
+	 * 
+	 * @param name
+	 *            - The name of the restaurant
+	 * @return An array containing the restaurants product list with beverages and
+	 *         details.
+	 */
+	@SuppressWarnings("unchecked")
 	public JSONArray getRestaurant(String name) {
 
 		try {
-			// Vertex restaurant = graph.getVertices("Restaurant.name",
-			// name).iterator().next();
 
-			// HashMap<String, HashMap<String, Double>> restaurantValues = new
-			// HashMap();
 			JSONArray restaurantValues = new JSONArray();
-
-			// Iterator keyIter = keys.iterator();
 
 			Iterator<Edge> tap = graph.getVertices("Restaurant.name", name).iterator().next()
 					.getEdges(Direction.IN, "Tap").iterator();
 
-			// HashMap<String, Double> tapName = new HashMap();
+			if (tap.hasNext()) {
 
-			while (tap.hasNext()) {
+				while (tap.hasNext()) {
 
-				JSONObject tapBev = new JSONObject();
+					JSONObject tapBev = new JSONObject();
 
-				Edge e = tap.next();
-				double price = e.getProperty("price");
-				double vol = e.getProperty("vol");
-				Vertex bev = e.getVertex(Direction.OUT);
+					Edge e = tap.next();
+					Vertex bev = e.getVertex(Direction.OUT);
 
-				tapBev.put("name", bev.getProperty("name").toString());
-				tapBev.put("serving", "tap");
-				tapBev.put("price", price);
-				tapBev.put("vol", vol);
-				tapBev.put("abv", bev.getProperty("abv").toString());
-				tapBev.put("type", bev.getProperty("type").toString());
+					tapBev.put("name", bev.getProperty("name").toString());
+					tapBev.put("serving", "tap");
+					try {
+						double price = e.getProperty("price");
+						tapBev.put("price", price);
+					} catch (Exception e1) {
+						tapBev.put("price", Double.MAX_VALUE);
+						System.out.println("No price found for: Tap - " + bev.getProperty("name"));
+					}
+					try {
+						double vol = e.getProperty("vol");
+						tapBev.put("vol", vol);
+					} catch (Exception e1) {
+						tapBev.put("vol", Double.MAX_VALUE);
+						System.out.println("No vol found for: Tap - " + bev.getProperty("name"));
+					}
+					try {
+						tapBev.put("abv", bev.getProperty("abv").toString());
+					} catch (Exception e1) {
+						tapBev.put("abv", Double.MAX_VALUE);
+						System.out.println("No abv found for: Tap - " + bev.getProperty("name"));
+					}
+					try {
+						tapBev.put("type", bev.getProperty("type").toString());
+					} catch (Exception e1) {
+						tapBev.put("type", 0);
+						System.out.println("No type found for: Tap - " + bev.getProperty("name"));
+					}
 
-				restaurantValues.put(tapBev);
+					restaurantValues.add(tapBev);
 
-			}
+				}
+
+			} else
+				System.out.println("No Tap beverages found for: " + name);
 
 			Iterator<Edge> bottle = graph.getVertices("Restaurant.name", name).iterator().next()
 					.getEdges(Direction.IN, "Bottle").iterator();
 
-			// HashMap<String, Double> botName = new HashMap();
+			if (bottle.hasNext()) {
 
-			while (bottle.hasNext()) {
+				while (bottle.hasNext()) {
 
-				JSONObject botBev = new JSONObject();
+					JSONObject botBev = new JSONObject();
 
-				Edge e = bottle.next();
-				double price = e.getProperty("price");
-				double vol = e.getProperty("vol");
-				Vertex bev = e.getVertex(Direction.OUT);
+					Edge e = bottle.next();
+					Vertex bev = e.getVertex(Direction.OUT);
 
-				botBev.put("name", bev.getProperty("name").toString());
-				botBev.put("serving", "bottle");
-				botBev.put("price", price);
-				botBev.put("vol", vol);
-				botBev.put("abv", bev.getProperty("abv").toString());
-				botBev.put("type", bev.getProperty("type").toString());
+					botBev.put("name", bev.getProperty("name").toString());
+					botBev.put("serving", "bottle");
+					try {
+						double price = e.getProperty("price");
+						botBev.put("price", price);
+					} catch (Exception e1) {
+						botBev.put("price", Double.MAX_VALUE);
+						System.out.println("No price found for: Bottle - " + bev.getProperty("name"));
+					}
+					try {
+						double vol = e.getProperty("vol");
+						botBev.put("vol", vol);
+					} catch (Exception e1) {
+						botBev.put("vol", Double.MAX_VALUE);
+						System.out.println("No vol found for: Bottle - " + bev.getProperty("name"));
+					}
+					try {
+						botBev.put("abv", bev.getProperty("abv").toString());
+					} catch (Exception e1) {
+						botBev.put("abv", Double.MAX_VALUE);
+						System.out.println("No abv found for: Bottle - " + bev.getProperty("name"));
+					}
+					try {
+						botBev.put("type", bev.getProperty("type").toString());
+					} catch (Exception e1) {
+						botBev.put("type", 0);
+						System.out.println("No type found for: Bottle - " + bev.getProperty("name"));
+					}
 
-				restaurantValues.put(botBev);
+					restaurantValues.add(botBev);
 
-			}
+				}
+
+			} else
+				System.out.println("No Bottle beverages found for: " + name);
 
 			return restaurantValues;
 
 		} catch (Exception e) {
-
-			return null;
+			e.printStackTrace();
+			return new JSONArray();
 		}
 
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public HashMap<String, Double[]> filterRestaurants(JSONObject params) {
+	/**
+	 * 
+	 * Takes in a path to a .json file containing an array of beverages as
+	 * JSONObjects and writes them to the database if they do not already exist.
+	 * 
+	 * @param path
+	 */
+	public void parseBeverages(String path) {
 
-		HashMap restaurants = new HashMap();
-		HashMap keys = new HashMap();
+		try {
+			JSONParser parser = new JSONParser();
 
-		params.keys().forEachRemaining(k -> {
-			try {
-				keys.put(k.toString(), params.get(k.toString()));
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
-		});
+			JSONArray array = (JSONArray) parser.parse(new FileReader(path));
 
-		List<Vertex> beers = new ArrayList();
-		beers = new GremlinPipeline(graph.getVertices("Beer.beer", true)).toList();
+			for (Object o : array) {
 
-		for (int i = 0; i < beers.size(); i++) {
+				JSONObject json = (JSONObject) o;
 
-			if (keys.containsKey("type") && !beers.get(i).getProperty("type").equals(keys.get("type"))) {
-
-				beers.remove(beers.get(i));
-
-			}
-
-			if (keys.containsKey("brand") && !beers.get(i).getProperty("brand").equals(keys.get("brand"))) {
-
-				beers.remove(beers.get(i));
+				if (!graph.getVertices("Beer.name", json.get("Name")).iterator().hasNext())
+					graph.addVertex("class:Beer", "beer", true, "brand", json.get("Brand"), "type", json.get("Type"),
+							"abv", json.get("Abv"), "name", json.get("Name"));
+				else
+					System.out.println("Duplicate on: " + json.get("Name"));
 
 			}
 
-			if (Double.parseDouble(beers.get(i).getProperty("abv").toString()) < Double
-					.parseDouble(keys.get("abvMin").toString())
-					&& Double.parseDouble(beers.get(i).getProperty("abv").toString()) > Double
-							.parseDouble(keys.get("abvMax").toString())) {
-
-				beers.remove(beers.get(i));
-
-			}
-
+		} catch (IOException | ParseException e) {
+			e.printStackTrace();
 		}
 
-		Iterator<Edge> edges;
+	}
 
-		for (Vertex v : beers) {
+	/**
+	 * Takes in a path to a .json file containing an array of restaurants as
+	 * JSONObjects, which contain an array of beverages as JSONObjects as parameter,
+	 * and creates a record of each restaurant if needed and creates the relations
+	 * between the restaurants and beverages listed in the file.
+	 * 
+	 * @param path
+	 *            to .json file
+	 */
+	public void linkRestaurants(String path) {
 
-			System.out.println("Alku: " + beers);
+		JSONParser parser = new JSONParser();
 
-			if (keys.containsKey("serving") && !keys.get("serving").equals("")) {
+		try {
 
-				edges = v.getEdges(Direction.OUT, keys.get("serving").toString()).iterator();
+			JSONArray restaurantArray = (JSONArray) parser.parse(new FileReader(path));
 
-			} else {
-				edges = v.getEdges(Direction.OUT, "E").iterator();
-			}
+			for (Object o : restaurantArray) {
 
-			System.out.println("Menossa Whileen: " + edges);
+				JSONObject restaurantJson = (JSONObject) o;
 
-			while (edges.hasNext()) {
+				Vertex restaurant;
 
-				Edge e = edges.next();
+				if (graph.getVertices("Restaurant.name", restaurantJson.get("Name")).iterator().hasNext())
+					restaurant = graph.getVertices("Restaurant.name", restaurantJson.get("Name")).iterator().next();
+				else
+					restaurant = graph.addVertex("class:Restaurant", "name", restaurantJson.get("Name"));
 
-				System.out.println(e);
+				JSONArray beverageArray = (JSONArray) restaurantJson.get("Beverages");
 
-				System.out.println(e.getPropertyKeys());
-				System.out.println(e.getLabel());
+				for (Object beverage : beverageArray) {
 
-				if (Double.parseDouble(e.getProperty("price").toString()) <= Double
-						.parseDouble(keys.get("price").toString())) {
+					JSONObject beverageJson = (JSONObject) beverage;
 
-					Vertex restaurant = e.getVertex(Direction.IN);
+					ArrayList<String> beverages = new ArrayList<>();
 
-					Double[] coordinates = { Double.parseDouble(restaurant.getProperty("latitude").toString()),
-							Double.parseDouble(restaurant.getProperty("longitude").toString()) };
+					graph.getVertices("Restaurant.name", restaurantJson.get("Name")).iterator().next()
+							.getEdges(Direction.IN, beverageJson.get("Serving").toString()).forEach(e -> {
+								beverages.add(e.getVertex(Direction.OUT).getProperty("name"));
+							});
+					;
 
-					restaurants.put(restaurant.getProperty("name"), coordinates);
+					if (graph.getVertices("Beer.name", beverageJson.get("Name")).iterator().hasNext()) {
 
+						if (!beverages.contains(beverageJson.get("Name"))) {
+							Edge edge = graph.addEdge(null,
+									graph.getVertices("Beer.name", beverageJson.get("Name")).iterator().next(),
+									restaurant, beverageJson.get("Serving").toString());
+
+							String price = beverageJson.get("Price").toString();
+
+							if (!beverageJson.get("Price").toString().contains("\"")) {
+								price = price.replaceAll("\"", "");
+								price = price.replace(',', '.');
+							} else
+								price = price.replace(',', '.');
+
+							if (!price.equals("") && !price.isEmpty())
+								edge.setProperty("price", Double.parseDouble(price));
+
+							String vol = beverageJson.get("Vol").toString();
+
+							if (!beverageJson.get("Vol").toString().contains("\"")) {
+								vol = vol.replaceAll("\"", "");
+								vol = vol.replace(',', '.');
+							} else
+								vol = vol.replace(',', '.');
+
+							if (!vol.equals("") && !vol.isEmpty())
+								edge.setProperty("vol", Double.parseDouble(vol));
+						} else
+							System.out.println("Duplicate on restaurant: " + restaurantJson.get("Name") + ", Beverage: "
+									+ beverageJson.get("Name"));
+					} else {
+						System.out.println("Couldn't find beverage " + beverageJson.get("Name")
+								+ " from DB, Restaurant: " + restaurantJson.get("Name"));
+					}
 				}
-
 			}
 
+		} catch (IOException |
+
+				ParseException e) {
+			e.printStackTrace();
 		}
 
-		System.out.println("Success!\n");
+	}
+
+	/**
+	 * 
+	 * Takes in a JSONObject map containing search parameters, queries the database
+	 * for restaurants that match the criteria and returns an array containing the
+	 * names of the matching restaurants.
+	 * 
+	 * @param params
+	 *            - Search parameters as a JSONObject, with keys: 'types', 'brands',
+	 *            'serving', 'abvMin', 'abvMax', 'price'.
+	 * @return - An array containing the names of matching restaurants.
+	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public JSONArray findRestaurants(JSONObject params) {
+
+		JSONArray restaurants = new JSONArray();
+
+		if (params.get("types").toString().equals("[]") || params.get("types").toString().isEmpty())
+			params.put("types", this.getBeverageTypes());
+
+		if (params.get("brands").toString().equals("[]") || params.get("brands").toString().isEmpty())
+			params.put("brands", this.getBrands());
+
+		if (params.get("serving".toString()).equals("Both")) {
+			System.out.println("Both");
+			List<Vertex> beers = new GremlinPipeline(graph.getVertices("Beer.beer", true))
+					.has("type", T.in, params.get("types")).has("brand", T.in, params.get("brands"))
+					.has("abv", T.gte, (double) params.get("abvMin")).has("abv", T.lte, (double) params.get("abvMax"))
+					.outE().has("price", T.lte, (double) params.get("price")).inV().toList();
+
+			for (Vertex v : beers) {
+				if (!restaurants.contains(v.getProperty("name").toString()))
+					restaurants.add(v.getProperty("name").toString());
+			}
+
+		} else {
+			System.out.println(params.get("serving").toString());
+			List<Vertex> beers = new GremlinPipeline(graph.getVertices("Beer.beer", true))
+					.has("type", T.in, params.get("types")).has("brand", T.in, params.get("brands"))
+					.has("abv", T.gte, (double) params.get("abvMin")).has("abv", T.lte, (double) params.get("abvMax"))
+					.outE(params.get("serving").toString()).has("price", T.lte, (double) params.get("price")).inV()
+					.toList();
+
+			for (Vertex v : beers) {
+				if (!restaurants.contains(v.getProperty("name").toString()))
+					restaurants.add(v.getProperty("name").toString());
+			}
+		}
+
 		return restaurants;
 
 	}
