@@ -1,13 +1,18 @@
 package org.kaljakartta.fi.app.back;
 
-import org.springframework.web.bind.annotation.RestController;
-import org.json.JSONObject;
+
+import org.json.simple.JSONObject;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
+
+@CrossOrigin(origins = "*")
 @Controller
 @RestController
 public class RESTController {
@@ -24,7 +29,7 @@ public class RESTController {
 	@RequestMapping(value = "/beertypes", method = RequestMethod.GET)
 	public @ResponseBody String passTypes() {
 
-		String ret = dao.getBeerTypes().toString();
+		String ret = dao.getBeverageTypes().toString();
 		return ret;
 
 	}
@@ -37,11 +42,10 @@ public class RESTController {
 
 	}
 
-	@RequestMapping(value = "/findrestaurants", method = RequestMethod.GET)
-	public @ResponseBody String findRestaurants(@RequestParam JSONObject keys) {
+	@RequestMapping(value = "/findrestaurants", method = RequestMethod.POST, consumes="application/json")
+	public @ResponseBody String findRestaurants(@RequestBody JSONObject keys) {
 
-		String ret = dao.filterRestaurants(keys).toString();
-		return ret;
+		return dao.findRestaurants(keys).toString();
 	}
 
 }
