@@ -81,7 +81,7 @@ public class Dao {
 	public JSONArray getRestaurant(String name) {
 
 		try {
-			
+
 			JSONArray restaurantValues = new JSONArray();
 
 			Iterator<Edge> tap = graph.getVertices("Restaurant.name", name).iterator().next()
@@ -134,7 +134,6 @@ public class Dao {
 
 			Iterator<Edge> bottle = graph.getVertices("Restaurant.name", name).iterator().next()
 					.getEdges(Direction.IN, "Bottle").iterator();
-
 
 			if (bottle.hasNext()) {
 
@@ -189,7 +188,6 @@ public class Dao {
 		}
 
 	}
-
 
 	public void parseBeers(String path) {
 
@@ -295,6 +293,15 @@ public class Dao {
 
 	}
 
+	/**
+	 * 
+	 * Takes in a JSONObject map containing search parameters, queries the database
+	 * for restaurants that match the criteria and returns an array containing the
+	 * names of the matching restaurants.
+	 * 
+	 * @param params - Search parameters as a JSONObject, with keys: 'types', 'brands', 'serving', 'abvMin', 'abvMax', 'price'.
+	 * @return - An array containing the names of matching restaurants.
+	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public JSONArray findRestaurants(JSONObject params) {
 
@@ -314,19 +321,20 @@ public class Dao {
 					.outE().has("price", T.lte, (double) params.get("price")).inV().toList();
 
 			for (Vertex v : beers) {
-				if(!restaurants.contains(v.getProperty("name").toString()))
+				if (!restaurants.contains(v.getProperty("name").toString()))
 					restaurants.add(v.getProperty("name").toString());
 			}
-			
+
 		} else {
 			System.out.println(params.get("serving").toString());
 			List<Vertex> beers = new GremlinPipeline(graph.getVertices("Beer.beer", true))
 					.has("type", T.in, params.get("types")).has("brand", T.in, params.get("brands"))
 					.has("abv", T.gte, (double) params.get("abvMin")).has("abv", T.lte, (double) params.get("abvMax"))
-					.outE(params.get("serving").toString()).has("price", T.lte, (double) params.get("price")).inV().toList();
-			
+					.outE(params.get("serving").toString()).has("price", T.lte, (double) params.get("price")).inV()
+					.toList();
+
 			for (Vertex v : beers) {
-				if(!restaurants.contains(v.getProperty("name").toString()))
+				if (!restaurants.contains(v.getProperty("name").toString()))
 					restaurants.add(v.getProperty("name").toString());
 			}
 		}
@@ -335,27 +343,28 @@ public class Dao {
 
 	}
 
-//	public static void main(String[] args) {
-//		Dao dao = new Dao("remote:188.166.162.144:2424/KaljakarttaDB", "dao", "bakkiPassu");
-//		// dao.parseBeers("F:/Downloads/beers2.json");
-//		// dao.linkRestaurants("F:/Downloads/restaurants.json");
-//		JSONObject params = new JSONObject();
-//		JSONArray types = new JSONArray();
-//		JSONArray brands = new JSONArray();
-//
-////		types.add("Lager,Lager");
-////		brands.add("Karhu");
-//
-//		params.put("types", types);
-//		params.put("brands", brands);
-//		params.put("price", 8.0);
-//		params.put("abvMin", 3.0);
-//		params.put("abvMax", 15.0);
-//		params.put("serving", "Both");
-//
-//		System.out.println(params);
-//
-//		System.out.println(dao.findRestaurants(params));
-//	}
+	// public static void main(String[] args) {
+	// Dao dao = new Dao("remote:188.166.162.144:2424/KaljakarttaDB", "dao",
+	// "bakkiPassu");
+	// // dao.parseBeers("F:/Downloads/beers2.json");
+	// // dao.linkRestaurants("F:/Downloads/restaurants.json");
+	// JSONObject params = new JSONObject();
+	// JSONArray types = new JSONArray();
+	// JSONArray brands = new JSONArray();
+	//
+	//// types.add("Lager,Lager");
+	//// brands.add("Karhu");
+	//
+	// params.put("types", types);
+	// params.put("brands", brands);
+	// params.put("price", 8.0);
+	// params.put("abvMin", 3.0);
+	// params.put("abvMax", 15.0);
+	// params.put("serving", "Both");
+	//
+	// System.out.println(params);
+	//
+	// System.out.println(dao.findRestaurants(params));
+	// }
 
 }
