@@ -1,6 +1,5 @@
 package org.kaljakartta.fi.app.back;
 
-
 import org.json.simple.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -11,7 +10,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-
+/**
+ * 
+ * Receives REST HTTP requests and calls methods accordingly
+ * 
+ * @author Akisa
+ *
+ */
 @CrossOrigin(origins = "*")
 @Controller
 @RestController
@@ -19,6 +24,13 @@ public class RESTController {
 
 	private Dao dao = new Dao("remote:188.166.162.144:2424/KaljakarttaDB", "dao", "bakkiPassu");
 
+	/**
+	 * 
+	 * Relays the name of the restaurant and returns restaurant info.
+	 * 
+	 * @param name - Name of the restaurant
+	 * @return An array containing the restaurants product list with beverages and details.
+	 */
 	@RequestMapping(value = "/restaurant", method = RequestMethod.GET)
 	public @ResponseBody String passRestaurants(@RequestParam String name) {
 
@@ -26,7 +38,13 @@ public class RESTController {
 
 	}
 
-	@RequestMapping(value = "/beertypes", method = RequestMethod.GET)
+	/**
+	 * 
+	 * Returns beverage types by request.
+	 * 
+	 * @return An array containing a list of all beverage types found in the database.
+	 */
+	@RequestMapping(value = "/beveragetypes", method = RequestMethod.GET)
 	public @ResponseBody String passTypes() {
 
 		String ret = dao.getBeverageTypes().toString();
@@ -34,6 +52,12 @@ public class RESTController {
 
 	}
 
+	/**
+	 * 
+	 * Returns beverage brands by request.
+	 * 
+	 * @return An array containing a list of all beverage types found in the database
+	 */
 	@RequestMapping(value = "/brands", method = RequestMethod.GET)
 	public @ResponseBody String passBrands() {
 
@@ -42,7 +66,13 @@ public class RESTController {
 
 	}
 
-	@RequestMapping(value = "/findrestaurants", method = RequestMethod.POST, consumes="application/json")
+	/**
+	 * 
+	 * Relays search parameters and returns a list of matching restaurants.
+	 * 
+	 * @return An array containing the names of matching restaurants.
+	 */
+	@RequestMapping(value = "/findrestaurants", method = RequestMethod.POST, consumes = "application/json")
 	public @ResponseBody String findRestaurants(@RequestBody JSONObject keys) {
 
 		return dao.findRestaurants(keys).toString();
