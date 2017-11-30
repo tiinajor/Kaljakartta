@@ -359,8 +359,9 @@ public class Dao {
 			System.out.println("Both");
 			List<Vertex> beers = new GremlinPipeline(graph.getVertices("Beer.beer", true))
 					.has("type", T.in, params.get("types")).has("brand", T.in, params.get("brands"))
-					.has("abv", T.gte, (double) params.get("abvMin")).has("abv", T.lte, (double) params.get("abvMax"))
-					.outE().has("price", T.lte, (double) params.get("price")).inV().toList();
+					.has("abv", T.gte, Double.parseDouble(params.get("abvMin").toString()))
+					.has("abv", T.lte, Double.parseDouble(params.get("abvMax").toString())).outE()
+					.has("price", T.lte, Double.parseDouble(params.get("price").toString())).inV().toList();
 
 			for (Vertex v : beers) {
 				if (!restaurants.contains(v.getProperty("name").toString()))
@@ -371,9 +372,10 @@ public class Dao {
 			System.out.println(params.get("serving").toString());
 			List<Vertex> beers = new GremlinPipeline(graph.getVertices("Beer.beer", true))
 					.has("type", T.in, params.get("types")).has("brand", T.in, params.get("brands"))
-					.has("abv", T.gte, (double) params.get("abvMin")).has("abv", T.lte, (double) params.get("abvMax"))
-					.outE(params.get("serving").toString()).has("price", T.lte, (double) params.get("price")).inV()
-					.toList();
+					.has("abv", T.gte, Double.parseDouble(params.get("abvMin").toString()))
+					.has("abv", T.lte, Double.parseDouble(params.get("abvMax").toString()))
+					.outE(params.get("serving").toString())
+					.has("price", T.lte, Double.parseDouble(params.get("price").toString())).inV().toList();
 
 			for (Vertex v : beers) {
 				if (!restaurants.contains(v.getProperty("name").toString()))
