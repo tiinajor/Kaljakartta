@@ -30,7 +30,7 @@ public class Dao {
 	public Dao(String address, String user, String pass) {
 
 		System.out.println("New Dao object created");
-		factory = new OrientGraphFactory(address, user, pass).setupPool(0, 20);
+		factory = new OrientGraphFactory(address, user, pass).setupPool(1, 10);
 		graph = factory.getNoTx();
 
 	}
