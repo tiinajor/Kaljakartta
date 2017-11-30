@@ -57,9 +57,9 @@ window.onload = function(){
 
 	const searchVars = {
 		serving : "Both",
-		price : 8.5,
-		abvMin : 2.8,
-		abvMax : 5.6,
+		price : 25,
+		abvMin : 0,
+		abvMax : 12,
 		brands : [],
 		types : []
 	};
@@ -245,7 +245,6 @@ window.onload = function(){
 
 	// hae-nappi hakee baarit, joista löytyy hakukriteereitä vastaavia juomia
 	document.querySelector('.button-submit').addEventListener('click', () => {
-		console.log(searchVars);
 		postJSON("https://cors-anywhere.herokuapp.com/http://188.166.162.144:130/findrestaurants", searchVars);
 		document.getElementById('route-container').style.height = 0 + "px";
 		document.getElementById('search-container').style.position = "absolute";
@@ -374,7 +373,7 @@ window.onload = function(){
 
 	//slaiderien luonti
 	noUiSlider.create(priceSlider, {
-		start: 24.5,
+		start: 25,
 		connect: [true, false],
 		step: 0.5,
 		range: {
@@ -386,7 +385,7 @@ window.onload = function(){
 		})
 	});
 	noUiSlider.create(alcoholSlider, {
-		start: [ 0.5, 11.5 ],
+		start: [ 0, 12 ],
 		connect: true,
 		range: {
 			"min": [ 0 ],
@@ -397,7 +396,7 @@ window.onload = function(){
 		})
 	});
 	noUiSlider.create(distanceSlider, {
-		start: 500,
+		start: 1000,
 		connect: [true, false],
 		range: {
 			"min": [  0, 50 ],
@@ -1047,13 +1046,14 @@ function initMap() {
  *
  */
 function locateUser(distance) {
+
+
 	if (navigator.geolocation) {
 		navigator.geolocation.getCurrentPosition(function(position) {
 			googleshit.userPos = {
 				lat: position.coords.latitude,
 				lng: position.coords.longitude
 			};
-			console.log(googleshit.userPos);
 			if (googleshit.userPos != null) {
 				googleshit.map.panTo(googleshit.userPos);
 				const image = "kgps_icons/yellow-marker.png";
@@ -1223,13 +1223,17 @@ function processResults(results, status, pagination) {
  */
 function createMarker(place) {
 	globalLists.bars = globalLists.bars.map(name => capitalizeEveryWord(name));
-	const customIcon = globalLists.bars.indexOf(place.name) > -1 ? "kgps_icons/beer-marker-small.png" : "";
-	console.log(place.name);
+	if(globalLists.bars.indexOf(place.name) === -1) return;
+	const customIcon =  {
+		path: "kgps_icons/kaljakartta_map_arrow.svg",
+		scale: 1,
+		anchor: (19,27)
+	};
 	const marker = new google.maps.Marker({
 		map: googleshit.map,
 		position: place.geometry.location,
 		animation: google.maps.Animation.DROP,
-		icon: customIcon,
+		icon: "kgps_icons/kaljakartta_map_arrow.svg" ,
 	});
 	globalLists.markers.push(marker);
 	google.maps.event.addListener(marker, "click", function() {
