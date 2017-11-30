@@ -349,10 +349,10 @@ public class Dao {
 
 		JSONArray restaurants = new JSONArray();
 
-		if (params.get("types").toString().equals("[]"))
+		if (params.get("types").toString().equals("[]") || params.get("types").toString().isEmpty())
 			params.put("types", this.getBeverageTypes());
 
-		if (params.get("brands").toString().equals("[]"))
+		if (params.get("brands").toString().equals("[]") || params.get("brands").toString().isEmpty())
 			params.put("brands", this.getBrands());
 
 		if (params.get("serving".toString()).equals("Both")) {
