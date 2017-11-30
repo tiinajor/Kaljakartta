@@ -1,8 +1,18 @@
-let map;
-let pos;
-let infowindow;
-let markers = [];
-let bars = [];
+const globalLists = {
+	markers : [],
+	bars : [],
+	beerList : []
+}
+
+const googleshit = {
+	map: null,
+	directionsService: null,
+	directionsRenderer: null, 
+	geocoder: null,
+	placesService: null,
+	infowindow: null,
+	userPos: null
+};
 
 loadScript("https://maps.googleapis.com/maps/api/js?key=AIzaSyDuIpE10xbisU_de-Mg_xR4-OpmOVl3BxA&libraries=places&language=fi&region=FI", initMap);
 
@@ -12,7 +22,7 @@ loadScript("https://maps.googleapis.com/maps/api/js?key=AIzaSyDuIpE10xbisU_de-Mg
 - Restaurant cardin element heights, juomalista voi mennä näytön ulkopuolelle?
 
 */
-let beerlist = [];
+
 
 
 window.onload = function(){
@@ -29,8 +39,6 @@ window.onload = function(){
 	const theads = document.getElementsByTagName('th');
 	const servingButtons = document.querySelectorAll('.serving-button');
 	const directionsElement = document.getElementById('route-container');
-	const directionsService = new google.maps.DirectionsService;
-	const directionsRenderer = new google.maps.DirectionsRenderer({suppressMarkers: true});
 	let headerHeight = headerElement.clientHeight;
 	let windowHeight = window.innerHeight;
 	let language = window.localStorage.getItem("language") || "fi";
@@ -55,8 +63,6 @@ window.onload = function(){
 		brands : [],
 		types : []
 	};
-	directionsRenderer.setPanel(document.getElementById("route"));
-	infowindow = new google.maps.InfoWindow();
 	document.querySelector(".title").innerHTML += ("<sup class='version'>alpha</sup>");
 
 	//showModal();
@@ -77,37 +83,37 @@ window.onload = function(){
 		switch(column) {
 		case "serving":
 			servingAsc = !servingAsc;
-			sortedValues = beerList.sort(sortBy(column, servingAsc));
+			sortedValues = globalLists.beerList.sort(sortBy(column, servingAsc));
 			updateTable(sortedValues, language);
 			activeSortIcon = servingAsc ? descSortIcon : ascSortIcon;
 			break;
 		case "name":
 			nameAsc = !nameAsc;
-			sortedValues = beerList.sort(sortBy(column, nameAsc));
+			sortedValues = globalLists.beerList.sort(sortBy(column, nameAsc));
 			updateTable(sortedValues, language);
 			activeSortIcon = nameAsc ? descSortIcon : ascSortIcon;
 			break;
 		case "type":
 			typeAsc = !typeAsc;
-			sortedValues = beerList.sort(sortBy(column, typeAsc));
+			sortedValues = globalLists.beerList.sort(sortBy(column, typeAsc));
 			updateTable(sortedValues, language);
 			activeSortIcon = typeAsc ? descSortIcon : ascSortIcon;
 			break;
 		case "abv":
 			abvAsc = !abvAsc;
-			sortedValues = beerList.sort(sortBy(column, abvAsc));
+			sortedValues = globalLists.beerList.sort(sortBy(column, abvAsc));
 			updateTable(sortedValues, language);
 			activeSortIcon = abvAsc ? descSortIcon : ascSortIcon;
 			break;
 		case "vol":
 			volAsc = !volAsc;
-			sortedValues = beerList.sort(sortBy(column, volAsc));
+			sortedValues = globalLists.beerList.sort(sortBy(column, volAsc));
 			updateTable(sortedValues, language);
 			activeSortIcon = volAsc ? descSortIcon : ascSortIcon;
 			break;
 		case "price":
 			priceAsc = !priceAsc;
-			sortedValues = beerList.sort(sortBy(column, priceAsc));
+			sortedValues = globalLists.beerList.sort(sortBy(column, priceAsc));
 			updateTable(sortedValues, language);
 			activeSortIcon = priceAsc ? descSortIcon : ascSortIcon;
 			break;
@@ -159,9 +165,9 @@ window.onload = function(){
 		const input = document.getElementById("searchbox");
 		const address = input.value;
 		if(address !== "") {
-			directionsRenderer.setMap(null);
+			googleshit.directionsRenderer.setMap(null);
 			clearMarkers();
-			geocodeAddress(address, distance, infowindow);
+			geocodeAddress(address, distance, googleshit.infowindow);
 			input.value = "";
 		}
 	});
@@ -173,9 +179,9 @@ window.onload = function(){
 		const distance = distanceSlider.noUiSlider.get();
 		const address = input.value;
 		if(e.keyCode === 13 && address !== ""){ 
-			directionsRenderer.setMap(null);
+			googleshit.directionsRenderer.setMap(null);
 			clearMarkers();
-			geocodeAddress(address, distance, infowindow);
+			geocodeAddress(address, distance, googleshit.infowindow);
 			this.value = "";
 		}
 	});
@@ -233,8 +239,8 @@ window.onload = function(){
 		document.getElementById('search-container').style.position = "absolute";
 		resizeElementHeights();
 		clearMarkers();
-		directionsRenderer.setMap(null);
-		locateUser(distanceSlider.noUiSlider.get(), infowindow);
+		googleshit.directionsRenderer.setMap(null);
+		locateUser(distanceSlider.noUiSlider.get());
 	});
 
 	// hae-nappi hakee baarit, joista löytyy hakukriteereitä vastaavia juomia
@@ -245,9 +251,9 @@ window.onload = function(){
 		document.getElementById('search-container').style.position = "absolute";
 		resizeElementHeights();
 		clearMarkers();
-		directionsRenderer.setMap(null);
+		googleshit.directionsRenderer.setMap(null);
 		setTimeout(() => {
-			locateUser(distanceSlider.noUiSlider.get(), infowindow);
+			locateUser(distanceSlider.noUiSlider.get());
 		}, 250);
 		closeMenu();
 	});
@@ -272,7 +278,7 @@ window.onload = function(){
 
 	// reittiohjeen sulkeminen
 	document.getElementById("route-close-x").addEventListener("click", function() {
-		directionsRenderer.setMap(null);
+		googleshit.directionsRenderer.setMap(null);
 		closeDirections();
 		resizeElementHeights();
 	});
@@ -362,7 +368,7 @@ window.onload = function(){
 		const endPoint = document.getElementById("bar-address").textContent;
 		const barName = document.getElementById("bar-name").textContent;
 		const mode = e.id.toUpperCase();
-		calcRoute(directionsService,directionsRenderer,endPoint,mode);
+		calcRoute(endPoint,mode);
 		//geocodeAddress(barName, 1);
 	}));
 
@@ -465,11 +471,11 @@ function createBeerTable(language) {
  *
  * @param {List} beerList List of the beers that the clicked bar has. 
  */
-function createBeerTableBody(beerList) {
+function createBeerTableBody(beers) {
 	const tableBody = document.querySelector("tbody");
 	let html = "";
-	for(let i=0;i<beerList.length;i++) {
-		const beer = beerList[i];
+	for(let i=0;i<beers.length;i++) {
+		const beer = beers[i];
 		const name = capitalizeFirstLetter(beer.name);
 		const type = capitalizeFirstLetter(beer.type);
 		const bottleIcon = "kgps_icons/beer-bottle.svg";
@@ -500,19 +506,19 @@ function createBeerTableBody(beerList) {
  *"
  * @param {List} beerList Updated list of the beers that the clicked bar has. 
  */
-function updateTable(beerList, language) {
+function updateTable(beers, language) {
 	const rows = document.querySelector("tbody").rows;
 	const bottleIcon = "kgps_icons/beer-bottle.svg";
 	const tapIcon = "kgps_icons/beer-tap.svg";
-	for(let i = 0; i < beerList.length; i++){
-		const icon = beerList[i].serving === "tap" ? tapIcon : bottleIcon;
-		const vol = beerList[i].vol === Number.MAX_VALUE ? "?" : beerList[i].vol + "l";
-		const abv = beerList[i].abv === Number.MAX_VALUE ? "?" : beerList[i].abv + "%";
-		const price = beerList[i].price === Number.MAX_VALUE ? "?" : beerList[i].price + "€";
+	for(let i = 0; i < beers.length; i++){
+		const icon = beers[i].serving === "tap" ? tapIcon : bottleIcon;
+		const vol = beers[i].vol === Number.MAX_VALUE ? "?" : beers[i].vol + "l";
+		const abv = beers[i].abv === Number.MAX_VALUE ? "?" : beers[i].abv + "%";
+		const price = beers[i].price === Number.MAX_VALUE ? "?" : beers[i].price + "€";
 
 		let beerType = "?";
-		if(beerList[i].type !== Number.MAX_VALUE) {
-			const typeLocales = (beerList[i].type.indexOf(",") > 0) ? beerList[i].type.split(",") : beerList[i].type;
+		if(beers[i].type !== Number.MAX_VALUE) {
+			const typeLocales = (beers[i].type.indexOf(",") > 0) ? beers[i].type.split(",") : beers[i].type;
 			if(typeof(typeLocales) === "object") {
 				beerType = language === "fi" ? typeLocales[0] : typeLocales[1];
 			} else {
@@ -520,7 +526,7 @@ function updateTable(beerList, language) {
 			}	
 		}			
 		rows[i].cells[0].innerHTML = `<img src=${icon}>`;
-		rows[i].cells[1].textContent = capitalizeFirstLetter(beerList[i].name);
+		rows[i].cells[1].textContent = capitalizeFirstLetter(beers[i].name);
 		rows[i].cells[2].textContent = capitalizeFirstLetter(beerType);
 		rows[i].cells[3].textContent = vol;
 		rows[i].cells[4].textContent = abv;
@@ -609,7 +615,7 @@ function postJSON(url, data) {
 	})
 	.then(data => {
 		console.log(data);
-		bars = data;
+		globalLists.bars = data;
 	})
 }
 
@@ -830,9 +836,8 @@ function closeDirections() {
 	const windowHeight = window.innerHeight;
 	const headerHeight = document.getElementsByTagName("header")[0].clientHeight;
 	const mapHeight = windowHeight - headerHeight + "px";
-	const directionsHeight = 0 + "px";
 	document.getElementById("map").style.height = mapHeight;
-	document.getElementById("route").style.height = directionsHeight;
+	document.getElementById("route-container").style.height = 0 + "px";
 	document.getElementById("search-container").style.display = "block";
 }
 
@@ -873,7 +878,6 @@ function renderBarInfo(place) {
 	const barName = document.getElementById("bar-name");
 	const barOpen = document.getElementById("bar-open");
 	const barPhoto = document.getElementById("bar-photo");
-	const service = new google.maps.places.PlacesService(map);
 	const response = getBarData(place.name);
 	response.then(data => {
 		console.log(data);
@@ -886,12 +890,12 @@ function renderBarInfo(place) {
 			createBeerTableBody(data);
 			updateTable(data.sort(sortBy("name", true)), language);
 		}	
-		beerList = data;	
+		globalLists.beerList = data;	
 	});
 	barName.innerHTML = place.name;
 	setRating(place.rating);
 	
-	service.getDetails({
+	googleshit.placesService.getDetails({
 		placeId: place.place_id
 	}, function(data, status) {
 		if (status === google.maps.places.PlacesServiceStatus.OK) {
@@ -992,7 +996,7 @@ function debounce(func, wait, immediate) {
  *
  */
 function initMap() {
-	map = new google.maps.Map(document.getElementById("map"), {
+	googleshit.map = new google.maps.Map(document.getElementById("map"), {
 		center: {lat: 60.162786, lng: 24.932607},
 		zoom: 14,
 		gestureHandling: "greedy",
@@ -1025,6 +1029,13 @@ function initMap() {
 			}
 		]
 	});
+	googleshit.placesService = new google.maps.places.PlacesService(googleshit.map);
+	googleshit.directionsService = new google.maps.DirectionsService;
+	googleshit.directionsRenderer = new google.maps.DirectionsRenderer({ suppressMarkers: true });
+	googleshit.directionsRenderer.setPanel(document.getElementById("route"));
+	googleshit.geocoder = new google.maps.Geocoder();
+	googleshit.infowindow = new google.maps.InfoWindow();
+	
 }
 
 /**
@@ -1035,30 +1046,31 @@ function initMap() {
  * @param {Object} infowindow The small pop-up info that is showed when the user clicks the yellow marker (which is placed at the address that the user searched). 
  *
  */
-function locateUser(distance, infowindow) {
+function locateUser(distance) {
 	if (navigator.geolocation) {
 		navigator.geolocation.getCurrentPosition(function(position) {
-			pos = {
+			googleshit.userPos = {
 				lat: position.coords.latitude,
 				lng: position.coords.longitude
 			};
-			if(pos != null) {
-				map.setCenter(pos);
+			console.log(googleshit.userPos);
+			if (googleshit.userPos != null) {
+				googleshit.map.panTo(googleshit.userPos);
 				const image = "kgps_icons/yellow-marker.png";
 				const marker = new google.maps.Marker({
-					map: map,
-					position: pos,
+					map: googleshit.map,
+					position: googleshit.userPos,
 					icon : image,
 				});
-				markers.push(marker);
-				searchNearby(pos, distance);
+				globalLists.markers.push(marker);
+				searchNearby(googleshit.userPos, distance);
 			}
 		}, function() {
-			handleLocationError(true, infowindow, map.getCenter());
+			handleLocationError(true, googleshit.map.getCenter());
 		});
 	} else {
 		// Selain ei tue geolokaatiota
-		handleLocationError(false, infowindow, map.getCenter());
+		handleLocationError(false, googleshit.map.getCenter());
 	}
 }
 
@@ -1072,18 +1084,16 @@ function locateUser(distance, infowindow) {
  * @param {Object} infowindow The small pop-up info that is showed when the user clicks the yellow marker (which is placed at the address that the user searched). 
  *
  */
-function geocodeAddress(address, distance, infowindow) {
-	const geocoder = new google.maps.Geocoder();
+function geocodeAddress(address, distance) {
 	const image = "kgps_icons/yellow-marker.png";
-	geocoder.geocode(
+	googleshit.geocoder.geocode(
 		{"address": address,
 			componentRestrictions: {
 				country: "FI"
 			}}, function(results, status) {
 			if (status == "OK") {
-				console.log(results);
 				const searchPos = results[0].geometry.location;
-				map.setCenter(searchPos);
+				googleshit.map.setCenter(searchPos);
 				
 				// jos etsitty paikka on baari/yökerho -> näyttää vain sen markerin, muuten etsii baarit lähistöltä normaalisti
 				if (results[0].types.filter(type => type === "bar" || type === "night_club").length > 0) {
@@ -1092,14 +1102,14 @@ function geocodeAddress(address, distance, infowindow) {
 					searchNearby(searchPos, distance);
 					const image = "kgps_icons/yellow-marker.png";
 					const marker = new google.maps.Marker({
-						map: map,
+						map: googleshit.map,
 						position: searchPos,
 						icon : image,
 					});
-					markers.push(marker);
-					infowindow.setContent(results[0].formatted_address);
+					globalLists.markers.push(marker);
+					googleshit.infowindow.setContent(results[0].formatted_address);
 					google.maps.event.addListener(marker, "click", function() {
-						infowindow.open(map, marker);
+						googleshit.infowindow.open(googleshit.map, marker);
 					}); 
 				}
 			} else {
@@ -1111,24 +1121,22 @@ function geocodeAddress(address, distance, infowindow) {
 /**
  * Google navigator.
  * Calculates the route from the user location to the selected bar using the transport that the user clicked and opens the element with the directions. 
- * @param {Object} directionsService Google directions service.
- * @param {Object} directionsRenderer Google directions renderer.
  * @param {Object} endPoint The coordinates of the bar. Latitude, longitude.
  * @param {string} mode The transport mode that was chosen (walk/drive/bike/public transport). 
  *
  */
-function calcRoute(directionsService, directionsRenderer, endPoint, mode) {
-	if (pos === undefined && navigator.geolocation) {
+function calcRoute(endPoint, mode) {
+	if (googleshit.userPos === null && navigator.geolocation) {
   		navigator.geolocation.getCurrentPosition(function(position) {
-	        pos = {
+			googleshit.userPos = {
 	          	lat: position.coords.latitude,
 	          	lng: position.coords.longitude
 	        };
     	});
     };
-    directionsRenderer.setMap(map);
-	directionsService.route({
-		origin: pos,
+    googleshit.directionsRenderer.setMap(googleshit.map);
+	googleshit.directionsService.route({
+		origin: googleshit.userPos,
 		destination: endPoint,
 		travelMode: mode,
 		transitOptions: {
@@ -1143,15 +1151,15 @@ function calcRoute(directionsService, directionsRenderer, endPoint, mode) {
 		region: "FI"
 	}, function(response, status) {
 		if (status === "OK") {
-			directionsRenderer.setDirections(response);
+			googleshit.directionsRenderer.setDirections(response);
 			const windowHeight = window.innerHeight;
 			document.getElementById('route-container').style.height = windowHeight * 0.3 + "px";
 			document.getElementById('search-container').style.display = "none";
 			const marker = new google.maps.Marker({
-				map: map,
+				map: googleshit.map,
 				position: endPoint,
 			});
-			markers.push(marker);
+			globalLists.markers.push(marker);
 			resizeElementHeights();
 			closeCard();
 		} else {
@@ -1168,14 +1176,13 @@ function calcRoute(directionsService, directionsRenderer, endPoint, mode) {
  *
  */
 function searchNearby(loc, distance) {
-	const service = new google.maps.places.PlacesService(map);
-	service.nearbySearch({
+	googleshit.placesService.nearbySearch({
 		location: loc, 
 		radius: distance,
 		type: ["night_club"]
 	}, processResults);	
 
-	service.nearbySearch({
+	googleshit.placesService.nearbySearch({
 		location: loc, 
 		radius: distance,
 		type: ["bar"]
@@ -1215,16 +1222,16 @@ function processResults(results, status, pagination) {
  *
  */
 function createMarker(place) {
-	bars = bars.map(name => capitalizeEveryWord(name));
-	const customIcon = bars.indexOf(place.name) > -1 ? "kgps_icons/beer-marker.png" : "";
+	globalLists.bars = globalLists.bars.map(name => capitalizeEveryWord(name));
+	const customIcon = globalLists.bars.indexOf(place.name) > -1 ? "kgps_icons/beer-marker-small.png" : "";
 	console.log(place.name);
 	const marker = new google.maps.Marker({
-		map: map,
+		map: googleshit.map,
 		position: place.geometry.location,
 		animation: google.maps.Animation.DROP,
 		icon: customIcon,
 	});
-	markers.push(marker);
+	globalLists.markers.push(marker);
 	google.maps.event.addListener(marker, "click", function() {
 		renderBarInfo(place);
 		openCard();
@@ -1235,19 +1242,19 @@ function createMarker(place) {
  * Clears all markers from the map.
  */
 function clearMarkers() {
-	for (let i = 0; i < markers.length; i++) {
-		markers[i].setMap(null);
+	for (let i = 0; i < globalLists.markers.length; i++) {
+		globalLists.markers[i].setMap(null);
 	}
-	markers = [];
+	globalLists.markers = [];
 }
 
 // googlen oma error funktio
-function handleLocationError(browserHasGeolocation, infowindow, pos) {
-	infowindow.setPosition(pos);
-	infowindow.setContent(browserHasGeolocation ?
+function handleLocationError(browserHasGeolocation, pos) {
+	googleshit.infowindow.setPosition(pos);
+	googleshit.infowindow.setContent(browserHasGeolocation ?
 		"Error: Paikannus epäonnistui." :
 		"Error: Selaimesi ei tue paikannusta.");
-	infowindow.open(map);
+	googleshit.infowindow.open(googleshit.map);
 }
 
 function loadScript(url, callback) {
