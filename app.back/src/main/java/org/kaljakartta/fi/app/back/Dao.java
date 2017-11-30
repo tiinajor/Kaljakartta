@@ -218,7 +218,7 @@ public class Dao {
 	 * Takes in a path to a .json file containing an array of beverages as
 	 * JSONObjects and writes them to the database if they do not already exist.
 	 * 
-	 * @param path
+	 * @param path to .json file
 	 */
 	public void parseBeverages(String path) {
 
