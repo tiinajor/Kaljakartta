@@ -70,12 +70,13 @@ public class RESTController {
 	 * 
 	 * Relays search parameters and returns a list of matching restaurants.
 	 * 
+	 * @param params - Search parameters as a JSONObject, with keys: 'types', 'brands', 'serving', 'abvMin', 'abvMax', 'price'.
 	 * @return An array containing the names of matching restaurants.
 	 */
 	@RequestMapping(value = "/findrestaurants", method = RequestMethod.POST, consumes = "application/json")
-	public @ResponseBody String findRestaurants(@RequestBody JSONObject keys) {
+	public @ResponseBody String findRestaurants(@RequestBody JSONObject params) {
 
-		return dao.findRestaurants(keys).toString();
+		return dao.findRestaurants(params).toString();
 	}
 
 }
