@@ -70,9 +70,14 @@ header {
 
 .title-container {
 	display: flex;
+	align-self: stretch;
 	align-items: center;
 	color: var(--primary);
 	font-family: 'Bebas Neue', sans-serif;
+}
+
+.title-container img {
+	align-self: center;
 }
 
 .title {
@@ -80,17 +85,21 @@ header {
 	height: 100%;
 	display: flex;
 	display: -webkit-flex;
+	align-items: flex-end;
 	letter-spacing: 2px;
 }
 
+/*
 .title span {
 	display: flex;
 	align-self: center;
 }
+*/
 
 .version {
 	font-size: 0.4em;
 	align-self: flex-start;
+	transform: translateY(50%);
 }
 
 .header-icon {

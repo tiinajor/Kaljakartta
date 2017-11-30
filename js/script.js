@@ -252,17 +252,7 @@ window.onload = function(){
 
 	// hae-nappi hakee baarit, joista löytyy hakukriteereitä vastaavia juomia
 	document.querySelector('.button-submit').addEventListener('click', () => {
-		postJSON("https://cors-anywhere.herokuapp.com/http://188.166.162.144:130/findrestaurants", searchVars);
-		document.getElementById('route-container').style.height = 0 + "px";
-		document.getElementById('search-container').style.position = "absolute";
-		resizeElementHeights();
-		clearMarkers();
-		googleshit.directionsRenderer.setMap(null);
-		globalVars.search = true;
-		setTimeout(() => {
-			locateUser(distanceSlider.noUiSlider.get());
-		}, 250);
-		closeMenu();
+		searchWithVars("https://cors-anywhere.herokuapp.com/http://188.166.162.144:130/findrestaurants", searchVars, distanceSlider.noUiSlider.get());
 	});
 
 	// menun sulkeminen
@@ -606,7 +596,7 @@ function getBarData(barName) {
  * @param {string} url The url where the request is sent.
  * @param {*} data The data which will be sent in the request.
  */
-function postJSON(url, data) {
+function searchWithVars(url, data,distance) {
 	fetch(url, {
 		method: "POST",
 		body: JSON.stringify(data),
@@ -623,6 +613,16 @@ function postJSON(url, data) {
 	.then(data => {
 		console.log(data);
 		globalLists.bars = data;
+		document.getElementById('route-container').style.height = 0 + "px";
+		document.getElementById('search-container').style.position = "absolute";
+		resizeElementHeights();
+		clearMarkers();
+		googleshit.directionsRenderer.setMap(null);
+		globalVars.search = true;
+		setTimeout(() => {
+			locateUser(distance);
+		}, 250);
+		closeMenu();
 	})
 }
 
