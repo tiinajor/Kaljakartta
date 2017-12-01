@@ -1,9 +1,17 @@
+/**
+ * Global object. Has list for map markers, list for bars that match the searchVars and the list of beers that a bar has.
+ * @type {object}
+ */
 const globalLists = {
 	markers : [],
 	bars : [],
 	beerList : []
 }
 
+/**
+ * Global object which contains all google variables and services.
+ * @type {object}
+*/
 const googleshit = {
 	map: null,
 	directionsService: null,
@@ -11,9 +19,12 @@ const googleshit = {
 	geocoder: null,
 	placesService: null,
 	infowindow: null,
-	userPos: null
 };
 
+/**
+ * Global object which contains helper variables for search and displaying the directions markers.
+ * @type {object}
+*/
 const globalVars = {
 	searchWithVars: false,
 	clickedPlace: null
@@ -22,9 +33,11 @@ const globalVars = {
 loadScript("https://maps.googleapis.com/maps/api/js?key=AIzaSyDuIpE10xbisU_de-Mg_xR4-OpmOVl3BxA&libraries=places&language=fi&region=FI", initMap);
 
 /*
-- haku kriteerien kanssa kusee
-- jos menun tekstikentässä on jotain -> hae-nappi etsii sen perusteella
-- jos menun tekstikenttä on tyhjä -> etsii käyttäjän sijainnista
+TODO LISTA:
+
+- modaali ja käyttöohjeet
+- K18 -vahvistus
+- 
 */
 
 
@@ -69,14 +82,18 @@ window.onload = function(){
 		brands : [],
 		types : []
 	};
+
+	// lisää alpha-teksin headeriin, ei tule lopulliseen versioon
 	document.querySelector(".title").innerHTML += ("<sup class='version'>alpha</sup>");
 
 	//showModal();
 	localizeContent(language);
 	createBeerTable(language);
 
+	// tap-bottle-both
 	Array.from(servingButtons).forEach((e) => e.addEventListener("click", (e) => searchVars.serving = toggleServing(e.target)));
 
+	// olutlistan "otsikoiden" klikkaaminen järjestää listan kyseisen sarakkeen mukaan
 	Array.from(theads).forEach((e) => e.addEventListener("click", function() {
 		const column = e.getAttribute("data-id");
 		const language = window.localStorage.getItem("language");
@@ -134,7 +151,10 @@ window.onload = function(){
 		}
 	}));
 
+	// kaljakartta -teksti lataa sivun uudestaan
 	document.querySelector(".title").addEventListener("click", () => {window.location.reload(true)});
+
+	// lippujen klikkaaminen vaihtaa sivuston kielen kyseiseen kieleen
 	document.getElementById("fi").addEventListener("click", (e) => swapLanguage(e.target.id));
 	document.getElementById("en").addEventListener("click", (e) => swapLanguage(e.target.id));
 
@@ -282,7 +302,6 @@ window.onload = function(){
 		setTimeout(() => {
 			directionsElement.style.height = (directionsHeight < directionsMaxHeight) ? directionsHeight + "px" : directionsMaxHeight + "px";
 		}, 100);
-
 	});
 
 	//reittiohjeiden koon muuttaminen mobiilissa
@@ -307,7 +326,6 @@ window.onload = function(){
 		setTimeout(() => {
 			directionsElement.style.height = (directionsHeight < directionsMaxHeight) ? directionsHeight + "px" : directionsMaxHeight + "px";
 		}, 150);
-
 	});
 
 	// menun voi avata pyyhkäisemällä vasemmasta reunasta
@@ -487,6 +505,7 @@ function createBeerTableBody(beers) {
  * Updates the content of the ".beers-table" element from the given list.
  *"
  * @param {List} beerList Updated list of the beers that the clicked bar has.
+ * @param {string} language The beertype column is in this language.
  */
 function updateTable(beers, language) {
 	const rows = document.querySelector("tbody").rows;
@@ -551,7 +570,7 @@ function capitalizeFirstLetter(string) {
 
 /**
  * Capitalizes the first letter of every word in the given text.
- *
+ * 
  * @param {string} text The text where every word needs to be capitalized.
  * @returns {String} The same text with every word capitalized.
  */
@@ -565,7 +584,6 @@ function capitalizeEveryWord(text) {
 
 /**
  * Gets the beerlist of the given bar from our API.
- *
  * @param {String} barName The name of the bar that you need the beerlist for.
  * @returns {Object} Returns the beerlist as a JSON or return null if the request status is 500.
  */
@@ -575,12 +593,15 @@ function getBarData(barName) {
 }
 
 /**
- * Sends a post request to the url using fetch API and sends the data as the request body. If successful saves the response content to global variable bars.
+ * Sends a post request to the url using fetch API and sends the data as the request body.
+ * If the menu searchbox is empty -> locates the user and searches that location with the searchVars.
+ * If the menu searchbox has text in it -> geolocates the address and does the search there.
  *
  * @param {string} url The url where the request is sent.
  * @param {*} data The data which will be sent in the request.
+ * @param {number} distance The max range from the address where the bars will be searched.
  */
-function searchWithVars(url, data,distance) {
+function searchWithVars(url, data, distance) {
 	fetch(url, {
 		method: "POST",
 		body: JSON.stringify(data),
@@ -597,15 +618,26 @@ function searchWithVars(url, data,distance) {
 	.then(data => {
 		console.log(data);
 		globalLists.bars = data;
+		const input = document.getElementById('menu-searchbox');
 		document.getElementById('route-container').style.height = 0 + "px";
 		document.getElementById('search-container').style.position = "absolute";
 		resizeElementHeights();
 		clearMarkers();
 		googleshit.directionsRenderer.setMap(null);
 		globalVars.searchWithVars = true;
-		setTimeout(() => {
-			locateUser(distance);
-		}, 250);
+		if(input.value === "") {
+			locateUser(distance)
+			.then(pos => {
+				googleshit.map.panTo(pos);
+				createMarker(pos, true, false);
+				globalLists.bars = globalLists.bars.map(name => capitalizeEveryWord(name));
+				searchNearby(pos, distance);
+			})
+			.catch(error => console.log("ERROR " + error));
+		} else {
+			textSearch(input.value, distance);
+			input.value = "";
+		}
 		closeMenu();
 	})
 }
@@ -613,9 +645,8 @@ function searchWithVars(url, data,distance) {
 
 /**
  * Google geolocates the address, searches for bars within the distance and places marker for each bar on the map.
- *
  * @param {string} address The address which the user typed to the search box on the map.
- * @param {number} distance The range from the address where the bars will be searched.
+ * @param {number} distance The max range from the address where the bars will be searched.
  */
 function textSearch(address, distance) {
 	googleshit.directionsRenderer.setMap(null);
@@ -642,7 +673,6 @@ function textSearch(address, distance) {
 
 /**
  * Saves the websites language to localStorage so that the user's choice is saved even when the browser is closed.
- *
  * @param {string} language The language to be saved in localStorage.
  */
 function swapLanguage(language) {
@@ -650,7 +680,6 @@ function swapLanguage(language) {
 		window.localStorage.setItem("language", language);
 		window.location.reload();
 	}
-
 }
 
 /**
@@ -702,7 +731,6 @@ function createList(list, parentDiv, id, searchVars) {
 
 /**
  * Closes the given list.
- *
  * @param {HTMLElement} div The div which contains the list element.
  */
 function closeList(div) {
@@ -715,7 +743,6 @@ function closeList(div) {
 
 /**
  * Toggles the beer brands and types in the search variables as the user selects/deselects them.
- *
  * @param {HTMLElement} li The list item that was clicked.
  * @param {Object} searchVars The search variables -object.
  */
@@ -741,7 +768,6 @@ function toggleInSearch(li, searchVars) {
 
 /**
  * Toggles the beer serving (tap-bottle-both) in the search variables when the buttons are clicked in menu.
- *
  * @param {HTMLElement} el The element that was clicked.
  * @returns {string} The id of the clicked element.
  */
@@ -774,8 +800,7 @@ function resizeElementHeights() {
 }
 
 /**
- * Removes duplicates from the given list.
- *
+ * Removes duplicates from the given list/array.
  * @param {list} array The list where the duplicates should be removed from.
  * @returns {list} The same list without duplicates.
  */
@@ -787,7 +812,6 @@ function removeDuplicates(array) {
 
 /**
  * Opens the beer brand and beer type lists in the menu when they are clicked.
- *
  * @param {HTMLElement} item The list element that should be made visible.
  */
 function toggleVisible(item){
@@ -799,8 +823,7 @@ function toggleVisible(item){
 }
 
 /**
- * Rotates the given element.
- *
+ * Toggles the rotation of the given element between horizontal and vertical.
  * @param {HTMLElement} icon The element that needs to be rotated.
  */
 function rotateIcon(icon) {
@@ -850,7 +873,7 @@ function closeCard() {
 }
 
 /**
- * Closes the directions to the selected bar.
+ * Closes the directions element.
  *
  */
 function closeDirections() {
@@ -862,7 +885,10 @@ function closeDirections() {
 	document.getElementById("search-container").style.display = "block";
 }
 
-// näyttää käyttöohjeet ellei käyttäjä ole valinnut toisin
+/**
+ * Opens the modal element.
+ *
+ */
 function showModal() {
 	const noShow = localStorage.getItem("noMoreInstructions");
 	if(noShow) return;
@@ -870,10 +896,12 @@ function showModal() {
 	const oof = document.getElementById("oof");
 	oof.style.width = "100%";
 	modal.classList.add("visible");
-
 }
 
-// sulkee modalin
+/**
+ * Closes the modal element.
+ *
+ */
 function hideModal() {
 	const modal = document.getElementById("modal");
 	const oof = document.getElementById("oof");
@@ -887,7 +915,7 @@ function hideModal() {
 
 /**
  * Adds the restaurants name, address, open hours for the current day and a photo of the bar from google.
- *
+ * Gets the beverage list of the bar from our DB and shows it.
  * @param {Object} place The bar object from Google's search.
  *
  */
@@ -931,7 +959,6 @@ function renderBarInfo(place) {
 
 /**
  * Sets the bar's google rating as beer pints into the restaurant card for the selected bar.
- *
  * @param {number} rating The bar's rating on Google. (0-5)
  *
  */
@@ -952,7 +979,7 @@ function setRating(rating) {
  * Converts the static content Finnish <-> English based on the saved locale.
  * The Finnish and English texts are from the locale JSON files.
  *
- * @param {string} language The language that was saved in local storage.
+ * @param {string} language The language for the content. For now only "fi" or "en".
  *
  */
 function localizeContent(language) {
@@ -1009,7 +1036,7 @@ function debounce(func, wait, immediate) {
 // ----- TÄSTÄ ALASPÄIN VAIN KARTTAAN LIITTYVIÄ FUNKTIOITA ----
 
 /**
- * Initializes the map after the google maps API script has loaded.
+ * Initializes the map and all the Google services after the Google Maps API script has loaded.
  *
  */
 function initMap() {
@@ -1057,18 +1084,19 @@ function initMap() {
 
 /**
  * Google geolocation.
- * Locates the user and searches for the nearby bars within the given distance if geolocation is enabled/available.
+ * Locates the user and returns the coordinates.
+ * Initially returns a promise and after the geolocation has finished it will resolve/reject the promise based on the geocoder's status.
  * @returns Initially returns a promise and after the geolocation has finished it will resolve/reject the promise based on the geocoder's status.
  */
 function locateUser() {
 	return new Promise((resolve, reject) => {
 		if(navigator.geolocation) {
 			navigator.geolocation.getCurrentPosition(position => {
-				const userPos = {
+				const pos = {
 					lat: position.coords.latitude,
 					lng: position.coords.longitude
 				};
-				resolve(userPos);
+				resolve(pos);
 			}, function() {
 				reject("Paikannuksessa tapahtui virhe.");
 			})
@@ -1081,7 +1109,8 @@ function locateUser() {
 
 /**
  * Google geocoder.
- * Geocodes the given address into latitude and longitude coordinates.
+ * Geocodes the given address into latitude and longitude coordinates. 
+ * Initially returns a promise and after the geocoder has finished it will resolve/reject the promise based on the geocoder's status.
  * @param {string} address The address/place that the user searched.
  * @returns {promise} Initially returns a promise and after the geocoder has finished it will resolve/reject the promise based on the geocoder's status.
  *
@@ -1128,7 +1157,7 @@ function defineStartingPoint() {
 
 
 /**
- * Google navigator.
+ * Google directions.
  * Calculates the route from the user location to the selected bar using the transport that the user clicked and opens the element with the directions.
  * @param {Object} startPoint The coordinates of the starting location.
  * @param {string} endPoint The address of the destination.
@@ -1199,7 +1228,7 @@ function searchNearby(loc, distance) {
 }
 
 /**
- * Processes the results of the searchNearby-method and places a marker on the map for each bar.
+ * Processes the results of the searchNearby-method and places a marker on the map for each bar. Clicking on the marker shows the bar's info.
  * @see searchNearby
  * @param {Object[]} results The results of the Google search.
  * @param {Object} status The status of the Google search.
@@ -1228,12 +1257,10 @@ function processResults(results, status, pagination) {
 }
 
 /**
- * Creates a marker at the given place's location and adds a Google eventlistener for it.
- * Clicking the marker updates the restaurant card to show the selected bar and opens the restaurant card.
- * @see renderBarInfo
- * @see openCard
+ * Creates a marker at the given location.
  * @param {Object} location The (lat,lng) coordinates of the spot where the marker should be placed.
- * @param {boolean} isBarMarker Changes the marker's icon depending on whether the marker is for a bar or for the user's location. 
+ * @param {boolean} animate Whether or not the marker will use the drop animation. Default true.
+ * @param {boolean} isBarMarker Changes the marker's icon depending on whether the marker is for a bar or for the user's location. Default true.
  *
  */
 function createMarker(location, animate = true, isBarMarker = true) {

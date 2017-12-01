@@ -715,15 +715,11 @@ header {
 #menu-searchbox {
 	border-radius: 5px;
 	border: 2px solid var(--bg-dark);
-	color: #9DBFAF;
-	width:94%;
-	padding: 5px;
-	z-index: 2;
-}
-
-#menu-searchbox{
 	color: #202020;
 	font-size: 1em;
+	width: calc(100% - 14px);
+	padding: 5px;
+	z-index: 2;
 }
 
 #searchbox {

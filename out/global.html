@@ -94,6 +94,226 @@
     
 
     
+        <h3 class="subsection-title">Members</h3>
+
+        
+            
+<h4 class="name" id="globalLists"><span class="type-signature">(constant) </span>globalLists<span class="type-signature"> :object</span></h4>
+
+
+
+
+<div class="description">
+    Global object. Has list for map markers, list for bars that match the searchVars and the list of beers that a bar has.
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">object</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="script.js.html">script.js</a>, <a href="script.js.html#line5">line 5</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="globalVars"><span class="type-signature">(constant) </span>globalVars<span class="type-signature"> :object</span></h4>
+
+
+
+
+<div class="description">
+    Global object which contains helper variables for search and displaying the directions markers.
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">object</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="script.js.html">script.js</a>, <a href="script.js.html#line28">line 28</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="googleshit"><span class="type-signature">(constant) </span>googleshit<span class="type-signature"> :object</span></h4>
+
+
+
+
+<div class="description">
+    Global object which contains all google variables and services.
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">object</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="script.js.html">script.js</a>, <a href="script.js.html#line15">line 15</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+    
 
     
         <h3 class="subsection-title">Methods</h3>
@@ -104,7 +324,7 @@
     
 
     
-    <h4 class="name" id="calcRoute"><span class="type-signature"></span>calcRoute<span class="signature">(directionsService, directionsRenderer, endPoint, mode)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="calcRoute"><span class="type-signature"></span>calcRoute<span class="signature">(startPoint, endPoint, mode)</span><span class="type-signature"></span></h4>
     
 
     
@@ -112,7 +332,7 @@
 
 
 <div class="description">
-    Google navigator.Calculates the route from the user location to the selected bar using the transport that the user clicked and opens the element with the directions.
+    Google directions.Calculates the route from the user location to the selected bar using the transport that the user clicked and opens the element with the directions.
 </div>
 
 
@@ -148,7 +368,7 @@
 
         <tr>
             
-                <td class="name"><code>directionsService</code></td>
+                <td class="name"><code>startPoint</code></td>
             
 
             <td class="type">
@@ -164,30 +384,7 @@
 
             
 
-            <td class="description last">Google directions service.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>directionsRenderer</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Google directions renderer.</td>
+            <td class="description last">The coordinates of the starting location.</td>
         </tr>
 
     
@@ -200,7 +397,7 @@
             <td class="type">
             
                 
-<span class="param-type">Object</span>
+<span class="param-type">string</span>
 
 
             
@@ -210,7 +407,7 @@
 
             
 
-            <td class="description last">The coordinates of the bar. Latitude, longitude.</td>
+            <td class="description last">The address of the destination.</td>
         </tr>
 
     
@@ -274,7 +471,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="script.js.html">script.js</a>, <a href="script.js.html#line1039">line 1039</a>
+        <a href="script.js.html">script.js</a>, <a href="script.js.html#line1167">line 1167</a>
     </li></ul></dd>
     
 
@@ -297,6 +494,163 @@
 
 
 
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="capitalizeEveryWord"><span class="type-signature"></span>capitalizeEveryWord<span class="signature">(text)</span><span class="type-signature"> &rarr; {String}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Capitalizes the first letter of every word in the given text.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>text</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The text where every word needs to be capitalized.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="script.js.html">script.js</a>, <a href="script.js.html#line577">line 577</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    The same text with every word capitalized.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">String</span>
+
+
+    </dd>
+</dl>
+
+    
 
 
 
@@ -409,7 +763,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="script.js.html">script.js</a>, <a href="script.js.html#line667">line 667</a>
+        <a href="script.js.html">script.js</a>, <a href="script.js.html#line567">line 567</a>
     </li></ul></dd>
     
 
@@ -517,7 +871,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="script.js.html">script.js</a>, <a href="script.js.html#line1153">line 1153</a>
+        <a href="script.js.html">script.js</a>, <a href="script.js.html#line1282">line 1282</a>
     </li></ul></dd>
     
 
@@ -603,7 +957,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="script.js.html">script.js</a>, <a href="script.js.html#line742">line 742</a>
+        <a href="script.js.html">script.js</a>, <a href="script.js.html#line870">line 870</a>
     </li></ul></dd>
     
 
@@ -645,7 +999,7 @@
 
 
 <div class="description">
-    Closes the directions to the selected bar.
+    Closes the directions element.
 </div>
 
 
@@ -689,7 +1043,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="script.js.html">script.js</a>, <a href="script.js.html#line751">line 751</a>
+        <a href="script.js.html">script.js</a>, <a href="script.js.html#line879">line 879</a>
     </li></ul></dd>
     
 
@@ -824,7 +1178,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="script.js.html">script.js</a>, <a href="script.js.html#line598">line 598</a>
+        <a href="script.js.html">script.js</a>, <a href="script.js.html#line736">line 736</a>
     </li></ul></dd>
     
 
@@ -910,7 +1264,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="script.js.html">script.js</a>, <a href="script.js.html#line722">line 722</a>
+        <a href="script.js.html">script.js</a>, <a href="script.js.html#line850">line 850</a>
     </li></ul></dd>
     
 
@@ -996,7 +1350,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="script.js.html">script.js</a>, <a href="script.js.html#line428">line 428</a>
+        <a href="script.js.html">script.js</a>, <a href="script.js.html#line449">line 449</a>
     </li></ul></dd>
     
 
@@ -1131,7 +1485,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="script.js.html">script.js</a>, <a href="script.js.html#line453">line 453</a>
+        <a href="script.js.html">script.js</a>, <a href="script.js.html#line474">line 474</a>
     </li></ul></dd>
     
 
@@ -1335,7 +1689,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="script.js.html">script.js</a>, <a href="script.js.html#line575">line 575</a>
+        <a href="script.js.html">script.js</a>, <a href="script.js.html#line693">line 693</a>
     </li></ul></dd>
     
 
@@ -1369,7 +1723,7 @@
     
 
     
-    <h4 class="name" id="createMarker"><span class="type-signature"></span>createMarker<span class="signature">(place)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="createMarker"><span class="type-signature"></span>createMarker<span class="signature">(location, animate, isBarMarker)</span><span class="type-signature"></span></h4>
     
 
     
@@ -1377,7 +1731,7 @@
 
 
 <div class="description">
-    Creates a marker at the given place's location and adds a Google eventlistener for it.Clicking the marker updates the restaurant card to show the selected bar and opens the restaurant card.
+    Creates a marker at the given location.
 </div>
 
 
@@ -1403,6 +1757,8 @@
         
 
         
+        <th>Default</th>
+        
 
         <th class="last">Description</th>
     </tr>
@@ -1413,7 +1769,7 @@
 
         <tr>
             
-                <td class="name"><code>place</code></td>
+                <td class="name"><code>location</code></td>
             
 
             <td class="type">
@@ -1428,8 +1784,70 @@
             
 
             
+                <td class="default">
+                
+                </td>
+            
 
-            <td class="description last">The place object from a Google search.</td>
+            <td class="description last">The (lat,lng) coordinates of the spot where the marker should be placed.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>animate</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                    true
+                
+                </td>
+            
+
+            <td class="description last">Whether or not the marker will use the drop animation. Default true.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>isBarMarker</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                    true
+                
+                </td>
+            
+
+            <td class="description last">Changes the marker's icon depending on whether the marker is for a bar or for the user's location. Default true.</td>
         </tr>
 
     
@@ -1470,21 +1888,12 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="script.js.html">script.js</a>, <a href="script.js.html#line1136">line 1136</a>
+        <a href="script.js.html">script.js</a>, <a href="script.js.html#line1266">line 1266</a>
     </li></ul></dd>
     
 
     
 
-    
-    <dt class="tag-see">See:</dt>
-    <dd class="tag-see">
-        <ul>
-            <li><a href="global.html#renderBarInfo">renderBarInfo</a></li>
-        
-            <li><a href="global.html#openCard">openCard</a></li>
-        </ul>
-    </dd>
     
 
     
@@ -1660,7 +2069,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="script.js.html">script.js</a>, <a href="script.js.html#line891">line 891</a>
+        <a href="script.js.html">script.js</a>, <a href="script.js.html#line1019">line 1019</a>
     </li></ul></dd>
     
 
@@ -1716,7 +2125,7 @@
     
 
     
-    <h4 class="name" id="geocodeAddress"><span class="type-signature"></span>geocodeAddress<span class="signature">(address, distance, infowindow)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="defineStartingPoint"><span class="type-signature"></span>defineStartingPoint<span class="signature">()</span><span class="type-signature"> &rarr; {promise}</span></h4>
     
 
     
@@ -1724,7 +2133,115 @@
 
 
 <div class="description">
-    Google geocoder.If the search result is a place that has "bar" or "night_club" tag on google -> only that place's marker is shown on the map.Otherwise there is a yellow marker at the location and the nearby area is searched for bars with the selected search parameters from the menu.
+    If the user has made a text search for an address (map has a yellow marker) -> that will be the starting point. Otherwise it will try to use geolocation to get the current location of the user.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="script.js.html">script.js</a>, <a href="script.js.html#line1137">line 1137</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    Initially returns a promise and after the starting point has been set it will resolve/reject the promise. Throws an error if no yellow markers were on the map and geolocation fails.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">promise</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="geocodeAddress"><span class="type-signature"></span>geocodeAddress<span class="signature">(address)</span><span class="type-signature"> &rarr; {promise}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Google geocoder.Geocodes the given address into latitude and longitude coordinates. Initially returns a promise and after the geocoder has finished it will resolve/reject the promise based on the geocoder's status.
 </div>
 
 
@@ -1780,52 +2297,6 @@
         </tr>
 
     
-
-        <tr>
-            
-                <td class="name"><code>distance</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">The range of the search in meters.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>infowindow</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">The small pop-up info that is showed when the user clicks the yellow marker (which is placed at the address that the user searched).</td>
-        </tr>
-
-    
     </tbody>
 </table>
 
@@ -1863,19 +2334,12 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="script.js.html">script.js</a>, <a href="script.js.html#line995">line 995</a>
+        <a href="script.js.html">script.js</a>, <a href="script.js.html#line1118">line 1118</a>
     </li></ul></dd>
     
 
     
 
-    
-    <dt class="tag-see">See:</dt>
-    <dd class="tag-see">
-        <ul>
-            <li><a href="global.html#searchNearby">searchNearby</a></li>
-        </ul>
-    </dd>
     
 
     
@@ -1893,6 +2357,28 @@
 
 
 
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    Initially returns a promise and after the geocoder has finished it will resolve/reject the promise based on the geocoder's status.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">promise</span>
+
+
+    </dd>
+</dl>
+
+    
 
 
 
@@ -2005,7 +2491,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="script.js.html">script.js</a>, <a href="script.js.html#line545">line 545</a>
+        <a href="script.js.html">script.js</a>, <a href="script.js.html#line590">line 590</a>
     </li></ul></dd>
     
 
@@ -2061,7 +2547,7 @@
     
 
     
-    <h4 class="name" id="initMap"><span class="type-signature"></span>initMap<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="hideModal"><span class="type-signature"></span>hideModal<span class="signature">()</span><span class="type-signature"></span></h4>
     
 
     
@@ -2069,7 +2555,7 @@
 
 
 <div class="description">
-    Initializes the map after the google maps API script has loaded.
+    Closes the modal element.
 </div>
 
 
@@ -2113,7 +2599,93 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="script.js.html">script.js</a>, <a href="script.js.html#line914">line 914</a>
+        <a href="script.js.html">script.js</a>, <a href="script.js.html#line905">line 905</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="initMap"><span class="type-signature"></span>initMap<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Initializes the map and all the Google services after the Google Maps API script has loaded.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="script.js.html">script.js</a>, <a href="script.js.html#line1042">line 1042</a>
     </li></ul></dd>
     
 
@@ -2207,7 +2779,7 @@
 
             
 
-            <td class="description last">The language that was saved in local storage.</td>
+            <td class="description last">The language for the content. For now only "fi" or "en".</td>
         </tr>
 
     
@@ -2248,7 +2820,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="script.js.html">script.js</a>, <a href="script.js.html#line857">line 857</a>
+        <a href="script.js.html">script.js</a>, <a href="script.js.html#line985">line 985</a>
     </li></ul></dd>
     
 
@@ -2282,7 +2854,7 @@
     
 
     
-    <h4 class="name" id="locateUser"><span class="type-signature"></span>locateUser<span class="signature">(distance, infowindow)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="locateUser"><span class="type-signature"></span>locateUser<span class="signature">()</span><span class="type-signature"></span></h4>
     
 
     
@@ -2290,7 +2862,7 @@
 
 
 <div class="description">
-    Google geolocation.Locates the user and searches for the nearby bars within the given distance if geolocation is enabled/available.
+    Google geolocation.Locates the user and returns the coordinates.Initially returns a promise and after the geolocation has finished it will resolve/reject the promise based on the geocoder's status.
 </div>
 
 
@@ -2301,78 +2873,6 @@
 
 
 
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>distance</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">The distance from the menu's distance slider.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>infowindow</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">The small pop-up info that is showed when the user clicks the yellow marker (which is placed at the address that the user searched).</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
 
 
 
@@ -2406,19 +2906,12 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="script.js.html">script.js</a>, <a href="script.js.html#line958">line 958</a>
+        <a href="script.js.html">script.js</a>, <a href="script.js.html#line1091">line 1091</a>
     </li></ul></dd>
     
 
     
 
-    
-    <dt class="tag-see">See:</dt>
-    <dd class="tag-see">
-        <ul>
-            <li><a href="global.html#searchNearby">searchNearby</a></li>
-        </ul>
-    </dd>
     
 
     
@@ -2436,6 +2929,16 @@
 
 
 
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    Initially returns a promise and after the geolocation has finished it will resolve/reject the promise based on the geocoder's status.
+</div>
+
+
+
+    
 
 
 
@@ -2499,7 +3002,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="script.js.html">script.js</a>, <a href="script.js.html#line731">line 731</a>
+        <a href="script.js.html">script.js</a>, <a href="script.js.html#line859">line 859</a>
     </li></ul></dd>
     
 
@@ -2585,7 +3088,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="script.js.html">script.js</a>, <a href="script.js.html#line713">line 713</a>
+        <a href="script.js.html">script.js</a>, <a href="script.js.html#line841">line 841</a>
     </li></ul></dd>
     
 
@@ -2627,7 +3130,7 @@
 
 
 <div class="description">
-    Processes the results of the searchNearby-method and places a marker on the map for each bar.
+    Processes the results of the searchNearby-method and places a marker on the map for each bar. Clicking on the marker shows the bar's info.
 </div>
 
 
@@ -2766,7 +3269,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="script.js.html">script.js</a>, <a href="script.js.html#line1113">line 1113</a>
+        <a href="script.js.html">script.js</a>, <a href="script.js.html#line1239">line 1239</a>
     </li></ul></dd>
     
 
@@ -2815,7 +3318,7 @@
 
 
 <div class="description">
-    Removes duplicates from the given list.
+    Removes duplicates from the given list/array.
 </div>
 
 
@@ -2908,7 +3411,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="script.js.html">script.js</a>, <a href="script.js.html#line677">line 677</a>
+        <a href="script.js.html">script.js</a>, <a href="script.js.html#line807">line 807</a>
     </li></ul></dd>
     
 
@@ -2972,7 +3475,7 @@
 
 
 <div class="description">
-    Adds the restaurants name, address, open hours for the current day and a photo of the bar from google.
+    Adds the restaurants name, address, open hours for the current day and a photo of the bar from google.Gets the beverage list of the bar from our DB and shows it.
 </div>
 
 
@@ -3065,7 +3568,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="script.js.html">script.js</a>, <a href="script.js.html#line790">line 790</a>
+        <a href="script.js.html">script.js</a>, <a href="script.js.html#line922">line 922</a>
     </li></ul></dd>
     
 
@@ -3151,7 +3654,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="script.js.html">script.js</a>, <a href="script.js.html#line651">line 651</a>
+        <a href="script.js.html">script.js</a>, <a href="script.js.html#line792">line 792</a>
     </li></ul></dd>
     
 
@@ -3193,7 +3696,7 @@
 
 
 <div class="description">
-    Rotates the given element.
+    Toggles the rotation of the given element between horizontal and vertical.
 </div>
 
 
@@ -3286,7 +3789,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="script.js.html">script.js</a>, <a href="script.js.html#line701">line 701</a>
+        <a href="script.js.html">script.js</a>, <a href="script.js.html#line829">line 829</a>
     </li></ul></dd>
     
 
@@ -3444,7 +3947,188 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="script.js.html">script.js</a>, <a href="script.js.html#line1089">line 1089</a>
+        <a href="script.js.html">script.js</a>, <a href="script.js.html#line1216">line 1216</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="searchWithVars"><span class="type-signature"></span>searchWithVars<span class="signature">(url, data, distance)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Sends a post request to the url using fetch API and sends the data as the request body.If the menu searchbox is empty -> locates the user and searches that location with the searchVars.If the menu searchbox has text in it -> geolocates the address and does the search there.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>url</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The url where the request is sent.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>data</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">*</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The data which will be sent in the request.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>distance</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The max range from the address where the bars will be searched.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="script.js.html">script.js</a>, <a href="script.js.html#line604">line 604</a>
     </li></ul></dd>
     
 
@@ -3579,7 +4263,93 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="script.js.html">script.js</a>, <a href="script.js.html#line837">line 837</a>
+        <a href="script.js.html">script.js</a>, <a href="script.js.html#line965">line 965</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="showModal"><span class="type-signature"></span>showModal<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Opens the modal element.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="script.js.html">script.js</a>, <a href="script.js.html#line892">line 892</a>
     </li></ul></dd>
     
 
@@ -3749,7 +4519,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="script.js.html">script.js</a>, <a href="script.js.html#line525">line 525</a>
+        <a href="script.js.html">script.js</a>, <a href="script.js.html#line547">line 547</a>
     </li></ul></dd>
     
 
@@ -3794,6 +4564,299 @@
 </dl>
 
     
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="swapLanguage"><span class="type-signature"></span>swapLanguage<span class="signature">(language)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Saves the websites language to localStorage so that the user's choice is saved even when the browser is closed.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>language</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The language to be saved in localStorage.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="script.js.html">script.js</a>, <a href="script.js.html#line678">line 678</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="textSearch"><span class="type-signature"></span>textSearch<span class="signature">(address, distance)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Google geolocates the address, searches for bars within the distance and places marker for each bar on the map.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>address</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The address which the user typed to the search box on the map.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>distance</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The max range from the address where the bars will be searched.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="script.js.html">script.js</a>, <a href="script.js.html#line651">line 651</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -3929,7 +4992,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="script.js.html">script.js</a>, <a href="script.js.html#line612">line 612</a>
+        <a href="script.js.html">script.js</a>, <a href="script.js.html#line749">line 749</a>
     </li></ul></dd>
     
 
@@ -3952,6 +5015,163 @@
 
 
 
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="toggleServing"><span class="type-signature"></span>toggleServing<span class="signature">(el)</span><span class="type-signature"> &rarr; {string}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Toggles the beer serving (tap-bottle-both) in the search variables when the buttons are clicked in menu.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>el</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">HTMLElement</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The element that was clicked.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="script.js.html">script.js</a>, <a href="script.js.html#line774">line 774</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    The id of the clicked element.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">string</span>
+
+
+    </dd>
+</dl>
+
+    
 
 
 
@@ -4064,7 +5284,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="script.js.html">script.js</a>, <a href="script.js.html#line688">line 688</a>
+        <a href="script.js.html">script.js</a>, <a href="script.js.html#line817">line 817</a>
     </li></ul></dd>
     
 
@@ -4098,7 +5318,7 @@
     
 
     
-    <h4 class="name" id="updateTable"><span class="type-signature"></span>updateTable<span class="signature">(beerList)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="updateTable"><span class="type-signature"></span>updateTable<span class="signature">(beerList, language)</span><span class="type-signature"></span></h4>
     
 
     
@@ -4162,6 +5382,29 @@
         </tr>
 
     
+
+        <tr>
+            
+                <td class="name"><code>language</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The beertype column is in this language.</td>
+        </tr>
+
+    
     </tbody>
 </table>
 
@@ -4199,7 +5442,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="script.js.html">script.js</a>, <a href="script.js.html#line488">line 488</a>
+        <a href="script.js.html">script.js</a>, <a href="script.js.html#line510">line 510</a>
     </li></ul></dd>
     
 
@@ -4243,13 +5486,13 @@
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#calcRoute">calcRoute</a></li><li><a href="global.html#capitalizeFirstLetter">capitalizeFirstLetter</a></li><li><a href="global.html#clearMarkers">clearMarkers</a></li><li><a href="global.html#closeCard">closeCard</a></li><li><a href="global.html#closeDirections">closeDirections</a></li><li><a href="global.html#closeList">closeList</a></li><li><a href="global.html#closeMenu">closeMenu</a></li><li><a href="global.html#createBeerTable">createBeerTable</a></li><li><a href="global.html#createBeerTableBody">createBeerTableBody</a></li><li><a href="global.html#createList">createList</a></li><li><a href="global.html#createMarker">createMarker</a></li><li><a href="global.html#debounce">debounce</a></li><li><a href="global.html#geocodeAddress">geocodeAddress</a></li><li><a href="global.html#getBarData">getBarData</a></li><li><a href="global.html#initMap">initMap</a></li><li><a href="global.html#localizeContent">localizeContent</a></li><li><a href="global.html#locateUser">locateUser</a></li><li><a href="global.html#openCard">openCard</a></li><li><a href="global.html#openMenu">openMenu</a></li><li><a href="global.html#processResults">processResults</a></li><li><a href="global.html#removeDuplicates">removeDuplicates</a></li><li><a href="global.html#renderBarInfo">renderBarInfo</a></li><li><a href="global.html#resizeElementHeights">resizeElementHeights</a></li><li><a href="global.html#rotateIcon">rotateIcon</a></li><li><a href="global.html#searchNearby">searchNearby</a></li><li><a href="global.html#setRating">setRating</a></li><li><a href="global.html#sortBy">sortBy</a></li><li><a href="global.html#toggleInSearch">toggleInSearch</a></li><li><a href="global.html#toggleVisible">toggleVisible</a></li><li><a href="global.html#updateTable">updateTable</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#calcRoute">calcRoute</a></li><li><a href="global.html#capitalizeEveryWord">capitalizeEveryWord</a></li><li><a href="global.html#capitalizeFirstLetter">capitalizeFirstLetter</a></li><li><a href="global.html#clearMarkers">clearMarkers</a></li><li><a href="global.html#closeCard">closeCard</a></li><li><a href="global.html#closeDirections">closeDirections</a></li><li><a href="global.html#closeList">closeList</a></li><li><a href="global.html#closeMenu">closeMenu</a></li><li><a href="global.html#createBeerTable">createBeerTable</a></li><li><a href="global.html#createBeerTableBody">createBeerTableBody</a></li><li><a href="global.html#createList">createList</a></li><li><a href="global.html#createMarker">createMarker</a></li><li><a href="global.html#debounce">debounce</a></li><li><a href="global.html#defineStartingPoint">defineStartingPoint</a></li><li><a href="global.html#geocodeAddress">geocodeAddress</a></li><li><a href="global.html#getBarData">getBarData</a></li><li><a href="global.html#globalLists">globalLists</a></li><li><a href="global.html#globalVars">globalVars</a></li><li><a href="global.html#googleshit">googleshit</a></li><li><a href="global.html#hideModal">hideModal</a></li><li><a href="global.html#initMap">initMap</a></li><li><a href="global.html#localizeContent">localizeContent</a></li><li><a href="global.html#locateUser">locateUser</a></li><li><a href="global.html#openCard">openCard</a></li><li><a href="global.html#openMenu">openMenu</a></li><li><a href="global.html#processResults">processResults</a></li><li><a href="global.html#removeDuplicates">removeDuplicates</a></li><li><a href="global.html#renderBarInfo">renderBarInfo</a></li><li><a href="global.html#resizeElementHeights">resizeElementHeights</a></li><li><a href="global.html#rotateIcon">rotateIcon</a></li><li><a href="global.html#searchNearby">searchNearby</a></li><li><a href="global.html#searchWithVars">searchWithVars</a></li><li><a href="global.html#setRating">setRating</a></li><li><a href="global.html#showModal">showModal</a></li><li><a href="global.html#sortBy">sortBy</a></li><li><a href="global.html#swapLanguage">swapLanguage</a></li><li><a href="global.html#textSearch">textSearch</a></li><li><a href="global.html#toggleInSearch">toggleInSearch</a></li><li><a href="global.html#toggleServing">toggleServing</a></li><li><a href="global.html#toggleVisible">toggleVisible</a></li><li><a href="global.html#updateTable">updateTable</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sun Nov 26 2017 22:52:43 GMT+0200 (Suomen normaaliaika)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Fri Dec 01 2017 23:42:58 GMT+0200 (Suomen normaaliaika)
 </footer>
 
 <script> prettyPrint(); </script>
