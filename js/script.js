@@ -15,16 +15,16 @@ const googleshit = {
 };
 
 const globalVars = {
-	searchWithVars : false
+	searchWithVars: false,
+	clickedPlace: null
 }
 
 loadScript("https://maps.googleapis.com/maps/api/js?key=AIzaSyDuIpE10xbisU_de-Mg_xR4-OpmOVl3BxA&libraries=places&language=fi&region=FI", initMap);
 
 /*
-- Reittiohjeiden klikkaaminen poistaa kaikki markerit ja näyttää vain lähtöpaikan sekä kohteen
-- Reittiohjeiden musta palkki ei liiku, kun reittiohjeita scrollataan
-- Restaurant cardin element heights, juomalista voi mennä näytön ulkopuolelle?
-
+- haku kriteerien kanssa kusee
+- jos menun tekstikentässä on jotain -> hae-nappi etsii sen perusteella
+- jos menun tekstikenttä on tyhjä -> etsii käyttäjän sijainnista
 */
 
 
@@ -118,10 +118,10 @@ window.onload = function(){
 			activeSortIcon = sortAscending.vol ? descSortIcon : ascSortIcon;
 			break;
 		case "price":
-			sortAscending = !sortAscending;
-			sortedValues = globalLists.beerList.sort(sortBy(column, sortAscending));
+			sortAscending.price = !sortAscending.price;
+			sortedValues = globalLists.beerList.sort(sortBy(column, sortAscending.price));
 			updateTable(sortedValues, language);
-			activeSortIcon = sortAscending ? descSortIcon : ascSortIcon;
+			activeSortIcon = sortAscending.price ? descSortIcon : ascSortIcon;
 			break;
 		default:
 			break;
@@ -225,7 +225,7 @@ window.onload = function(){
 		locateUser(distance).then(pos => {
 			if (pos != null) {
 				googleshit.map.panTo(pos);
-				createMarker(pos, false);
+				createMarker(pos, true, false);
 				globalLists.bars = globalLists.bars.map(name => capitalizeEveryWord(name));
 				searchNearby(pos, distance);
 			}
@@ -342,12 +342,16 @@ window.onload = function(){
 	});
 
 	// reittiohjenapit asettaa reitin kulkuneuvon napin ID:n mukaan
-	Array.from(directionsButtons).forEach((e) => e.addEventListener("click", function() {
+	Array.from(directionsButtons).forEach((el) => el.addEventListener("click", function() {
 		const endPoint = document.getElementById("bar-address").textContent;
 		const barName = document.getElementById("bar-name").textContent;
-		const mode = e.id.toUpperCase();
-		calcRoute(endPoint,mode);
-		//geocodeAddress(barName, 1);
+		const mode = el.id.toUpperCase();
+		defineStartingPoint()
+			.then(startPoint => {
+				calcRoute(startPoint,endPoint,mode);
+			})
+			.catch(error => console.log(error));
+		
 	}));
 
 	//slaiderien luonti
@@ -567,7 +571,6 @@ function capitalizeEveryWord(text) {
  */
 function getBarData(barName) {
 	const url = "https://cors-anywhere.herokuapp.com/http://188.166.162.144:130/restaurant?name=" + barName.toLowerCase();
-	console.log(url);
 	return fetch(url).then(response => response.status !== 500 ? response.json() : null);
 }
 
@@ -584,7 +587,7 @@ function searchWithVars(url, data,distance) {
 		headers: { "content-type": "application/json" },
 	})
 	.then(response => {
-		if (response.ok) { // ok if status is 2xx
+		if (response.ok) {
 			console.log('Status: ' + response.statusText);
 		} else {
 			console.log('Request failed. Returned status of ' + response.status);
@@ -627,8 +630,7 @@ function textSearch(address, distance) {
 				searchNearby(searchPos, 1);
 			} else {
 				searchNearby(searchPos, distance);
-				const marker = createMarker(searchPos, false);
-				globalLists.markers.push(marker);
+				const marker = createMarker(searchPos, false, false);
 				googleshit.infowindow.setContent(results[0].formatted_address);
 				google.maps.event.addListener(marker, "click", function() {
 					googleshit.infowindow.open(googleshit.map, marker);
@@ -898,7 +900,7 @@ function renderBarInfo(place) {
 	const barOpen = document.getElementById("bar-open");
 	const barPhoto = document.getElementById("bar-photo");
 	getBarData(place.name).then(data => {
-		console.log(data);
+		//console.log(data);
 		const body = document.querySelector("tbody");
 		if(data.length === 0){
 			body.textContent = "Ei listatietoja saatavilla.";
@@ -912,11 +914,7 @@ function renderBarInfo(place) {
 	});
 	barName.innerHTML = place.name;
 	setRating(place.rating);
-
-	googleshit.placesService.getDetails(
-		{
-			placeId: place.place_id
-		},
+	googleshit.placesService.getDetails({placeId: place.place_id},
 		function(data, status) {
 			if(status !== google.maps.places.PlacesServiceStatus.OK) return;
 			const address = data.formatted_address;
@@ -1060,58 +1058,31 @@ function initMap() {
 /**
  * Google geolocation.
  * Locates the user and searches for the nearby bars within the given distance if geolocation is enabled/available.
- * @see searchNearby
- * @param {number} distance The distance from the menu's distance slider.
- * @param {Object} infowindow The small pop-up info that is showed when the user clicks the yellow marker (which is placed at the address that the user searched).
- *
+ * @returns Initially returns a promise and after the geolocation has finished it will resolve/reject the promise based on the geocoder's status.
  */
 function locateUser() {
 	return new Promise((resolve, reject) => {
-		if(!navigator.geolocation) reject();
-		navigator.geolocation.getCurrentPosition(position => {
-			googleshit.userPos = {
-				lat: position.coords.latitude,
-				lng: position.coords.longitude
-			};
-			const pos = googleshit.userPos;
-			resolve(pos);
-		})
+		if(navigator.geolocation) {
+			navigator.geolocation.getCurrentPosition(position => {
+				const userPos = {
+					lat: position.coords.latitude,
+					lng: position.coords.longitude
+				};
+				resolve(userPos);
+			}, function() {
+				reject("Paikannuksessa tapahtui virhe.");
+			})
+		} else {
+			reject("Selaimesi ei valitettavasti tue paikannusta.");
+		}	
 	})
 }
-/*
-	if (navigator.geolocation) {
-		navigator.geolocation.getCurrentPosition(position => {
-			googleshit.userPos = {
-				lat: position.coords.latitude,
-				lng: position.coords.longitude
-			};
-			if (googleshit.userPos != null) {
-				googleshit.map.panTo(googleshit.userPos);
-				const image = "kgps_icons/yellow-marker.png";
-				const marker = new google.maps.Marker({
-					map: googleshit.map,
-					position: googleshit.userPos,
-					icon : image,
-				});
-				globalLists.markers.push(marker);
-				globalLists.bars = globalLists.bars.map(name => capitalizeEveryWord(name));
-				searchNearby(googleshit.userPos, distance);
-			}
-		}, function() {
-			handleLocationError(true, googleshit.map.getCenter());
-		});
-	} else {
-		// Selain ei tue geolokaatiota
-		handleLocationError(false, googleshit.map.getCenter());
-	}
-	*/
 
 
 /**
  * Google geocoder.
  * Geocodes the given address into latitude and longitude coordinates.
  * @param {string} address The address/place that the user searched.
- * @param {number} distance The range of the search in meters.
  * @returns {promise} Initially returns a promise and after the geocoder has finished it will resolve/reject the promise based on the geocoder's status.
  *
  */
@@ -1128,32 +1099,47 @@ function geocodeAddress(address) {
 }
 
 /**
+ * If the user has made a text search for an address (map has a yellow marker) -> that will be the starting point. 
+ * Otherwise it will try to use geolocation to get the current location of the user.
+ * @returns {promise} Initially returns a promise and after the starting point has been set it will resolve/reject the promise. 
+ * Throws an error if no yellow markers were on the map and geolocation fails.
+ *
+ */
+function defineStartingPoint() {
+	return new Promise((resolve, reject) => {
+		let startPoint = null;
+		for(marker of globalLists.markers) {
+			if(marker.icon === "kgps_icons/yellow-marker.png") {
+				startPoint = {
+					lat: marker.position.lat(),
+					lng: marker.position.lng()
+				};
+			}
+		}
+		if(startPoint === null) {
+			locateUser()
+				.then(start => resolve(start))
+				.catch(error => reject(error));
+		} else {
+			resolve(startPoint);
+		}
+	})
+}
+
+
+/**
  * Google navigator.
  * Calculates the route from the user location to the selected bar using the transport that the user clicked and opens the element with the directions.
- * @param {Object} endPoint The coordinates of the bar. Latitude, longitude.
+ * @param {Object} startPoint The coordinates of the starting location.
+ * @param {string} endPoint The address of the destination.
  * @param {string} mode The transport mode that was chosen (walk/drive/bike/public transport).
  *
  */
-function calcRoute(address, mode) {
-	let startPoint = null;
-	for(marker of globalLists.markers) {
-		if(marker.icon === "kgps_icons/yellow-marker.png") {
-			console.log(marker);
-			startPoint = {
-				lat: marker.position.lat(),
-				lng: marker.position.lng()
-		  	};
-		}
-	}
-	if(startPoint === null) {
-		locateUser()
-		.then(pos => startPoint = pos)
-		.catch(err => console.log("calcRoute user locating failed " + err));
-	}
-    googleshit.directionsRenderer.setMap(googleshit.map);
+function calcRoute(startPoint, endPoint, mode) {
+	googleshit.directionsRenderer.setMap(googleshit.map);
 	googleshit.directionsService.route({
 		origin: startPoint,
-		destination: address,
+		destination: endPoint,
 		travelMode: mode,
 		transitOptions: {
 			modes: ["BUS", "RAIL"],
@@ -1172,14 +1158,17 @@ function calcRoute(address, mode) {
 			document.getElementById('route-container').style.height = windowHeight * 0.3 + "px";
 			document.getElementById('search-container').style.display = "none";
 			clearMarkers();
-			geocodeAddress(address).then(pos => {
-				const endPoint = {
-					lat: pos[0].geometry.location.lat(),
-					lng: pos[0].geometry.location.lng()
-				  };
-				  createMarker(endPoint);
-			});
-			createMarker(googleshit.userPos, false);
+			geocodeAddress(endPoint)
+				.then(results => {	
+					const searchPos = results[0].geometry.location;
+					const endPointMarker = createMarker(searchPos, false);
+					google.maps.event.addListener(endPointMarker, "click", function() {
+						renderBarInfo(globalVars.clickedPlace);
+						openCard();
+					})
+				})
+				.catch(error => console.log("ERROR " + error));
+			createMarker(startPoint, false, false);
 			resizeElementHeights();
 			closeCard();
 		} else {
@@ -1229,6 +1218,7 @@ function processResults(results, status, pagination) {
 				if(globalVars.searchWithVars && globalLists.bars.indexOf(results[i].name) === -1) return;
 				const marker = createMarker(results[i].geometry.location);
 				google.maps.event.addListener(marker, "click", function() {
+					globalVars.clickedPlace = results[i];
 					renderBarInfo(results[i]);
 					openCard();
 				});
@@ -1246,13 +1236,13 @@ function processResults(results, status, pagination) {
  * @param {boolean} isBarMarker Changes the marker's icon depending on whether the marker is for a bar or for the user's location. 
  *
  */
-function createMarker(location, isBarMarker = true) {
-	console.log("createMarker");
-	const icon = isBarMarker ? "kgps_icons/kaljakartta_map_arrow.svg" : "kgps_icons/yellow-marker.png"
+function createMarker(location, animate = true, isBarMarker = true) {
+	const icon = isBarMarker ? "kgps_icons/kaljakartta_map_arrow.svg" : "kgps_icons/yellow-marker.png";
+	const animation = animate ? google.maps.Animation.DROP : null;
 	const marker = new google.maps.Marker({
 		map: googleshit.map,
 		position: location,
-		animation: google.maps.Animation.DROP,
+		animation: animation,
 		icon: icon
 	});
 	globalLists.markers.push(marker);
