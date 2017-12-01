@@ -334,7 +334,7 @@ window.onload = function(){
 	// menun voi avata pyyhkäisemällä vasemmasta reunasta
 	mapElement.addEventListener("touchstart", (e) => {
 		const boolean = !(e.changedTouches[0].pageX < 25);
-		map.setOptions({ draggable: boolean});
+		googleshit.map.setOptions({ draggable: boolean});
 		mouseStartPos = {x: e.changedTouches[0].pageX, y: e.changedTouches[0].pageX};
 	});
 	mapElement.addEventListener("touchend", (e) => {
@@ -1216,13 +1216,13 @@ function calcRoute(startPoint, endPoint, mode) {
 function searchNearby(loc, distance) {
 	googleshit.placesService.nearbySearch({
 		location: loc,
-		radius: distance,
+		rankBy: google.maps.places.RankBy.DISTANCE,
 		type: ["night_club"]
 	}, processResults);
 
 	googleshit.placesService.nearbySearch({
 		location: loc,
-		radius: distance,
+		rankBy: google.maps.places.RankBy.DISTANCE,
 		type: ["bar"]
 	}, processResults);
 }
