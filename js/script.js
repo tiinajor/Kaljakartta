@@ -15,7 +15,7 @@ const googleshit = {
 };
 
 const globalVars = {
-	search : false
+	searchWithVars : false
 }
 
 loadScript("https://maps.googleapis.com/maps/api/js?key=AIzaSyDuIpE10xbisU_de-Mg_xR4-OpmOVl3BxA&libraries=places&language=fi&region=FI", initMap);
@@ -52,12 +52,14 @@ window.onload = function(){
 	let directionsMaxHeight;
 	let mapMinHeight;
 	//beertable sorting order per column
-	let servingAsc = false;
-	let typeAsc = false;
-	let nameAsc = true;
-	let volAsc = false;
-	let abvAsc = false;
-	let priceAsc = false;
+	const sortAscending = {
+		serving: false,
+		type: false,
+		name: false,
+		vol: false,
+		abv: false,
+		price: false
+	}
 
 	const searchVars = {
 		serving : "Both",
@@ -86,40 +88,40 @@ window.onload = function(){
 
 		switch(column) {
 		case "serving":
-			servingAsc = !servingAsc;
-			sortedValues = globalLists.beerList.sort(sortBy(column, servingAsc));
+			sortAscending.serving = !sortAscending.serving;
+			sortedValues = globalLists.beerList.sort(sortBy(column, sortAscending.serving));
 			updateTable(sortedValues, language);
-			activeSortIcon = servingAsc ? descSortIcon : ascSortIcon;
+			activeSortIcon = sortAscending.serving ? descSortIcon : ascSortIcon;
 			break;
 		case "name":
-			nameAsc = !nameAsc;
-			sortedValues = globalLists.beerList.sort(sortBy(column, nameAsc));
+			sortAscending.name = !sortAscending.name;
+			sortedValues = globalLists.beerList.sort(sortBy(column, sortAscending.name));
 			updateTable(sortedValues, language);
-			activeSortIcon = nameAsc ? descSortIcon : ascSortIcon;
+			activeSortIcon = sortAscending.name ? descSortIcon : ascSortIcon;
 			break;
 		case "type":
-			typeAsc = !typeAsc;
-			sortedValues = globalLists.beerList.sort(sortBy(column, typeAsc));
+			sortAscending.type = !sortAscending.type;
+			sortedValues = globalLists.beerList.sort(sortBy(column, sortAscending.type));
 			updateTable(sortedValues, language);
-			activeSortIcon = typeAsc ? descSortIcon : ascSortIcon;
+			activeSortIcon = sortAscending.type ? descSortIcon : ascSortIcon;
 			break;
 		case "abv":
-			abvAsc = !abvAsc;
-			sortedValues = globalLists.beerList.sort(sortBy(column, abvAsc));
+			sortAscending.abv = !sortAscending.abv;
+			sortedValues = globalLists.beerList.sort(sortBy(column, sortAscending.abv));
 			updateTable(sortedValues, language);
-			activeSortIcon = abvAsc ? descSortIcon : ascSortIcon;
+			activeSortIcon = sortAscending.abv ? descSortIcon : ascSortIcon;
 			break;
 		case "vol":
-			volAsc = !volAsc;
-			sortedValues = globalLists.beerList.sort(sortBy(column, volAsc));
+			sortAscending.vol = !sortAscending.vol;
+			sortedValues = globalLists.beerList.sort(sortBy(column, sortAscending.vol));
 			updateTable(sortedValues, language);
-			activeSortIcon = volAsc ? descSortIcon : ascSortIcon;
+			activeSortIcon = sortAscending.vol ? descSortIcon : ascSortIcon;
 			break;
 		case "price":
-			priceAsc = !priceAsc;
-			sortedValues = globalLists.beerList.sort(sortBy(column, priceAsc));
+			sortAscending = !sortAscending;
+			sortedValues = globalLists.beerList.sort(sortBy(column, sortAscending));
 			updateTable(sortedValues, language);
-			activeSortIcon = priceAsc ? descSortIcon : ascSortIcon;
+			activeSortIcon = sortAscending ? descSortIcon : ascSortIcon;
 			break;
 		default:
 			break;
@@ -141,38 +143,13 @@ window.onload = function(){
 	resizeElementHeights();
 	window.addEventListener("resize", debounce(resizeElementHeights,100,false));
 
-	/*
-	// hanat mukana haussa kyllä/ei
-	document.getElementById("tapButton").addEventListener("click", function() {
-		this.classList.toggle("selected");
-		this.classList.toggle("selected-border");
-		if(searchVars.serving == "" || searchVars.serving == "bottle") {
-			searchVars.serving = "tap";
-		} else {
-			searchVars.serving = "";
-		}
-	});
-
-	// pullot mukana haussa kyllä/ei
-	document.getElementById("bottleButton").addEventListener("click", function() {
-		this.classList.toggle("selected");
-		if(searchVars.serving == "" || searchVars.serving == "tap") {
-			searchVars.serving = "bottle";
-		} else {
-			searchVars.serving = "";
-		}
-	});
-	*/
-
 	// kartan päällä olevan hakukentän suurennuslasi etsii osoitteen mukaan baarit jos osoite ei ole tyhjä
 	document.getElementById("search-button").addEventListener("click", function() {
 		const input = document.getElementById("searchbox");
 		const address = input.value;
 		if(address !== "") {
-			googleshit.directionsRenderer.setMap(null);
-			clearMarkers();
-			globalVars.search = false;
-			geocodeAddress(address, distance);
+			const distance = distanceSlider.noUiSlider.get();
+			textSearch(address, distance);
 			input.value = "";
 		}
 	});
@@ -181,13 +158,10 @@ window.onload = function(){
 	document.getElementById("searchbox").addEventListener("keyup", function(e) {
 		e.preventDefault();
 		const input = e.target;
-		const distance = distanceSlider.noUiSlider.get();
 		const address = input.value;
 		if(e.keyCode === 13 && address !== ""){
-			googleshit.directionsRenderer.setMap(null);
-			clearMarkers();
-			globalVars.search = false;
-			geocodeAddress(address, distance);
+			const distance = distanceSlider.noUiSlider.get();
+			textSearch(address, distance);
 			this.value = "";
 		}
 	});
@@ -246,8 +220,16 @@ window.onload = function(){
 		resizeElementHeights();
 		clearMarkers();
 		googleshit.directionsRenderer.setMap(null);
-		globalVars.search = false;
-		locateUser(distanceSlider.noUiSlider.get());
+		globalVars.searchWithVars = false;
+		const distance = distanceSlider.noUiSlider.get();
+		locateUser(distance).then(pos => {
+			if (pos != null) {
+				googleshit.map.panTo(pos);
+				createMarker(pos, false);
+				globalLists.bars = globalLists.bars.map(name => capitalizeEveryWord(name));
+				searchNearby(pos, distance);
+			}
+		})
 	});
 
 	// hae-nappi hakee baarit, joista löytyy hakukriteereitä vastaavia juomia
@@ -266,11 +248,10 @@ window.onload = function(){
 
 	// out of focus alueen klikkaaminen sulkee kaikki
 	document.getElementById("oof").addEventListener("click",(e) => {
-		if(e.target === oof) {
-			hideModal();
-			closeCard();
-			closeMenu();
-		}
+		if(e.target !== oof) return;
+		hideModal();
+		closeCard();
+		closeMenu();
 	});
 
 	// reittiohjeen sulkeminen
@@ -618,12 +599,43 @@ function searchWithVars(url, data,distance) {
 		resizeElementHeights();
 		clearMarkers();
 		googleshit.directionsRenderer.setMap(null);
-		globalVars.search = true;
+		globalVars.searchWithVars = true;
 		setTimeout(() => {
 			locateUser(distance);
 		}, 250);
 		closeMenu();
 	})
+}
+
+
+/**
+ * Google geolocates the address, searches for bars within the distance and places marker for each bar on the map.
+ *
+ * @param {string} address The address which the user typed to the search box on the map.
+ * @param {number} distance The range from the address where the bars will be searched.
+ */
+function textSearch(address, distance) {
+	googleshit.directionsRenderer.setMap(null);
+	globalVars.searchWithVars = false;
+	clearMarkers();
+	geocodeAddress(address)
+		.then(results => {
+			const searchPos = results[0].geometry.location;
+			googleshit.map.setCenter(searchPos);
+			// jos etsitty paikka on baari/yökerho -> näyttää vain sen markerin, muuten etsii baarit lähistöltä normaalisti
+			if (results[0].types.filter(type => type === "bar" || type === "night_club").length > 0) {
+				searchNearby(searchPos, 1);
+			} else {
+				searchNearby(searchPos, distance);
+				const marker = createMarker(searchPos, false);
+				globalLists.markers.push(marker);
+				googleshit.infowindow.setContent(results[0].formatted_address);
+				google.maps.event.addListener(marker, "click", function() {
+					googleshit.infowindow.open(googleshit.map, marker);
+				});
+			}
+		})
+		.catch(error => console.log(error));
 }
 
 /**
@@ -885,8 +897,7 @@ function renderBarInfo(place) {
 	const barName = document.getElementById("bar-name");
 	const barOpen = document.getElementById("bar-open");
 	const barPhoto = document.getElementById("bar-photo");
-	const response = getBarData(place.name);
-	response.then(data => {
+	getBarData(place.name).then(data => {
 		console.log(data);
 		const body = document.querySelector("tbody");
 		if(data.length === 0){
@@ -902,21 +913,22 @@ function renderBarInfo(place) {
 	barName.innerHTML = place.name;
 	setRating(place.rating);
 
-	googleshit.placesService.getDetails({
-		placeId: place.place_id
-	}, function(data, status) {
-		if (status === google.maps.places.PlacesServiceStatus.OK) {
+	googleshit.placesService.getDetails(
+		{
+			placeId: place.place_id
+		},
+		function(data, status) {
+			if(status !== google.maps.places.PlacesServiceStatus.OK) return;
 			const address = data.formatted_address;
 			barAddress.innerHTML = address.split(",",2).join();
-			barOpen.innerHTML = capitalizeFirstLetter(data.opening_hours.weekday_text[weekday]);
+			barOpen.innerHTML = data.opening_hours ? capitalizeFirstLetter(data.opening_hours.weekday_text[weekday]) : "Aukioloajat ei tiedossa";
 			if(data.photos) {
 				const url = data.photos[0].getUrl({ "maxWidth": 600 });
 				barPhoto.style.backgroundSize = "cover";
-				barPhoto.style.backgroundImage = "url(" + url + ")";
-			}
+				barPhoto.style.backgroundImage = "url(" + url + ")";	
+			}		
 		}
-	});
-
+	);
 }
 
 /**
@@ -926,7 +938,7 @@ function renderBarInfo(place) {
  *
  */
 function setRating(rating) {
-	let rounded = Math.round(rating);
+	const rounded = Math.round(rating);
 	let html = "";
 	for(let i=1;i<=5;i++) {
 		if(i<=rating) {
@@ -1053,9 +1065,22 @@ function initMap() {
  * @param {Object} infowindow The small pop-up info that is showed when the user clicks the yellow marker (which is placed at the address that the user searched).
  *
  */
-function locateUser(distance) {
+function locateUser() {
+	return new Promise((resolve, reject) => {
+		if(!navigator.geolocation) reject();
+		navigator.geolocation.getCurrentPosition(position => {
+			googleshit.userPos = {
+				lat: position.coords.latitude,
+				lng: position.coords.longitude
+			};
+			const pos = googleshit.userPos;
+			resolve(pos);
+		})
+	})
+}
+/*
 	if (navigator.geolocation) {
-		navigator.geolocation.getCurrentPosition(function(position) {
+		navigator.geolocation.getCurrentPosition(position => {
 			googleshit.userPos = {
 				lat: position.coords.latitude,
 				lng: position.coords.longitude
@@ -1079,49 +1104,27 @@ function locateUser(distance) {
 		// Selain ei tue geolokaatiota
 		handleLocationError(false, googleshit.map.getCenter());
 	}
-}
+	*/
+
 
 /**
  * Google geocoder.
- * If the search result is a place that has "bar" or "night_club" tag on google -> only that place's marker is shown on the map.
- * Otherwise there is a yellow marker at the location and the nearby area is searched for bars with the selected search parameters from the menu.
- * @see searchNearby
+ * Geocodes the given address into latitude and longitude coordinates.
  * @param {string} address The address/place that the user searched.
  * @param {number} distance The range of the search in meters.
- * @param {Object} infowindow The small pop-up info that is showed when the user clicks the yellow marker (which is placed at the address that the user searched).
+ * @returns {promise} Initially returns a promise and after the geocoder has finished it will resolve/reject the promise based on the geocoder's status.
  *
  */
-function geocodeAddress(address, distance) {
-	googleshit.geocoder.geocode(
-		{"address": address,
-			componentRestrictions: {
-				country: "FI"
-			}}, function(results, status) {
-			if (status == "OK") {
-				const searchPos = results[0].geometry.location;
-				googleshit.map.setCenter(searchPos);
-
-				// jos etsitty paikka on baari/yökerho -> näyttää vain sen markerin, muuten etsii baarit lähistöltä normaalisti
-				if (results[0].types.filter(type => type === "bar" || type === "night_club").length > 0) {
-					searchNearby(searchPos, 1);
-				} else {
-					searchNearby(searchPos, distance);
-					const image = "kgps_icons/yellow-marker.png";
-					const marker = new google.maps.Marker({
-						map: googleshit.map,
-						position: searchPos,
-						icon : image,
-					});
-					globalLists.markers.push(marker);
-					googleshit.infowindow.setContent(results[0].formatted_address);
-					google.maps.event.addListener(marker, "click", function() {
-						googleshit.infowindow.open(googleshit.map, marker);
-					});
+function geocodeAddress(address) {
+	return new Promise((resolve, reject) => {
+		googleshit.geocoder.geocode(
+			{
+				"address": address,
+				componentRestrictions: {
+					country: "FI"
 				}
-			} else {
-				alert("Paikannus ei onnistunut: " + status);
-			}
-		});
+			}, (results, status) => status === google.maps.GeocoderStatus.OK ? resolve(results) : reject(results));
+	})
 }
 
 /**
@@ -1131,19 +1134,26 @@ function geocodeAddress(address, distance) {
  * @param {string} mode The transport mode that was chosen (walk/drive/bike/public transport).
  *
  */
-function calcRoute(endPoint, mode) {
-	if (googleshit.userPos === null && navigator.geolocation) {
-  		navigator.geolocation.getCurrentPosition(function(position) {
-			googleshit.userPos = {
-	          	lat: position.coords.latitude,
-	          	lng: position.coords.longitude
-	        };
-    	});
-    };
+function calcRoute(address, mode) {
+	let startPoint = null;
+	for(marker of globalLists.markers) {
+		if(marker.icon === "kgps_icons/yellow-marker.png") {
+			console.log(marker);
+			startPoint = {
+				lat: marker.position.lat(),
+				lng: marker.position.lng()
+		  	};
+		}
+	}
+	if(startPoint === null) {
+		locateUser()
+		.then(pos => startPoint = pos)
+		.catch(err => console.log("calcRoute user locating failed " + err));
+	}
     googleshit.directionsRenderer.setMap(googleshit.map);
 	googleshit.directionsService.route({
-		origin: googleshit.userPos,
-		destination: endPoint,
+		origin: startPoint,
+		destination: address,
 		travelMode: mode,
 		transitOptions: {
 			modes: ["BUS", "RAIL"],
@@ -1161,11 +1171,15 @@ function calcRoute(endPoint, mode) {
 			const windowHeight = window.innerHeight;
 			document.getElementById('route-container').style.height = windowHeight * 0.3 + "px";
 			document.getElementById('search-container').style.display = "none";
-			const marker = new google.maps.Marker({
-				map: googleshit.map,
-				position: endPoint,
+			clearMarkers();
+			geocodeAddress(address).then(pos => {
+				const endPoint = {
+					lat: pos[0].geometry.location.lat(),
+					lng: pos[0].geometry.location.lng()
+				  };
+				  createMarker(endPoint);
 			});
-			globalLists.markers.push(marker);
+			createMarker(googleshit.userPos, false);
 			resizeElementHeights();
 			closeCard();
 		} else {
@@ -1205,17 +1219,21 @@ function searchNearby(loc, distance) {
  *
  */
 function processResults(results, status, pagination) {
-	if (status === google.maps.places.PlacesServiceStatus.OK) {
-		if (pagination.hasNextPage) {
-			pagination.nextPage();
-		}
-		for (let i = 0; i < results.length; i++) {
-			setTimeout((function(i){
-				return function(){
-					createMarker(results[i]);
-				};
-			})(i),100*i);
-		}
+	if (status !== google.maps.places.PlacesServiceStatus.OK) return;
+	if (pagination.hasNextPage) {
+		pagination.nextPage();
+	}
+	for (let i = 0; i < results.length; i++) {
+		setTimeout((function(i){
+			return function(){
+				if(globalVars.searchWithVars && globalLists.bars.indexOf(results[i].name) === -1) return;
+				const marker = createMarker(results[i].geometry.location);
+				google.maps.event.addListener(marker, "click", function() {
+					renderBarInfo(results[i]);
+					openCard();
+				});
+			};
+		})(i),100*i);
 	}
 }
 
@@ -1224,23 +1242,21 @@ function processResults(results, status, pagination) {
  * Clicking the marker updates the restaurant card to show the selected bar and opens the restaurant card.
  * @see renderBarInfo
  * @see openCard
- * @param {Object} place The place object from a Google search.
+ * @param {Object} location The (lat,lng) coordinates of the spot where the marker should be placed.
+ * @param {boolean} isBarMarker Changes the marker's icon depending on whether the marker is for a bar or for the user's location. 
  *
  */
-function createMarker(place) {
-	console.log(globalVars.search);
-	if(globalVars.search && globalLists.bars.indexOf(place.name) === -1) return;
+function createMarker(location, isBarMarker = true) {
+	console.log("createMarker");
+	const icon = isBarMarker ? "kgps_icons/kaljakartta_map_arrow.svg" : "kgps_icons/yellow-marker.png"
 	const marker = new google.maps.Marker({
 		map: googleshit.map,
-		position: place.geometry.location,
+		position: location,
 		animation: google.maps.Animation.DROP,
-		icon: "kgps_icons/kaljakartta_map_arrow.svg"
+		icon: icon
 	});
 	globalLists.markers.push(marker);
-	google.maps.event.addListener(marker, "click", function() {
-		renderBarInfo(place);
-		openCard();
-	});
+	return marker;
 }
 
 /**
