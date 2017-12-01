@@ -86,6 +86,7 @@ header {
 .title {
 	font-size: 2.9em;
 	height: 100%;
+	line-height: 60px;
 	display: -webkit-box;
 	display: -ms-flexbox;
 	display: flex;
@@ -100,9 +101,9 @@ header {
 	font-size: 0.4em;
 	-ms-flex-item-align: start;
 	    align-self: flex-start;
-	-webkit-transform: translateY(50%);
-	    -ms-transform: translateY(50%);
-	        transform: translateY(50%);
+	-webkit-transform: translateY(-30%);
+	    -ms-transform: translateY(-30%);
+	        transform: translateY(-30%);
 }
 
 .header-icon {
@@ -952,6 +953,7 @@ input[type="checkbox"] {
 
 	.title {
 		font-size: 2.2em;
+		line-height: 45px;
 	}
 
 	.version {
