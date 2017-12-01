@@ -21,12 +21,12 @@
 		<div class="title">
 		<p>Lisää tai poista tuotteita</p>
 		</div>
-
+		<button class="add_btn" id="add_activity">Lisää tuote</button>
 		<div class="content">
 			<form form="beer_form"name='mainForm' id='mainForm' method="get" action="#">
 				<table id="tracklist">
 					<tr class="input">
-						<td id="counter">1</td>
+						<td class="bev_number" id="counter">1</td>
 							<td><select class="input" required>
 								<option disabled selected value>Valitse juoma</option>
 								<option>Aura</option>
@@ -41,11 +41,12 @@
 								<option>Pullo</option>
 								<option>Hana</option>
 							</select></td>
+							<td id="img"><img src="kgps_icons/x.svg" alt="X"/></td>
 					</tr>
 				</table>
 				<input class="submit_btn" type="submit" value="Tallenna muutokset" />
 			</form>
-			<button class="input" id="add_activity">Lisää tuote</button>
+			<!-- <button class="input" id="add_activity">Lisää tuote</button> -->
 		</div>
 	</div>
 </body>
