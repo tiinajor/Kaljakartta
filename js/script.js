@@ -169,6 +169,7 @@ window.onload = function(){
 		const address = input.value;
 		if(address !== "") {
 			const distance = distanceSlider.noUiSlider.get();
+			globalVars.searchWithVars = false;
 			textSearch(address, distance);
 			input.value = "";
 		}
@@ -181,6 +182,7 @@ window.onload = function(){
 		const address = input.value;
 		if(e.keyCode === 13 && address !== ""){
 			const distance = distanceSlider.noUiSlider.get();
+			globalVars.searchWithVars = false;
 			textSearch(address, distance);
 			this.value = "";
 		}
@@ -212,7 +214,7 @@ window.onload = function(){
 		.then(response => { return response.text() })
 		.then(data => {
 			let beerTypes = data.slice(1, -1).split(",");
-			beerTypes = beerTypes.map(x => { return x.trim() });
+			beerTypes = beerTypes.map(x => x.trim());
 			createList(beerTypes, document.getElementById("type-list"), "types", searchVars);
 			console.log("beertypes loaded");
 		})
@@ -226,7 +228,7 @@ window.onload = function(){
 			})
 			.then(data => {
 				let beerBrands = data.slice(1, -1).split(",");
-				beerBrands = beerBrands.map(x => { return x.trim() });
+				beerBrands = beerBrands.map(x => x.trim());
 				createList(beerBrands, document.getElementById("brand-list"), "brands", searchVars);
 				console.log("beer brands loaded");
 			})
@@ -254,6 +256,7 @@ window.onload = function(){
 
 	// hae-nappi hakee baarit, joista löytyy hakukriteereitä vastaavia juomia
 	document.querySelector('.button-submit').addEventListener('click', () => {
+		globalVars.searchWithVars = true;
 		searchWithVars("https://cors-anywhere.herokuapp.com/http://188.166.162.144:130/findrestaurants", searchVars, distanceSlider.noUiSlider.get());
 	});
 
@@ -579,7 +582,7 @@ function capitalizeEveryWord(text) {
 	for (let i = 0; i < words.length; i++) {
 		words[i] = words[i].charAt(0).toUpperCase() + words[i].slice(1);
 	}
-	return words.join(' ');
+	return words.join(' ').trim();
 }
 
 /**
@@ -616,7 +619,6 @@ function searchWithVars(url, data, distance) {
 		return response.json();
 	})
 	.then(data => {
-		console.log(data);
 		globalLists.bars = data;
 		const input = document.getElementById('menu-searchbox');
 		document.getElementById('route-container').style.height = 0 + "px";
@@ -624,13 +626,12 @@ function searchWithVars(url, data, distance) {
 		resizeElementHeights();
 		clearMarkers();
 		googleshit.directionsRenderer.setMap(null);
-		globalVars.searchWithVars = true;
+		globalLists.bars = globalLists.bars.map(name => capitalizeEveryWord(name));
 		if(input.value === "") {
 			locateUser(distance)
 			.then(pos => {
 				googleshit.map.panTo(pos);
 				createMarker(pos, true, false);
-				globalLists.bars = globalLists.bars.map(name => capitalizeEveryWord(name));
 				searchNearby(pos, distance);
 			})
 			.catch(error => console.log("ERROR " + error));
@@ -650,7 +651,6 @@ function searchWithVars(url, data, distance) {
  */
 function textSearch(address, distance) {
 	googleshit.directionsRenderer.setMap(null);
-	globalVars.searchWithVars = false;
 	clearMarkers();
 	geocodeAddress(address)
 		.then(results => {
@@ -708,7 +708,7 @@ function createList(list, parentDiv, id, searchVars) {
 		for (let i = 0; i<newList.length; i++) {
 			let li = document.createElement("li");
 			let locale = newList[i].split(",");
-			locale = locale.map(x => { return x.trim() });
+			locale = locale.map(x => x.trim());
 			let content = document.createTextNode(locale[0]);
 			li.appendChild(content);
 			li.dataset.type = newList[i];
