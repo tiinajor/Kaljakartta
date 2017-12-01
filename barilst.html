@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="x-ua-compatible" content="ie=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+	<title>Kaljakartta - Bar List</title>
+	<link rel="stylesheet" href="css/reset.css">
+	<link rel="stylesheet" href="css/barlist.css">
+	<link rel="icon" type="image/png" sizes="32x32" href="kgps_icons/favicon-32x32.png">
+	<script src="js/barlist.js"></script>
+
+</head>
+<body>
+	<header>
+	<p>Kaljakartta.fi</p>
+	</header>
+
+	<div class="modal">
+
+		<div class="title">
+		<p>Lisää tai poista tuotteita</p>
+		</div>
+
+		<div class="content">
+			<form form="beer_form"name='mainForm' id='mainForm' method="get" action="#">
+				<table id="tracklist">
+					<tr class="input">
+						<td id="counter">1</td>
+							<td><select class="input" required>
+								<option disabled selected value>Valitse juoma</option>
+								<option>Aura</option>
+								<option>Karhu III</option>
+								<option>Karhu IV</option>
+								<option>Karjala III</option>
+								<option>Karjala IV</option>
+							</select></td>
+							<td><input class="input" type="text" name="actlog1" class="required" placeholder="Syötä hinta" required></td>
+							<td><input class="input" type="text" name="time1" class="required" placeholder="Syötä koko" required></td>
+							<td><select class="input" required>
+								<option>Pullo</option>
+								<option>Hana</option>
+							</select></td>
+					</tr>
+				</table>
+				<input class="submit_btn" type="submit" value="Tallenna muutokset" />
+			</form>
+			<button class="input" id="add_activity">Lisää tuote</button>
+		</div>
+	</div>
+</body>
+</html>
