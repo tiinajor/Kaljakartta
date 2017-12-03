@@ -1,3 +1,15 @@
+/*
+TODO LISTA:
+- modaali ja käyttöohjeet
+- K18-vahvistus
+- searchNearby ei poista duplikaatteja (eli marker osalle baareista tulee kahteen kertaan)
+- error tilanteet
+- loading spinner hakukriteerien kanssa tehtävään hakuun
+- 
+*/
+
+
+
 /**
  * Global object. Has list for map markers, list for bars that match the searchVars and the list of beers that a bar has.
  * @type {object}
@@ -32,16 +44,6 @@ const globalVars = {
 
 loadScript("https://maps.googleapis.com/maps/api/js?key=AIzaSyDuIpE10xbisU_de-Mg_xR4-OpmOVl3BxA&libraries=places&language=fi&region=FI", initMap);
 
-/*
-TODO LISTA:
-
-- modaali ja käyttöohjeet
-- K18 -vahvistus
-- 
-*/
-
-
-
 window.onload = function(){
 	const priceSlider = document.getElementById('price-slider');
 	const alcoholSlider = document.getElementById('alcohol-slider');
@@ -53,7 +55,7 @@ window.onload = function(){
 	const menuElement = document.getElementById('side-menu');
 	const restaurantCard = document.getElementById('restaurant-card');
 	const oof = document.getElementById('oof');
-	const theads = document.getElementsByTagName('th');
+	const tableHeads = document.getElementsByTagName('th');
 	const servingButtons = document.querySelectorAll('.serving-button');
 	const directionsElement = document.getElementById('route-container');
 	let headerHeight = headerElement.clientHeight;
@@ -94,7 +96,7 @@ window.onload = function(){
 	Array.from(servingButtons).forEach((e) => e.addEventListener("click", (e) => searchVars.serving = toggleServing(e.target)));
 
 	// olutlistan "otsikoiden" klikkaaminen järjestää listan kyseisen sarakkeen mukaan
-	Array.from(theads).forEach((e) => e.addEventListener("click", function() {
+	Array.from(tableHeads).forEach((e) => e.addEventListener("click", function() {
 		const column = e.getAttribute("data-id");
 		const language = window.localStorage.getItem("language");
 		const inactiveSortIcon = "kgps_icons/sort-icon-inactive.png";
@@ -144,9 +146,9 @@ window.onload = function(){
 			break;
 		}
 
-		for (let i = 0; i < theads.length; i++) {
-			if (theads[i].childNodes.length > 0) {
-				theads[i].childNodes[0].src = (theads[i] === e) ? activeSortIcon : inactiveSortIcon;
+		for (let i = 0; i < tableHeads.length; i++) {
+			if (tableHeads[i].childNodes.length > 0) {
+				tableHeads[i].childNodes[0].src = (tableHeads[i] === e) ? activeSortIcon : inactiveSortIcon;
 			}
 		}
 	}));
@@ -185,6 +187,14 @@ window.onload = function(){
 			globalVars.searchWithVars = false;
 			textSearch(address, distance);
 			this.value = "";
+		}
+	});
+
+	document.getElementById("menu-searchbox").addEventListener("keyup", function(e) {
+		e.preventDefault();
+		if(e.keyCode === 13) {
+			globalVars.searchWithVars = true;
+			searchWithVars("https://cors-anywhere.herokuapp.com/http://188.166.162.144:130/findrestaurants", searchVars, distanceSlider.noUiSlider.get());
 		}
 	});
 
@@ -430,13 +440,11 @@ window.onload = function(){
 	priceSlider.noUiSlider.on("change", function() {
 		const value = parseFloat(priceSlider.noUiSlider.get());
 		searchVars.price = parseFloat(value.toFixed(1));
-		console.log(searchVars);
 	});
 	alcoholSlider.noUiSlider.on("change", function() {
 		const value = alcoholSlider.noUiSlider.get();
 		searchVars.abvMin = parseFloat(value[0]);
 		searchVars.abvMax = parseFloat(value[1]);
-		console.log(searchVars);
 	});
 
 
@@ -653,22 +661,22 @@ function textSearch(address, distance) {
 	googleshit.directionsRenderer.setMap(null);
 	clearMarkers();
 	geocodeAddress(address)
-		.then(results => {
-			const searchPos = results[0].geometry.location;
-			googleshit.map.setCenter(searchPos);
-			// jos etsitty paikka on baari/yökerho -> näyttää vain sen markerin, muuten etsii baarit lähistöltä normaalisti
-			if (results[0].types.filter(type => type === "bar" || type === "night_club").length > 0) {
-				searchNearby(searchPos, 1);
-			} else {
-				searchNearby(searchPos, distance);
-				const marker = createMarker(searchPos, false, false);
-				googleshit.infowindow.setContent(results[0].formatted_address);
-				google.maps.event.addListener(marker, "click", function() {
-					googleshit.infowindow.open(googleshit.map, marker);
-				});
-			}
-		})
-		.catch(error => console.log(error));
+	.then(results => {
+		const searchPos = results[0].geometry.location;
+		googleshit.map.panTo(searchPos);
+		// jos etsitty paikka on baari/yökerho -> näyttää vain sen markerin, muuten etsii baarit lähistöltä normaalisti
+		if (results[0].types.filter(type => type === "bar" || type === "night_club").length > 0) {
+			searchNearby(searchPos, 1);
+		} else {
+			searchNearby(searchPos, distance);
+			const marker = createMarker(searchPos, false, false);
+			googleshit.infowindow.setContent(results[0].formatted_address);
+			google.maps.event.addListener(marker, "click", function() {
+				googleshit.infowindow.open(googleshit.map, marker);
+			});
+		}
+	})
+	.catch(error => console.log(error));	
 }
 
 /**
@@ -805,8 +813,8 @@ function resizeElementHeights() {
  * @returns {list} The same list without duplicates.
  */
 function removeDuplicates(array) {
-	return array.filter(function(element, position, arr) {
-		return arr.indexOf(element) == position;
+	return array.filter((element, index, arr) => {
+		return arr.indexOf(element) === index;
 	});
 }
 
@@ -1092,11 +1100,7 @@ function locateUser() {
 	return new Promise((resolve, reject) => {
 		if(navigator.geolocation) {
 			navigator.geolocation.getCurrentPosition(position => {
-				const pos = {
-					lat: position.coords.latitude,
-					lng: position.coords.longitude
-				};
-				resolve(pos);
+				resolve(new google.maps.LatLng(position.coords.latitude, position.coords.longitude));
 			}, function() {
 				reject("Paikannuksessa tapahtui virhe.");
 			})
@@ -1218,13 +1222,14 @@ function searchNearby(loc, distance) {
 		location: loc,
 		rankBy: google.maps.places.RankBy.DISTANCE,
 		type: ["night_club"]
-	}, processResults);
+	}, (results, status, pagination) => processResults(results, status, pagination, loc, distance));
 
 	googleshit.placesService.nearbySearch({
 		location: loc,
 		rankBy: google.maps.places.RankBy.DISTANCE,
 		type: ["bar"]
-	}, processResults);
+	}, (results, status, pagination) => processResults(results, status, pagination, loc, distance));
+
 }
 
 /**
@@ -1236,12 +1241,11 @@ function searchNearby(loc, distance) {
  *  we can get up to 60 results instead of the default 20 (Google's max is 3 pages).
  *
  */
-function processResults(results, status, pagination) {
+function processResults(results, status, pagination, loc, distanceLimit) {
 	if (status !== google.maps.places.PlacesServiceStatus.OK) return;
-	if (pagination.hasNextPage) {
-		pagination.nextPage();
-	}
 	for (let i = 0; i < results.length; i++) {
+		const actualDistance = google.maps.geometry.spherical.computeDistanceBetween(loc, results[i].geometry.location);
+		if(actualDistance > distanceLimit) continue;
 		setTimeout((function(i){
 			return function(){
 				if(globalVars.searchWithVars && globalLists.bars.indexOf(results[i].name) === -1) return;
@@ -1253,6 +1257,10 @@ function processResults(results, status, pagination) {
 				});
 			};
 		})(i),100*i);
+	}
+
+	if (pagination.hasNextPage) {
+		pagination.nextPage();
 	}
 }
 
