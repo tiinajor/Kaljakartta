@@ -50,6 +50,14 @@ body, html {
     position: absolute;
 }
 
+.blur {
+	filter: blur(5px);
+}
+
+.no-blur {
+	filter: blur(0);
+}
+
 
 /* ----- HEADER ----- */
 header {
@@ -282,12 +290,12 @@ header {
 	    justify-content: space-around;
 }
 
-.button-cancel {
+.button-cancel, .button-no {
 	background-color: transparent;
 	border: 2px solid var(--secondary);
 }
 
-.button-submit {
+.button-submit, .button-yes {
 	/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#ffa600+1,e59b12+100 */
 	background: var(--secondary); /* Old browsers */ /* FF3.6-15 */
 	background: -webkit-linear-gradient(top, #ffa600 1%,#e59b12 100%); /* Chrome10-25,Safari5.1-6 */
@@ -372,6 +380,10 @@ header {
 	z-index: 60;
 }
 
+.out-of-focus-area.visible {
+	width: 100%;
+}
+
 .noUi-horizontal.noUi-extended {
 	padding-right: 32px;
 }
@@ -405,6 +417,10 @@ header {
     transition: 0.5s;
     width: 300px;
     z-index: 70;
+}
+
+#side-menu.visible {
+	left: 0;
 }
 
 #search-option-sliders {
@@ -694,6 +710,10 @@ header {
     z-index: 65;
 }
 
+#restaurant-card.visible {
+	right: 0;
+}
+
 /* ----- RESTAURANT CARD LOPPU -----*/
 
 
@@ -767,36 +787,35 @@ input[type="checkbox"] {
 	margin-right: 0.75em;
 }
 
-.modal-body, .modal-header, .modal-footer {
-	padding: 0 1em;
-}
-
 .modal-header {
 	background-color: var(--bg-dark);
 	border-top-left-radius: 0.75em;
 	border-top-right-radius: 0.75em;
-	height: 65px;
-	padding-right: 0;
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	align-self: center;
 }
 
 .modal-header h2 {
+	padding: 0.5em;
 	font: 2em 'Bebas Neue', sans-serif;
 	text-align: center;
 	letter-spacing: 1.5px;
 	color: var(--primary);
-	top: 50%;
-	position: relative;
-	-webkit-transform: translateY(-50%);
-	    -ms-transform: translateY(-50%);
-	        transform: translateY(-50%);
+	display: flex;
+	justify-content: center;
+	align-self: center;
 }
 
 .modal-body {
 	-webkit-box-flex: 1;
 	    -ms-flex: 1;
-	        flex: 1;
-	padding-top: 1em;
+			flex: 1;
+	padding: 0.5em 0.5em 1em 0.5em;
 	overflow-y: auto;
+	display: flex;
+	flex-direction: column;
 }
 
 .modal-body p {
@@ -811,12 +830,13 @@ input[type="checkbox"] {
 	display: -webkit-box;
 	display: -ms-flexbox;
 	display: flex;
+	padding: 0 1em;
 	-webkit-box-align: center;
 	    -ms-flex-align: center;
 	        align-items: center;
 }
 
-#modal {
+.modal {
 	max-width: 800px;
 	max-height: 600px;
 	font-family: 'Montserrat', sans-serif;
@@ -839,15 +859,32 @@ input[type="checkbox"] {
 	background-color: var(--bg-light);
 }
 
-#modal.visible {
+.modal.visible {
 	display: -webkit-box;
 	display: -ms-flexbox;
 	display: flex;
 }
 
+.k18-buttons {
+	display: flex;
+	justify-content: space-around;
+}
+
+.k18-body {
+	justify-content: space-between;
+}
+
+#k18 {
+	max-height: 300px;
+	max-width: 350px;
+	z-index: 60;
+}
+
 #modal-close-x {
 	background-color: transparent;
 	color: var(--bg-light);
+	position: fixed;
+	right: 0;
 }
 
 /* ----- TUTORIAL MODAL LOPPU ----- */
