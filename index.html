@@ -16,9 +16,10 @@
 	<link rel="icon" type="image/png" sizes="32x32" href="kgps_icons/favicon-32x32.png">
 	<script src="locale/fi_FI.json"></script>
 	<script src="locale/en_GB.json"></script>
-	<script async src="js/script.js"></script>
 	<script async defer src="js/wNumb.js"></script>
 	<script async defer src="js/nouislider.min.js"></script>
+	<script async src="js/script.js"></script>
+	
 
 </head>
 <body>
@@ -26,25 +27,12 @@
 	<div id="side-menu">
 		<div class="menu-main-section">
 			<span id="menu-close-x" class="closebtn button">x</span>
-			<!--
-			<div id="search-option-buttons" class="centered menu-block">
-				<button id="tapButton" class="search-option button">
-					<img class="icon" src="kgps_icons/beer-tap.svg" alt="hanat">
-					<span >Hanat</span>
-				</button>
-				<button id="bottleButton" class="search-option button">
-					<img class="icon" src="kgps_icons/beer-bottle.svg" alt="pullot">
-					<span >Pullot</span>
-				</button>
-			</div>
-			-->
 
 			<div class="search-serving-buttons centered menu-block">
 				<span id="tap" class="serving-button clickable"><label id="tapButtonText">Hanat</label></span>
 				<span id="both" class="serving-button clickable serving-button-active middle"><label id="bothButtonText">Molemmat</label></span>
 				<span id="bottle" class="serving-button clickable"><label id="bottleButtonText">Pullot</label></span>
 			</div>
-
 
 			<div id="search-option-sliders" class="centered menu-block">
 				<div class="slider-container">
@@ -128,21 +116,32 @@
 	</div>
 
 	<div id="oof" class="out-of-focus-area">
-		<div id="modal">
-
+		<div id="tutorial" class="modal">
 			<div class="modal-header">
-				<a id="modal-close-x" class="closebtn button">x</a>
 				<h2>Mikä ihmeen kaljakartta?</h2>
+				<a id="modal-close-x" class="closebtn button">x</a>
 			</div>
 			<div class="modal-body">
 				<p>Kaljakartan avulla löydät juuri Sinun makuusi ja kukkarollesi sopivat olutravintolat lähistöltäsi.</p>
 				<p>Voit etsiä oluita haluamillasi hakukriteereillä ja rajata hakua esimerkiksi hinnan, alkoholipitoisuuden, merkin ja panimon mukaan.</p>
-				<p>Voit hakea osoitteita tietystä kaupungista lisäämällä sen hakukenttään osoitteen perään. Esimerkiksi "Jyrätie, Tornio" etsii vain Tornion alueelta.</p>
+				<p>Voit hakea osoitteita tietystä kaupungista lisäämällä sen hakukenttään osoitteen perään. Esimerkiksi "Jyrätie Tornio" etsii vain Tornion alueelta.</p>
 			</div>
 			<div class="modal-footer">
 				<label class="clickable"><input type="checkbox" name="noMoreInstructions">Älä näytä ohjeita enää uudelleen.</label>
 			</div>
+		</div>
+	</div>
 
+	<div id="k18" class="modal">
+		<div class="modal-header">
+			<h2>Olethan täysi-ikäinen?</h2>
+		</div>
+		<div class="modal-body k18-body">
+			<p>Sivusto sisältää tietoa alkoholipitoisista juomista ja on tarkoitettu ainoastaan 18 vuotta täyttäneille henkilöille.</p>
+			<div class="k18-buttons">
+				<button class="button menu-button button-no">En</button>
+				<button class=" button menu-button button-yes">Kyllä</button>
+			</div>
 		</div>
 	</div>
 
@@ -165,6 +164,7 @@
 	</header>
 
 	<div id="map"></div>
+
 	<div id="route-container">
 		<div class="draggable">
 			<img src="kgps_icons/drag.svg">

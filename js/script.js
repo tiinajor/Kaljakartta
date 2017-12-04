@@ -8,43 +8,56 @@ TODO LISTA:
 - 
 */
 
+(function (window, document, noUiSlider, undefined) {
 
+	/**
+	 * Has list for map markers, list for bars that match the searchVars and the list of beers that a bar has.
+	 * @type {object}
+	 */
+	const globalLists = {
+		markers : [],
+		bars : [],
+		beerList : []
+	}
 
-/**
- * Global object. Has list for map markers, list for bars that match the searchVars and the list of beers that a bar has.
- * @type {object}
- */
-const globalLists = {
-	markers : [],
-	bars : [],
-	beerList : []
-}
+	/**
+	 * Object which contains all google variables and services.
+	 * @type {object}
+	*/
+	const googleshit = {
+		map: null,
+		directionsService: null,
+		directionsRenderer: null,
+		geocoder: null,
+		placesService: null,
+		infowindow: null,
+	};
 
-/**
- * Global object which contains all google variables and services.
- * @type {object}
-*/
-const googleshit = {
-	map: null,
-	directionsService: null,
-	directionsRenderer: null,
-	geocoder: null,
-	placesService: null,
-	infowindow: null,
-};
-
-/**
- * Global object which contains helper variables for search and displaying the directions markers.
- * @type {object}
-*/
-const globalVars = {
-	searchWithVars: false,
-	clickedPlace: null
-}
-
-loadScript("https://maps.googleapis.com/maps/api/js?key=AIzaSyDuIpE10xbisU_de-Mg_xR4-OpmOVl3BxA&libraries=places&language=fi&region=FI", initMap);
-
-window.onload = function(){
+	/**
+	 * Object which contains helper variables for search and displaying the directions markers.
+	 * @type {object}
+	*/
+	const globalVars = {
+		searchWithVars: false,
+		clickedPlace: null,
+		language: window.localStorage.getItem("language") || "fi"
+	}
+	const k18yes = document.querySelector('.button-yes');
+	const k18no = document.querySelector('.button-no');
+	const fiFlag = document.getElementById("fi");
+	const enFlag = document.getElementById("en");
+	const title = document.querySelector(".title");
+	const typeList = document.querySelector("#type-list div");
+	const brandList = document.querySelector("#brand-list div");
+	const menuButton = document.getElementById("hamburger-menu");
+	const locateButton = document.getElementById('locate');
+	const searchButton = document.querySelector('.button-submit');
+	const menuCloseButton = document.getElementById("menu-close-x");
+	const cardCloseButton = document.getElementById("card-close-x");
+	const modalCloseButton = document.getElementById("modal-close-x");
+	const routeCloseButton = document.getElementById("route-close-x");
+	const tutorialModal = document.getElementById("tutorial");
+	const k18Modal = document.getElementById("k18");
 	const priceSlider = document.getElementById('price-slider');
 	const alcoholSlider = document.getElementById('alcohol-slider');
 	const distanceSlider = document.getElementById('distance-slider');
@@ -58,9 +71,9 @@ window.onload = function(){
 	const tableHeads = document.getElementsByTagName('th');
 	const servingButtons = document.querySelectorAll('.serving-button');
 	const directionsElement = document.getElementById('route-container');
+	const searchContainer = document.getElementById('search-container');
 	let headerHeight = headerElement.clientHeight;
 	let windowHeight = window.innerHeight;
-	let language = window.localStorage.getItem("language") || "fi";
 	let mouseDown = false;
 	let mouseStartPos;
 	let handleOffset;
@@ -85,80 +98,34 @@ window.onload = function(){
 		types : []
 	};
 
-	// lisää alpha-teksin headeriin, ei tule lopulliseen versioon
-	document.querySelector(".title").innerHTML += ("<sup class='version'>alpha</sup>");
+	loadScript("https://maps.googleapis.com/maps/api/js?key=AIzaSyDuIpE10xbisU_de-Mg_xR4-OpmOVl3BxA&libraries=places&language=fi&region=FI", initMap);
 
-	//showModal();
-	localizeContent(language);
-	createBeerTable(language);
+	showK18();
+
+	localizeContent(globalVars.language);
+	createBeerTable(globalVars.language);
 
 	// tap-bottle-both
 	Array.from(servingButtons).forEach((e) => e.addEventListener("click", (e) => searchVars.serving = toggleServing(e.target)));
 
 	// olutlistan "otsikoiden" klikkaaminen järjestää listan kyseisen sarakkeen mukaan
-	Array.from(tableHeads).forEach((e) => e.addEventListener("click", function() {
-		const column = e.getAttribute("data-id");
-		const language = window.localStorage.getItem("language");
-		const inactiveSortIcon = "kgps_icons/sort-icon-inactive.png";
-		const ascSortIcon = "kgps_icons/sort-icon-ascend.png";
-		const descSortIcon = "kgps_icons/sort-icon-descend.png";
-		let sortedValues;
-		let activeSortIcon;
+	Array.from(tableHeads).forEach((element) => element.addEventListener("click", () => tableColumnSorting(element)));
 
-		switch(column) {
-		case "serving":
-			sortAscending.serving = !sortAscending.serving;
-			sortedValues = globalLists.beerList.sort(sortBy(column, sortAscending.serving));
-			updateTable(sortedValues, language);
-			activeSortIcon = sortAscending.serving ? descSortIcon : ascSortIcon;
-			break;
-		case "name":
-			sortAscending.name = !sortAscending.name;
-			sortedValues = globalLists.beerList.sort(sortBy(column, sortAscending.name));
-			updateTable(sortedValues, language);
-			activeSortIcon = sortAscending.name ? descSortIcon : ascSortIcon;
-			break;
-		case "type":
-			sortAscending.type = !sortAscending.type;
-			sortedValues = globalLists.beerList.sort(sortBy(column, sortAscending.type));
-			updateTable(sortedValues, language);
-			activeSortIcon = sortAscending.type ? descSortIcon : ascSortIcon;
-			break;
-		case "abv":
-			sortAscending.abv = !sortAscending.abv;
-			sortedValues = globalLists.beerList.sort(sortBy(column, sortAscending.abv));
-			updateTable(sortedValues, language);
-			activeSortIcon = sortAscending.abv ? descSortIcon : ascSortIcon;
-			break;
-		case "vol":
-			sortAscending.vol = !sortAscending.vol;
-			sortedValues = globalLists.beerList.sort(sortBy(column, sortAscending.vol));
-			updateTable(sortedValues, language);
-			activeSortIcon = sortAscending.vol ? descSortIcon : ascSortIcon;
-			break;
-		case "price":
-			sortAscending.price = !sortAscending.price;
-			sortedValues = globalLists.beerList.sort(sortBy(column, sortAscending.price));
-			updateTable(sortedValues, language);
-			activeSortIcon = sortAscending.price ? descSortIcon : ascSortIcon;
-			break;
-		default:
-			break;
-		}
-
-		for (let i = 0; i < tableHeads.length; i++) {
-			if (tableHeads[i].childNodes.length > 0) {
-				tableHeads[i].childNodes[0].src = (tableHeads[i] === e) ? activeSortIcon : inactiveSortIcon;
-			}
-		}
-	}));
+	// lisää alpha-teksin headeriin, ei tule lopulliseen versioon
+	title.innerHTML += ("<sup class='version'>alpha</sup>");
 
 	// kaljakartta -teksti lataa sivun uudestaan
-	document.querySelector(".title").addEventListener("click", () => {window.location.reload(true)});
+	title.addEventListener("click", () => {window.location.reload(true)});
 
 	// lippujen klikkaaminen vaihtaa sivuston kielen kyseiseen kieleen
-	document.getElementById("fi").addEventListener("click", (e) => swapLanguage(e.target.id));
-	document.getElementById("en").addEventListener("click", (e) => swapLanguage(e.target.id));
+	fiFlag.addEventListener("click", (e) => swapLanguage(e.target.id));
+	enFlag.addEventListener("click", (e) => swapLanguage(e.target.id));
+
+	k18no.addEventListener('click', () => window.close());
+	k18yes.addEventListener('click', () => {
+		closeK18();
+		showTutorial();
+	});
 
 
 	// asettaa kartan, menun, reittiohjeiden sekä baarikortin korkeuden ja korjaa niitä aina kun ikkunan koko muuttuu
@@ -199,7 +166,7 @@ window.onload = function(){
 	});
 
 	// avaa merkit-listan ja sulkee muut listat
-	document.getElementById("brand-list").children[0].addEventListener("click", function() {
+	brandList.addEventListener("click", function() {
 		let ul = document.getElementById("brands");
 		let icon = this.children[1];
 		toggleVisible(ul);
@@ -208,7 +175,7 @@ window.onload = function(){
 	});
 
 	// avaa oluttyypit-listan ja sulkee muut listat
-	document.getElementById("type-list").children[0].addEventListener("click", function() {
+	typeList.addEventListener("click", function() {
 		let ul = document.getElementById("types");
 		let icon = this.children[1];
 		toggleVisible(ul);
@@ -217,7 +184,7 @@ window.onload = function(){
 	});
 
 	// menun avaus
-	document.getElementById("hamburger-menu").addEventListener("click", () => openMenu());
+	menuButton.addEventListener("click", () => openMenu());
 
 	// hakee menuun oluttyypit
 	fetch("https://cors-anywhere.herokuapp.com/http://188.166.162.144:130/beveragetypes")
@@ -228,7 +195,7 @@ window.onload = function(){
 			createList(beerTypes, document.getElementById("type-list"), "types", searchVars);
 			console.log("beertypes loaded");
 		})
-		.catch(err => console.log("Fetch Error: ", err));
+		.catch(err => showErrorMessage("Fetch Error: " + err));
 
 	// hakee menuun olutmerkit
 	setTimeout(() => {
@@ -242,11 +209,11 @@ window.onload = function(){
 				createList(beerBrands, document.getElementById("brand-list"), "brands", searchVars);
 				console.log("beer brands loaded");
 			})
-			.catch(err => console.log("Fetch Error: ", err));
+			.catch(err => showErrorMessage("Fetch Error: " + err));
 	}, 500);
 
 	// käyttäjän GPS paikannus
-	document.getElementById('locate').addEventListener('click', () => {
+	locateButton.addEventListener('click', () => {
 		document.getElementById('route-container').style.height = 0+"px";
 		document.getElementById('search-container').style.position = "absolute";
 		resizeElementHeights();
@@ -254,97 +221,55 @@ window.onload = function(){
 		googleshit.directionsRenderer.setMap(null);
 		globalVars.searchWithVars = false;
 		const distance = distanceSlider.noUiSlider.get();
-		locateUser(distance).then(pos => {
-			if (pos != null) {
-				googleshit.map.panTo(pos);
-				createMarker(pos, true, false);
-				globalLists.bars = globalLists.bars.map(name => capitalizeEveryWord(name));
-				searchNearby(pos, distance);
-			}
-		})
+		locateUser(distance)
+			.then(pos => {
+				if (pos != null) {
+					googleshit.map.panTo(pos);
+					createMarker(pos, true, false);
+					globalLists.bars = globalLists.bars.map(name => capitalizeEveryWord(name));
+					searchNearby(pos, distance);
+				}
+			})
+			.catch(error => showErrorMessage("ERROR: " + error));
 	});
 
 	// hae-nappi hakee baarit, joista löytyy hakukriteereitä vastaavia juomia
-	document.querySelector('.button-submit').addEventListener('click', () => {
+	searchButton.addEventListener('click', () => {
 		globalVars.searchWithVars = true;
 		searchWithVars("https://cors-anywhere.herokuapp.com/http://188.166.162.144:130/findrestaurants", searchVars, distanceSlider.noUiSlider.get());
 	});
 
 	// menun sulkeminen
-	document.getElementById("menu-close-x").addEventListener("click", closeMenu);
+	menuCloseButton.addEventListener("click", closeMenu);
 
 	// "restaurant cardin" sulkeminen
-	document.getElementById("card-close-x").addEventListener("click", closeCard);
+	cardCloseButton.addEventListener("click", closeCard);
 
 	// modaalin sulkeminen
-	document.getElementById("modal-close-x").addEventListener("click", hideModal);
-
-	// out of focus alueen klikkaaminen sulkee kaikki
-	document.getElementById("oof").addEventListener("click",(e) => {
-		if(e.target !== oof) return;
-		hideModal();
-		closeCard();
-		closeMenu();
-	});
+	modalCloseButton.addEventListener("click", hideModal);
 
 	// reittiohjeen sulkeminen
-	document.getElementById("route-close-x").addEventListener("click", function() {
-		googleshit.directionsRenderer.setMap(null);
-		closeDirections();
-		resizeElementHeights();
-	});
+	routeCloseButton.addEventListener("click", closeDirections);
+
+	// out of focus alueen klikkaaminen sulkee kaikki
+	oof.addEventListener("click", (e) => closeAll(e.target));
 
 	// reittioheiden koon muuttaminen koneella
-	handle.addEventListener('mousedown', (e) => {
-		mouseStartPos = { x: e.pageX, y: e.pageY };
-		mouseDown = true;
-		handleOffset = mouseStartPos.y - handle.getBoundingClientRect().top;
-		const routeOptionsHeight = document.querySelector('.adp-list') != null ? document.querySelector('.adp-list').clientHeight : 0;
-		directionsMaxHeight = document.querySelector('.adp').clientHeight  + routeOptionsHeight + 24;
-		mapMinHeight = windowHeight - headerHeight - directionsMaxHeight;
-	});
+	handle.addEventListener('mousedown', (e) => directionsReziseStart(e));
 	window.addEventListener("mouseleave", () => mouseDown = false);
 	window.addEventListener("mouseup", () => mouseDown = false);
-	window.addEventListener("mousemove", (e) => {
-		if(!mouseDown) return;
-		e.preventDefault();
-		const handleTopPos = e.pageY - handleOffset;
-		const directionsHeight = windowHeight - handleTopPos;
-		const mapHeight = windowHeight - directionsHeight - headerHeight;
-		mapElement.style.height = (mapHeight > mapMinHeight) ? mapHeight + "px" : mapMinHeight + "px";
-		setTimeout(() => {
-			directionsElement.style.height = (directionsHeight < directionsMaxHeight) ? directionsHeight + "px" : directionsMaxHeight + "px";
-		}, 100);
-	});
+	window.addEventListener("mousemove", (e) => directionsResize(e));
 
 	//reittiohjeiden koon muuttaminen mobiilissa
-	handle.addEventListener("touchstart", (e) => {
-		e.preventDefault();
-		mouseStartPos = {x: e.touches[0].pageX, y: e.touches[0].pageY};
-		mouseDown = true;
-		handleOffset = mouseStartPos.y - handle.getBoundingClientRect().top;
-		const routeOptionsHeight = document.querySelector('.adp-list') !== null ? document.querySelector('.adp-list').clientHeight : 0;
-		directionsMaxHeight = document.querySelector('.adp').clientHeight  + routeOptionsHeight + 24;
-		mapMinHeight = windowHeight - headerHeight - directionsMaxHeight;
-	});
+	handle.addEventListener("touchstart", (e) => directionsReziseStart(e));
 	window.addEventListener("touchend", () => mouseDown = false);
 	window.addEventListener("touchcancel", () => mouseDown = false);
-	window.addEventListener("touchmove", (e) => {
-		if(!mouseDown || e.touches.length === 0) return;
-		e.preventDefault();
-		const handleTopPos = e.touches[0].pageY - handleOffset;
-		const directionsHeight = windowHeight - handleTopPos;
-		const mapHeight = windowHeight - directionsHeight - headerHeight;
-		mapElement.style.height = (mapHeight > mapMinHeight) ? mapHeight + "px" : mapMinHeight + "px";
-		setTimeout(() => {
-			directionsElement.style.height = (directionsHeight < directionsMaxHeight) ? directionsHeight + "px" : directionsMaxHeight + "px";
-		}, 150);
-	});
+	window.addEventListener("touchmove", (e) => directionsResize());
 
 	// menun voi avata pyyhkäisemällä vasemmasta reunasta
 	mapElement.addEventListener("touchstart", (e) => {
-		const boolean = !(e.changedTouches[0].pageX < 25);
-		googleshit.map.setOptions({ draggable: boolean});
+		const startFromLeftEdge = e.changedTouches[0].pageX < 25;
+		googleshit.map.setOptions({ draggable: !startFromLeftEdge});
 		mouseStartPos = {x: e.changedTouches[0].pageX, y: e.changedTouches[0].pageX};
 	});
 	mapElement.addEventListener("touchend", (e) => {
@@ -381,7 +306,7 @@ window.onload = function(){
 			.then(startPoint => {
 				calcRoute(startPoint,endPoint,mode);
 			})
-			.catch(error => console.log(error));
+			.catch(error => showErrorMessage("ERROR: " + error));
 		
 	}));
 
@@ -437,24 +362,67 @@ window.onload = function(){
 	});
 
 	// slaidereiden siirtäminen päivittää hakukriteerit
-	priceSlider.noUiSlider.on("change", function() {
-		const value = parseFloat(priceSlider.noUiSlider.get());
-		searchVars.price = parseFloat(value.toFixed(1));
-	});
-	alcoholSlider.noUiSlider.on("change", function() {
-		const value = alcoholSlider.noUiSlider.get();
-		searchVars.abvMin = parseFloat(value[0]);
-		searchVars.abvMax = parseFloat(value[1]);
-	});
-
-
-};
-// ---- WINDOW.ONLOAD LOPPU ----
-
+	priceSlider.noUiSlider.on("change", (value) => updatePrice(value[0]));
+	alcoholSlider.noUiSlider.on("change", (values) => updateAbv(values));
 
 
 /**
- *  Creates the thead and an empty tbody to ".beers-table" element in the restaurant card.
+ * When the user clicks on the black bar on the directions element, mapMinHeight and directionsMaxHeight are calculated.
+ * @see directionsResize
+ * @param {event} e The click/touch event.
+ *
+ */
+function directionsReziseStart(e) {
+	const x = e.pageX || e.touches.pageX;
+	const y = e.pageY || e.touches.pageY;
+	mouseDown = true;
+	handleOffset = y - handle.getBoundingClientRect().top;
+	const routeOptionsHeight = document.querySelector('.adp-list') != null ? document.querySelector('.adp-list').clientHeight : 0;
+	directionsMaxHeight = document.querySelector('.adp').clientHeight  + routeOptionsHeight + 24;
+	mapMinHeight = windowHeight - headerHeight - directionsMaxHeight;
+}
+
+/**
+ * Changes the size of the directions element while the user has their mouse/finger pressed down.
+ * @see directionsResizeStart
+ * @param {event} e The click/touch event.
+ */
+function directionsResize(e) {
+	if(!mouseDown) return;
+	e.preventDefault();
+	const y = e.pageY || e.touches.pageY;
+	const handleTopPos = y - handleOffset;
+	const directionsHeight = windowHeight - handleTopPos;
+	const mapHeight = windowHeight - directionsHeight - headerHeight;
+	mapElement.style.height = (mapHeight > mapMinHeight) ? mapHeight + "px" : mapMinHeight + "px";
+	setTimeout(() => {
+		directionsElement.style.height = (directionsHeight < directionsMaxHeight) ? directionsHeight + "px" : directionsMaxHeight + "px";
+	}, 150);
+}
+
+
+/**
+ * Updates the price in the search parameters.
+ * @param {string} value The new price.
+ *
+ */
+function updatePrice(value) {
+	searchVars.price = parseFloat(value);
+}
+
+/**
+ * Updates the abv min and max values in the search parameters.
+ * @param {list} values A list of the new values.
+ *
+ */
+function updateAbv(values) {
+	searchVars.abvMin = parseFloat(values[0]);
+	searchVars.abvMax = parseFloat(values[1]);
+}
+
+/**
+ * Creates the thead and an empty tbody to ".beers-table" element in the restaurant card. Table head values are set in Finnish/English based on the parameter value.
+ * @param {string} language The language (fi/en) of the content.
  *
  */
 function createBeerTable(language) {
@@ -600,7 +568,7 @@ function capitalizeEveryWord(text) {
  */
 function getBarData(barName) {
 	const url = "https://cors-anywhere.herokuapp.com/http://188.166.162.144:130/restaurant?name=" + barName.toLowerCase();
-	return fetch(url).then(response => response.status !== 500 ? response.json() : null);
+	return fetch(url).then(response => response.status !== 500 ? response.json() : null).catch(error => showErrorMessage("ERROR: " + error));
 }
 
 /**
@@ -628,27 +596,28 @@ function searchWithVars(url, data, distance) {
 	})
 	.then(data => {
 		globalLists.bars = data;
-		const input = document.getElementById('menu-searchbox');
+		const menuInput = document.getElementById('menu-searchbox');
 		document.getElementById('route-container').style.height = 0 + "px";
 		document.getElementById('search-container').style.position = "absolute";
 		resizeElementHeights();
 		clearMarkers();
 		googleshit.directionsRenderer.setMap(null);
 		globalLists.bars = globalLists.bars.map(name => capitalizeEveryWord(name));
-		if(input.value === "") {
+		if(menuInput.value === "") {
 			locateUser(distance)
 			.then(pos => {
 				googleshit.map.panTo(pos);
 				createMarker(pos, true, false);
 				searchNearby(pos, distance);
 			})
-			.catch(error => console.log("ERROR " + error));
+			.catch(error => showErrorMessage("ERROR: " + error));
 		} else {
-			textSearch(input.value, distance);
-			input.value = "";
+			textSearch(menuInput.value, distance);
+			menuInput.value = "";
 		}
 		closeMenu();
 	})
+	.catch(error => showErrorMessage("ERROR: " + error));
 }
 
 
@@ -676,7 +645,7 @@ function textSearch(address, distance) {
 			});
 		}
 	})
-	.catch(error => console.log(error));	
+	.catch(error => showErrorMessage("ERROR: " + error));	
 }
 
 /**
@@ -793,6 +762,67 @@ function toggleServing(el) {
 	return clicked.id;
 }
 
+
+/**
+ * Onclick function for table head cells. Sorts the beverage list by the clicked column.
+ * @param {HTMLElement} el The table head cell that was clicked.
+ */
+function tableColumnSorting(el) {
+	const column = el.getAttribute("data-id");
+	const inactiveSortIcon = "kgps_icons/sort-icon-inactive.png";
+	const ascSortIcon = "kgps_icons/sort-icon-ascend.png";
+	const descSortIcon = "kgps_icons/sort-icon-descend.png";
+	let sortedValues;
+	let activeSortIcon;
+
+	switch(column) {
+	case "serving":
+		sortAscending.serving = !sortAscending.serving;
+		sortedValues = globalLists.beerList.sort(sortBy(column, sortAscending.serving));
+		updateTable(sortedValues, globalVars.language);
+		activeSortIcon = sortAscending.serving ? descSortIcon : ascSortIcon;
+		break;
+	case "name":
+		sortAscending.name = !sortAscending.name;
+		sortedValues = globalLists.beerList.sort(sortBy(column, sortAscending.name));
+		updateTable(sortedValues, globalVars.language);
+		activeSortIcon = sortAscending.name ? descSortIcon : ascSortIcon;
+		break;
+	case "type":
+		sortAscending.type = !sortAscending.type;
+		sortedValues = globalLists.beerList.sort(sortBy(column, sortAscending.type));
+		updateTable(sortedValues, globalVars.language);
+		activeSortIcon = sortAscending.type ? descSortIcon : ascSortIcon;
+		break;
+	case "abv":
+		sortAscending.abv = !sortAscending.abv;
+		sortedValues = globalLists.beerList.sort(sortBy(column, sortAscending.abv));
+		updateTable(sortedValues, globalVars.language);
+		activeSortIcon = sortAscending.abv ? descSortIcon : ascSortIcon;
+		break;
+	case "vol":
+		sortAscending.vol = !sortAscending.vol;
+		sortedValues = globalLists.beerList.sort(sortBy(column, sortAscending.vol));
+		updateTable(sortedValues, globalVars.language);
+		activeSortIcon = sortAscending.vol ? descSortIcon : ascSortIcon;
+		break;
+	case "price":
+		sortAscending.price = !sortAscending.price;
+		sortedValues = globalLists.beerList.sort(sortBy(column, sortAscending.price));
+		updateTable(sortedValues, globalVars.language);
+		activeSortIcon = sortAscending.price ? descSortIcon : ascSortIcon;
+		break;
+	default:
+		break;
+	}
+
+	for (let i = 0; i < tableHeads.length; i++) {
+		if (tableHeads[i].childNodes.length > 0) {
+			tableHeads[i].childNodes[0].src = (tableHeads[i] === el) ? activeSortIcon : inactiveSortIcon;
+		}
+	}
+}
+
 /**
  * Resizes the map, menu and restaurant card heights when the window is resized.
  *
@@ -847,8 +877,8 @@ function rotateIcon(icon) {
  *
  */
 function openMenu() {
-	document.getElementById("side-menu").style.left = "0px";
-	document.getElementById("oof").style.width = "100%";
+	menuElement.classList.add('visible');
+	oof.classList.add('visible');
 }
 
 /**
@@ -856,8 +886,8 @@ function openMenu() {
  *
  */
 function closeMenu() {
-	document.getElementById("side-menu").style.left = "-300px";
-	document.getElementById("oof").style.width = "0";
+	menuElement.classList.remove('visible');
+	oof.classList.remove('visible');
 }
 
 /**
@@ -865,8 +895,8 @@ function closeMenu() {
  *
  */
 function openCard() {
-	document.getElementById("restaurant-card").style.right = "0";
-	document.getElementById("oof").style.width = "100%";
+	restaurantCard.classList.add('visible');
+	oof.classList.add('visible');
 	document.getElementById("bar-photo").style.backgroundImage = "url('kgps_icons/beer-load.gif')";
 	document.getElementById("bar-photo").style.backgroundSize = "150px";
 }
@@ -876,8 +906,21 @@ function openCard() {
  *
  */
 function closeCard() {
-	document.getElementById("restaurant-card").style.right = window.innerWidth <= 600 ? "-100%" : "-600px";
-	document.getElementById("oof").style.width = "0";
+	restaurantCard.classList.remove('visible');
+	oof.classList.remove('visible');
+}
+
+
+/**
+ * Clicking the out-of-focus element closes the modal, menu and restaurant card unless the legal age checker is still on the screen.
+ * @param {HTMLElement} clickedElement The element that was clicked.
+ *
+ */
+function closeAll(clickedElement) {
+	if(clickedElement !== oof || k18Modal.classList.contains('visible')) return;
+	hideModal();
+	closeCard();
+	closeMenu();
 }
 
 /**
@@ -885,25 +928,45 @@ function closeCard() {
  *
  */
 function closeDirections() {
+	googleshit.directionsRenderer.setMap(null);
 	const windowHeight = window.innerHeight;
 	const headerHeight = document.getElementsByTagName("header")[0].clientHeight;
 	const mapHeight = windowHeight - headerHeight + "px";
 	document.getElementById("map").style.height = mapHeight;
 	document.getElementById("route-container").style.height = 0 + "px";
 	document.getElementById("search-container").style.display = "block";
+	resizeElementHeights();
 }
 
 /**
  * Opens the modal element.
  *
  */
-function showModal() {
+function showTutorial() {
 	const noShow = localStorage.getItem("noMoreInstructions");
 	if(noShow) return;
-	const modal = document.getElementById("modal");
-	const oof = document.getElementById("oof");
-	oof.style.width = "100%";
-	modal.classList.add("visible");
+	oof.classList.add('visible');
+	tutorialModal.classList.add("visible");
+}
+
+function showK18() {
+	const checkedAge = sessionStorage.getItem('checkedAge');
+	console.log(checkedAge);
+	if(checkedAge) return showTutorial();
+	oof.classList.add('visible');
+	map.classList.add('blur');
+	searchContainer.classList.add('blur');
+	headerElement.classList.add('blur');
+	k18.classList.add('visible');
+	sessionStorage.setItem('checkedAge', true);
+}
+
+function closeK18() {
+	oof.classList.remove('visible');
+	map.classList.remove('blur');
+	searchContainer.classList.remove('blur');
+	headerElement.classList.remove('blur');
+	k18.classList.remove('visible');
 }
 
 /**
@@ -911,11 +974,9 @@ function showModal() {
  *
  */
 function hideModal() {
-	const modal = document.getElementById("modal");
-	const oof = document.getElementById("oof");
 	const checkbox = document.querySelector("input[name='noMoreInstructions'");
-	modal.classList.remove("visible");
-	oof.style.width = 0+"px";
+	tutorialModal.classList.remove("visible");
+	oof.classList.remove('visible');
 	if(checkbox.checked) {
 		localStorage.setItem("noMoreInstructions", true);
 	}
@@ -929,25 +990,26 @@ function hideModal() {
  */
 function renderBarInfo(place) {
 	const date = new Date();
-	const language = window.localStorage.getItem("language") === "en" ? "en" : "fi";
 	const weekday = date.getDay() > 0 ? date.getDay()-1 : 6;
 	const barAddress = document.getElementById("bar-address");
 	const barName = document.getElementById("bar-name");
 	const barOpen = document.getElementById("bar-open");
 	const barPhoto = document.getElementById("bar-photo");
-	getBarData(place.name).then(data => {
-		//console.log(data);
-		const body = document.querySelector("tbody");
-		if(data.length === 0){
-			body.textContent = "Ei listatietoja saatavilla.";
-			body.classList.add("emptyTable");
-		} else {
-			body.classList.remove("emptyTable");
-			createBeerTableBody(data);
-			updateTable(data.sort(sortBy("name", true)), language);
-		}
-		globalLists.beerList = data;
-	});
+	getBarData(place.name)
+		.then(data => {
+			//console.log(data);
+			const body = document.querySelector("tbody");
+			if(data.length === 0){
+				body.textContent = "Ei listatietoja saatavilla.";
+				body.classList.add("emptyTable");
+			} else {
+				body.classList.remove("emptyTable");
+				createBeerTableBody(data);
+				updateTable(data.sort(sortBy("name", true)), globalVars.language);
+			}
+			globalLists.beerList = data;
+		})
+		.catch(error => showErrorMessage("ERROR: " + error));
 	barName.innerHTML = place.name;
 	setRating(place.rating);
 	googleshit.placesService.getDetails({placeId: place.place_id},
@@ -1102,7 +1164,7 @@ function locateUser() {
 			navigator.geolocation.getCurrentPosition(position => {
 				resolve(new google.maps.LatLng(position.coords.latitude, position.coords.longitude));
 			}, function() {
-				reject("Paikannuksessa tapahtui virhe.");
+				reject("Paikannuksessa tapahtui virhe. Varmista, että paikannus on sallittu laitteesi asetuksissa.");
 			})
 		} else {
 			reject("Selaimesi ei valitettavasti tue paikannusta.");
@@ -1200,7 +1262,7 @@ function calcRoute(startPoint, endPoint, mode) {
 						openCard();
 					})
 				})
-				.catch(error => console.log("ERROR " + error));
+				.catch(error => showErrorMessage("ERROR: " + error));
 			createMarker(startPoint, false, false);
 			resizeElementHeights();
 			closeCard();
@@ -1285,7 +1347,7 @@ function createMarker(location, animate = true, isBarMarker = true) {
 }
 
 /**
- * Clears all markers from the map.
+ * Clears all markers from the map and from the markers list.
  */
 function clearMarkers() {
 	for (let i = 0; i < globalLists.markers.length; i++) {
@@ -1294,12 +1356,14 @@ function clearMarkers() {
 	globalLists.markers = [];
 }
 
-// googlen oma error funktio
-function handleLocationError(browserHasGeolocation, pos) {
-	googleshit.infowindow.setPosition(pos);
-	googleshit.infowindow.setContent(browserHasGeolocation ?
-		"Error: Paikannus epäonnistui." :
-		"Error: Selaimesi ei tue paikannusta.");
+/**
+ * Creates an infowindow into the middle of the current map location and displays the error message.
+ * @param {string} message The error message that will be shown in the infowindow.
+ */
+function showErrorMessage(message) {
+	const center = googleshit.map.getCenter();
+	googleshit.infowindow.setPosition(center);
+	googleshit.infowindow.setContent(message);
 	googleshit.infowindow.open(googleshit.map);
 }
 
@@ -1323,3 +1387,6 @@ function loadScript(url, callback) {
 		: "https://maps.googleapis.com/maps/api/js?key=AIzaSyDuIpE10xbisU_de-Mg_xR4-OpmOVl3BxA&libraries=places&language=fi&region=FI";
 	document.getElementsByTagName("head")[0].appendChild(script);
 }
+
+	
+})(window, document, noUiSlider);
