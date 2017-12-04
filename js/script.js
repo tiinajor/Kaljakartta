@@ -51,7 +51,7 @@ TODO LISTA:
 	const brandList = document.querySelector("#brand-list div");
 	const menuButton = document.getElementById("hamburger-menu");
 	const locateButton = document.getElementById('locate');
-	const searchButton = document.querySelector('.button-submit');
+	const menuSearchButton = document.querySelector('.button-submit');
 	const menuCloseButton = document.getElementById("menu-close-x");
 	const cardCloseButton = document.getElementById("card-close-x");
 	const modalCloseButton = document.getElementById("modal-close-x");
@@ -72,6 +72,10 @@ TODO LISTA:
 	const servingButtons = document.querySelectorAll('.serving-button');
 	const directionsElement = document.getElementById('route-container');
 	const searchContainer = document.getElementById('search-container');
+	const modalFlag = document.querySelector('#tutorial .flag');
+	const searchbox = document.getElementById("searchbox");
+	const menuSearchbox = document.getElementById("menu-searchbox");
+	const searchButton = document.getElementById("search-button");
 	let headerHeight = headerElement.clientHeight;
 	let windowHeight = window.innerHeight;
 	let mouseDown = false;
@@ -101,7 +105,7 @@ TODO LISTA:
 	loadScript("https://maps.googleapis.com/maps/api/js?key=AIzaSyDuIpE10xbisU_de-Mg_xR4-OpmOVl3BxA&libraries=places&language=fi&region=FI", initMap);
 
 	showK18();
-
+	console.log(globalVars.language);
 	localizeContent(globalVars.language);
 	createBeerTable(globalVars.language);
 
@@ -120,12 +124,18 @@ TODO LISTA:
 	// lippujen klikkaaminen vaihtaa sivuston kielen kyseiseen kieleen
 	fiFlag.addEventListener("click", (e) => swapLanguage(e.target.id));
 	enFlag.addEventListener("click", (e) => swapLanguage(e.target.id));
+	modalFlag.addEventListener("click", () => {
+		const newLanguage = window.localStorage.getItem('language') === "en" ? "fi" : "en";
+		swapLanguage(newLanguage);
+	});
 
 	k18no.addEventListener('click', () => window.close());
 	k18yes.addEventListener('click', () => {
+		sessionStorage.setItem('checkedAge', true);
 		closeK18();
 		showTutorial();
 	});
+
 
 
 	// asettaa kartan, menun, reittiohjeiden sekä baarikortin korkeuden ja korjaa niitä aina kun ikkunan koko muuttuu
@@ -133,7 +143,7 @@ TODO LISTA:
 	window.addEventListener("resize", debounce(resizeElementHeights,100,false));
 
 	// kartan päällä olevan hakukentän suurennuslasi etsii osoitteen mukaan baarit jos osoite ei ole tyhjä
-	document.getElementById("search-button").addEventListener("click", function() {
+	searchButton.addEventListener("click", function() {
 		const input = document.getElementById("searchbox");
 		const address = input.value;
 		if(address !== "") {
@@ -145,7 +155,7 @@ TODO LISTA:
 	});
 
 	// hakukentässä enterin painaminen käynnistää haun myös
-	document.getElementById("searchbox").addEventListener("keyup", function(e) {
+	searchbox.addEventListener("keyup", function(e) {
 		e.preventDefault();
 		const input = e.target;
 		const address = input.value;
@@ -157,7 +167,7 @@ TODO LISTA:
 		}
 	});
 
-	document.getElementById("menu-searchbox").addEventListener("keyup", function(e) {
+	menuSearchbox.addEventListener("keyup", function(e) {
 		e.preventDefault();
 		if(e.keyCode === 13) {
 			globalVars.searchWithVars = true;
@@ -234,7 +244,7 @@ TODO LISTA:
 	});
 
 	// hae-nappi hakee baarit, joista löytyy hakukriteereitä vastaavia juomia
-	searchButton.addEventListener('click', () => {
+	menuSearchButton.addEventListener('click', () => {
 		globalVars.searchWithVars = true;
 		searchWithVars("https://cors-anywhere.herokuapp.com/http://188.166.162.144:130/findrestaurants", searchVars, distanceSlider.noUiSlider.get());
 	});
@@ -246,7 +256,7 @@ TODO LISTA:
 	cardCloseButton.addEventListener("click", closeCard);
 
 	// modaalin sulkeminen
-	modalCloseButton.addEventListener("click", hideModal);
+	modalCloseButton.addEventListener("click", closeTutorial);
 
 	// reittiohjeen sulkeminen
 	routeCloseButton.addEventListener("click", closeDirections);
@@ -918,7 +928,7 @@ function closeCard() {
  */
 function closeAll(clickedElement) {
 	if(clickedElement !== oof || k18Modal.classList.contains('visible')) return;
-	hideModal();
+	closeTutorial();
 	closeCard();
 	closeMenu();
 }
@@ -939,7 +949,7 @@ function closeDirections() {
 }
 
 /**
- * Opens the modal element.
+ * Opens the tutorial modal.
  *
  */
 function showTutorial() {
@@ -949,37 +959,43 @@ function showTutorial() {
 	tutorialModal.classList.add("visible");
 }
 
-function showK18() {
-	const checkedAge = sessionStorage.getItem('checkedAge');
-	console.log(checkedAge);
-	if(checkedAge) return showTutorial();
-	oof.classList.add('visible');
-	map.classList.add('blur');
-	searchContainer.classList.add('blur');
-	headerElement.classList.add('blur');
-	k18.classList.add('visible');
-	sessionStorage.setItem('checkedAge', true);
-}
-
-function closeK18() {
-	oof.classList.remove('visible');
-	map.classList.remove('blur');
-	searchContainer.classList.remove('blur');
-	headerElement.classList.remove('blur');
-	k18.classList.remove('visible');
-}
-
 /**
- * Closes the modal element.
+ * Closes the tutorial modal and (if checked) saves the "show no more" option to local storage.
  *
  */
-function hideModal() {
+function closeTutorial() {
 	const checkbox = document.querySelector("input[name='noMoreInstructions'");
 	tutorialModal.classList.remove("visible");
 	oof.classList.remove('visible');
 	if(checkbox.checked) {
 		localStorage.setItem("noMoreInstructions", true);
 	}
+}
+
+/**
+ * Opens the modal that asks if the user is over the legal drinking age.
+ *
+ */
+function showK18() {
+	const checkedAge = sessionStorage.getItem('checkedAge');
+	if(checkedAge) return showTutorial();
+	oof.classList.add('visible');
+	map.classList.add('blur');
+	searchContainer.classList.add('blur');
+	headerElement.classList.add('blur');
+	k18.classList.add('visible');
+}
+
+/**
+ * Closes the modal that asked if the user is over the legal drinking age.
+ *
+ */
+function closeK18() {
+	oof.classList.remove('visible');
+	map.classList.remove('blur');
+	searchContainer.classList.remove('blur');
+	headerElement.classList.remove('blur');
+	k18.classList.remove('visible');
 }
 
 /**
@@ -1073,6 +1089,14 @@ function localizeContent(language) {
 	document.querySelector("#transit img").title = locale.restaurantCard.directionsButtons.transit;
 	document.querySelector("#bicycling img").alt = locale.restaurantCard.directionsButtons.bicycle;
 	document.querySelector("#bicycling img").title = locale.restaurantCard.directionsButtons.bicycle;
+	document.querySelector('#k18 h2').textContent = locale.k18.title;
+	document.querySelector('.button-no').textContent = locale.k18.noBtn;
+	document.querySelector('.button-yes').textContent = locale.k18.yesBtn;
+	document.querySelector('.k18-body p').textContent = locale.k18.body;
+	document.querySelector('#tutorial h2').textContent = locale.tutorial.title;
+	document.querySelector('#tutorial .modal-body').textContent = locale.tutorial.body;
+	document.querySelector('#tutorial label span').textContent = locale.tutorial.checkbox;
+	modalFlag.src = locale.icon;
 }
 
 /**
