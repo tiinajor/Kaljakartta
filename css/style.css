@@ -329,7 +329,7 @@ header {
 	        justify-content: space-between;
 }
 
-.dropdown ul {
+.dropdown-list {
 	background-color: #a1a1a1;
 	border-top: none;
 	color: #101010;
@@ -341,6 +341,10 @@ header {
 	-webkit-transition: 0.5s;
 	-o-transition: 0.5s;
 	transition: 0.5s;
+}
+
+.dropdown-list.open {
+	height: 195px;
 }
 
 .dropdown ul::-webkit-scrollbar {

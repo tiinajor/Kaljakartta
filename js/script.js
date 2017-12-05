@@ -70,7 +70,7 @@ TODO LISTA:
 	const oof = document.getElementById('oof');
 	const tableHeads = document.getElementsByTagName('th');
 	const servingButtons = document.querySelectorAll('.serving-button');
-	const directionsElement = document.getElementById('route-container');
+	const routeContainer = document.getElementById('route-container');
 	const searchContainer = document.getElementById('search-container');
 	const modalFlag = document.querySelector('#tutorial .flag');
 	const searchbox = document.getElementById("searchbox");
@@ -105,7 +105,6 @@ TODO LISTA:
 	loadScript("https://maps.googleapis.com/maps/api/js?key=AIzaSyDuIpE10xbisU_de-Mg_xR4-OpmOVl3BxA&libraries=places&language=fi&region=FI", initMap);
 
 	showK18();
-	console.log(globalVars.language);
 	localizeContent(globalVars.language);
 	createBeerTable(globalVars.language);
 
@@ -144,8 +143,7 @@ TODO LISTA:
 
 	// kartan päällä olevan hakukentän suurennuslasi etsii osoitteen mukaan baarit jos osoite ei ole tyhjä
 	searchButton.addEventListener("click", function() {
-		const input = document.getElementById("searchbox");
-		const address = input.value;
+		const address = searchbox.value;
 		if(address !== "") {
 			const distance = distanceSlider.noUiSlider.get();
 			globalVars.searchWithVars = false;
@@ -224,8 +222,8 @@ TODO LISTA:
 
 	// käyttäjän GPS paikannus
 	locateButton.addEventListener('click', () => {
-		document.getElementById('route-container').style.height = 0+"px";
-		document.getElementById('search-container').style.position = "absolute";
+		routeContainer.style.height = 0+"px";
+		searchContainer.style.position = "absolute";
 		resizeElementHeights();
 		clearMarkers();
 		googleshit.directionsRenderer.setMap(null);
@@ -406,7 +404,7 @@ function directionsResize(e) {
 	const mapHeight = windowHeight - directionsHeight - headerHeight;
 	mapElement.style.height = (mapHeight > mapMinHeight) ? mapHeight + "px" : mapMinHeight + "px";
 	setTimeout(() => {
-		directionsElement.style.height = (directionsHeight < directionsMaxHeight) ? directionsHeight + "px" : directionsMaxHeight + "px";
+		routeContainer.style.height = (directionsHeight < directionsMaxHeight) ? directionsHeight + "px" : directionsMaxHeight + "px";
 	}, 150);
 }
 
@@ -606,14 +604,13 @@ function searchWithVars(url, data, distance) {
 	})
 	.then(data => {
 		globalLists.bars = data;
-		const menuInput = document.getElementById('menu-searchbox');
-		document.getElementById('route-container').style.height = 0 + "px";
-		document.getElementById('search-container').style.position = "absolute";
+		routeContainer.style.height = 0 + "px";
+		searchContainer.style.position = "absolute";
 		resizeElementHeights();
 		clearMarkers();
 		googleshit.directionsRenderer.setMap(null);
 		globalLists.bars = globalLists.bars.map(name => capitalizeEveryWord(name));
-		if(menuInput.value === "") {
+		if(menuSearchbox.value === "") {
 			locateUser(distance)
 			.then(pos => {
 				googleshit.map.panTo(pos);
@@ -622,8 +619,8 @@ function searchWithVars(url, data, distance) {
 			})
 			.catch(error => showErrorMessage("ERROR: " + error));
 		} else {
-			textSearch(menuInput.value, distance);
-			menuInput.value = "";
+			textSearch(menuSearchbox.value, distance);
+			menuSearchbox.value = "";
 		}
 		closeMenu();
 	})
@@ -679,6 +676,7 @@ function swapLanguage(language) {
  */
 function createList(list, parentDiv, id, searchVars) {
 	const ul = document.createElement("ul");
+	ul.classList.add("dropdown-list");
 	ul.id = id;
 	for (let i = 0; i<list.length; i++) {
 		list[i] = capitalizeFirstLetter(list[i]);
@@ -724,7 +722,7 @@ function closeList(div) {
 	const otherList = div.children[1];
 	const otherDiv = div.children[0];
 	const icon = otherDiv.children[1];
-	otherList.style.height = "0px";
+	otherList.classList.remove('open');
 	icon.style.transform = "rotate(-90deg)";
 }
 
@@ -842,9 +840,9 @@ function resizeElementHeights() {
 	const headerHeight = document.querySelector('header').clientHeight;
 	const routeHeight = document.getElementById('route-container').clientHeight;
 	const mapHeight = routeHeight > 0 ? (windowHeight - headerHeight - routeHeight) : (windowHeight - headerHeight);
-	document.getElementById("side-menu").style.height = windowHeight + "px";
-	document.getElementById("restaurant-card").style.height = windowHeight + "px";
-	document.getElementById("map").style.height = mapHeight + "px";
+	menuElement.style.height = windowHeight + "px";
+	restaurantCard.style.height = windowHeight + "px";
+	mapElement.style.height = mapHeight + "px";
 }
 
 /**
@@ -863,11 +861,7 @@ function removeDuplicates(array) {
  * @param {HTMLElement} item The list element that should be made visible.
  */
 function toggleVisible(item){
-	if (item.style.height === "195px"){
-		item.style.height = "0px";
-	}else{
-		item.style.height = "195px";
-	}
+	item.classList.toggle('open');
 }
 
 /**
@@ -907,8 +901,9 @@ function closeMenu() {
 function openCard() {
 	restaurantCard.classList.add('visible');
 	oof.classList.add('visible');
-	document.getElementById("bar-photo").style.backgroundImage = "url('kgps_icons/beer-load.gif')";
-	document.getElementById("bar-photo").style.backgroundSize = "150px";
+	const photo = document.getElementById("bar-photo");
+	photo.style.backgroundImage = "url('kgps_icons/beer-load.gif')";
+	photo.style.backgroundSize = "150px";
 }
 
 /**
@@ -942,9 +937,9 @@ function closeDirections() {
 	const windowHeight = window.innerHeight;
 	const headerHeight = document.getElementsByTagName("header")[0].clientHeight;
 	const mapHeight = windowHeight - headerHeight + "px";
-	document.getElementById("map").style.height = mapHeight;
-	document.getElementById("route-container").style.height = 0 + "px";
-	document.getElementById("search-container").style.display = "block";
+	mapElement.style.height = mapHeight;
+	routeContainer.style.height = 0 + "px";
+	searchContainer.style.display = "block";
 	resizeElementHeights();
 }
 
@@ -1013,7 +1008,6 @@ function renderBarInfo(place) {
 	const barPhoto = document.getElementById("bar-photo");
 	getBarData(place.name)
 		.then(data => {
-			//console.log(data);
 			const body = document.querySelector("tbody");
 			if(data.length === 0){
 				body.textContent = "Ei listatietoja saatavilla.";
@@ -1274,8 +1268,8 @@ function calcRoute(startPoint, endPoint, mode) {
 		if (status === "OK") {
 			googleshit.directionsRenderer.setDirections(response);
 			const windowHeight = window.innerHeight;
-			document.getElementById('route-container').style.height = windowHeight * 0.3 + "px";
-			document.getElementById('search-container').style.display = "none";
+			routeContainer.style.height = windowHeight * 0.3 + "px";
+			searchContainer.style.display = "none";
 			clearMarkers();
 			geocodeAddress(endPoint)
 				.then(results => {	
@@ -1409,7 +1403,7 @@ function loadScript(url, callback) {
 	script.src = window.localStorage.getItem("language") === "en" ?
 		"https://maps.googleapis.com/maps/api/js?key=AIzaSyDuIpE10xbisU_de-Mg_xR4-OpmOVl3BxA&libraries=places&language=en&region=FI"
 		: "https://maps.googleapis.com/maps/api/js?key=AIzaSyDuIpE10xbisU_de-Mg_xR4-OpmOVl3BxA&libraries=places&language=fi&region=FI";
-	document.getElementsByTagName("head")[0].appendChild(script);
+	document.querySelector('head').appendChild(script);
 }
 
 	
