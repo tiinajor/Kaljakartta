@@ -463,8 +463,8 @@ function createBeerTableBody(beers) {
 	let html = "";
 	for(let i=0;i<beers.length;i++) {
 		const beer = beers[i];
-		const name = capitalizeFirstLetter(beer.name);
-		const type = capitalizeFirstLetter(beer.type);
+		const name = capitalize(beer.name);
+		const type = capitalize(beer.type);
 		const bottleIcon = "kgps_icons/beer-bottle.svg";
 		const tapIcon = "kgps_icons/beer-tap.svg";
 		let src = "";
@@ -514,8 +514,8 @@ function updateTable(beers, language) {
 			}
 		}
 		rows[i].cells[0].innerHTML = `<img src=${icon}>`;
-		rows[i].cells[1].textContent = capitalizeFirstLetter(beers[i].name);
-		rows[i].cells[2].textContent = capitalizeFirstLetter(beerType);
+		rows[i].cells[1].textContent = capitalize(beers[i].name);
+		rows[i].cells[2].textContent = capitalize(beerType);
 		rows[i].cells[3].textContent = vol;
 		rows[i].cells[4].textContent = abv;
 		rows[i].cells[5].textContent = price;
@@ -551,7 +551,7 @@ function sortBy(col, ascendingOrder=true) {
  * @param {string} string The string to be capitalized.
  * @returns {String} The inputted string with a capitalized first letter.
  */
-function capitalizeFirstLetter(string) {
+function capitalize(string) {
 	return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
@@ -679,7 +679,7 @@ function createList(list, parentDiv, id, searchVars) {
 	ul.classList.add("dropdown-list");
 	ul.id = id;
 	for (let i = 0; i<list.length; i++) {
-		list[i] = capitalizeFirstLetter(list[i]);
+		list[i] = capitalize(list[i]);
 	}
 
 	if(id === "types") {
@@ -1027,7 +1027,7 @@ function renderBarInfo(place) {
 			if(status !== google.maps.places.PlacesServiceStatus.OK) return;
 			const address = data.formatted_address;
 			barAddress.innerHTML = address.split(",",2).join();
-			barOpen.innerHTML = data.opening_hours ? capitalizeFirstLetter(data.opening_hours.weekday_text[weekday]) : "Aukioloajat ei tiedossa";
+			barOpen.innerHTML = data.opening_hours ? capitalize(data.opening_hours.weekday_text[weekday]) : "Aukioloajat ei tiedossa";
 			if(data.photos) {
 				const url = data.photos[0].getUrl({ "maxWidth": 600 });
 				barPhoto.style.backgroundSize = "cover";
