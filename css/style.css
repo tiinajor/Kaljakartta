@@ -459,24 +459,33 @@ header {
 	display: -webkit-box;
 	display: -ms-flexbox;
 	display: flex;
+	border: 1px solid #808080;
+	border-radius: 8px;
 	max-width: 250px;
-	-ms-flex-pack: distribute;
-	    justify-content: space-around;
+	overflow: hidden;
+	margin-right: 5px;
 }
 
 .directions-button {
-	margin-top: 8px;
-	width: 53px;
-	height: 35px;
-	display: -webkit-box;
-	display: -ms-flexbox;
-	display: flex;
-	-webkit-box-pack: center;
-	    -ms-flex-pack: center;
-	        justify-content: center;
-	-webkit-box-align: center;
-	    -ms-flex-align: center;
-	        align-items: center;
+	flex: 1;
+	padding: 5px;
+	border: none;
+	border-right: 1px solid #808080;
+	background: #ffffff;
+	background-image: -webkit-linear-gradient(top, #ffffff, #f3f3f3);
+	background-image: -moz-linear-gradient(top, #ffffff, #f3f3f3);
+	background-image: -ms-linear-gradient(top, #ffffff, #f3f3f3);
+	background-image: -o-linear-gradient(top, #ffffff, #f3f3f3);
+	background-image: linear-gradient(to bottom, #ffffff, #f3f3f3);
+}
+
+.directions-button:last-child {
+	border-right: none;
+}
+
+.directions-button:hover {
+	background-image: none;
+	background-color: #ddd;
 }
 
 .column {
@@ -755,7 +764,6 @@ header {
 #searchbox {
 	border-radius: 5px;
 	border: 3px solid var(--bg-dark);
-	color: #9DBFAF;
 	float: left;
 	font-size: 24px;
 	height: 30px;
@@ -1009,7 +1017,7 @@ input[type="checkbox"] {
 	}
 
 	.rating-icon {
-		width: 30px;
+		width: 28px;
 	}
 
 	.header-icon {
