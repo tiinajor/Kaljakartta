@@ -193,7 +193,7 @@ TODO LISTA:
 	});
 
 	// menun avaus
-	menuButton.addEventListener("click", () => openMenu());
+	menuButton.addEventListener("click", openMenu);
 
 	// hakee menuun oluttyypit
 	fetch("http://188.166.162.144:130/beveragetypes")
@@ -219,7 +219,7 @@ TODO LISTA:
 				console.log("beer brands loaded");
 			})
 			.catch(err => console.log("Fetch Error: " + err));
-	}, 500);
+	}, 750);
 
 	// käyttäjän GPS paikannus
 	locateButton.addEventListener('click', () => {
@@ -537,8 +537,6 @@ function sortBy(col, ascendingOrder=true) {
 	return function(a, b) {
 		let x = a[col];
 		let y = b[col];
-		if(x === 0) x = 999;
-		if(y === 0) y = 999;
 		if(typeof x === "string" && typeof y === "string") {
 			return ascendingOrder ? x.localeCompare(y) : y.localeCompare(x);
 		} else {
@@ -686,6 +684,8 @@ function createList(list, parentDiv, id, searchVars) {
 
 	if(id === "types") {
 		let newList = [];
+		const language = window.localStorage.getItem('language');
+
 		for (let i = 0; i < list.length; i++) {
 			const type = list[i] + "," + list[i+1];
 			newList.push(type);
@@ -693,10 +693,12 @@ function createList(list, parentDiv, id, searchVars) {
 		}
 		newList = newList.sort();
 		for (let i = 0; i<newList.length; i++) {
-			let li = document.createElement("li");
-			let locale = newList[i].split(",");
-			locale = locale.map(x => x.trim());
-			let content = document.createTextNode(locale[0]);
+			const li = document.createElement("li");
+			const beerTypes = newList[i]
+							.split(",")
+							.map(item => item.trim());
+			const beerType = language === "fi" ? beerTypes[0] : beerTypes[1];
+			const content = document.createTextNode(beerType);
 			li.appendChild(content);
 			li.dataset.type = newList[i];
 			li.addEventListener("click", () => toggleInSearch(li, searchVars));
@@ -706,8 +708,8 @@ function createList(list, parentDiv, id, searchVars) {
 		list = removeDuplicates(list);
 		list = list.sort();
 		for (let i = 0; i < list.length; i++) {
-			let li = document.createElement("li");
-			let content = document.createTextNode(list[i]);
+			const li = document.createElement("li");
+			const content = document.createTextNode(list[i]);
 			li.appendChild(content);
 			li.addEventListener("click", () => toggleInSearch(li, searchVars));
 			ul.appendChild(li);
@@ -1301,7 +1303,6 @@ function calcRoute(startPoint, endPoint, mode) {
  *
  */
 function searchNearby(loc, distance) {
-	console.log("search start");
 	document.getElementById('loading').classList.add('visible');
 	showSearchRadius(loc, distance);
 
@@ -1349,7 +1350,6 @@ function processResults(results, status, pagination, loc, distanceLimit) {
 	for (let i = 0; i < results.length; i++) {
 		const actualDistance = google.maps.geometry.spherical.computeDistanceBetween(loc, results[i].geometry.location);
 		if(!pagination.hasNextPage) {
-			console.log("search over");
 			document.getElementById('loading').classList.remove('visible');
 			return;
 		}
