@@ -379,8 +379,24 @@ header {
 	z-index: 60;
 }
 
+.out-of-focus-area img {
+	display: none;
+}
+
+.out-of-focus-area.light {
+	background-color: rgba(0,0,0, 0.2);
+	height: 100vh;
+	position: absolute;
+	width: 0;
+	z-index: 60;
+}
+
 .out-of-focus-area.visible {
 	width: 100%;
+}
+
+.out-of-focus-area.visible img {
+	display: block;
 }
 
 .noUi-horizontal.noUi-extended {
@@ -735,6 +751,17 @@ header {
 }
 /* ----- KARTTA LOPPU----- */
 
+
+/* ----- LOADER ----- */
+
+#loading {
+	z-index: 100;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+/* ----- LOADER ----- */
 
 
 /* ----- KARTAN HAKUKENTTÄ ----- */
