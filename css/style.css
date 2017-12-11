@@ -1011,6 +1011,9 @@ input[type="checkbox"] {
 	.version {
 		font-size: 0.4em;
 		letter-spacing: 1px;
+		-webkit-transform: translateY(-30%);
+	    	-ms-transform: translateY(-30%);
+	        	transform: translateY(-30%);
 	}
 
 	.rating-icon {
