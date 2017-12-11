@@ -75,7 +75,7 @@ header {
 
 .logo {
 	height: 36px;
-	padding-right: 5px;
+	padding-right: 2px;
 }
 
 .title-container {
@@ -92,9 +92,7 @@ header {
 }
 
 .title {
-	font-size: 2.9em;
 	height: 36px;
-	line-height: 36px;
 	display: -webkit-box;
 	display: -ms-flexbox;
 	display: flex;
@@ -102,16 +100,14 @@ header {
 	-webkit-box-align: center;
 	    -ms-flex-align: center;
 	        align-items: center;
-	letter-spacing: 2px;
 }
 
 .version {
-	font-size: 0.4em;
-	-ms-flex-item-align: start;
-	    align-self: flex-start;
-	-webkit-transform: translateY(-30%);
-	    -ms-transform: translateY(-30%);
-	        transform: translateY(-30%);
+	align-self: flex-start;
+	letter-spacing: 2px;
+	-webkit-transform: translateY(-50%);
+	    -ms-transform: translateY(-50%);
+	        transform: translateY(-50%);
 }
 
 .header-icon {
@@ -1013,7 +1009,8 @@ input[type="checkbox"] {
 	}
 
 	.version {
-		vertical-align: middle;
+		font-size: 0.4em;
+		letter-spacing: 1px;
 	}
 
 	.rating-icon {

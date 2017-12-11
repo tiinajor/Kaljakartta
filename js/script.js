@@ -31,6 +31,7 @@ TODO LISTA:
 		geocoder: null,
 		placesService: null,
 		infowindow: null,
+		circle: null
 	};
 
 	/**
@@ -310,6 +311,7 @@ TODO LISTA:
 		const endPoint = document.getElementById("bar-address").textContent;
 		const barName = document.getElementById("bar-name").textContent;
 		const mode = el.id.toUpperCase();
+		googleshit.circle.setOptions({fillOpacity: 0, strokeOpacity: 0});
 		defineStartingPoint()
 			.then(startPoint => {
 				calcRoute(startPoint,endPoint,mode);
@@ -1167,7 +1169,7 @@ function initMap() {
 	googleshit.directionsRenderer.setPanel(document.getElementById("route"));
 	googleshit.geocoder = new google.maps.Geocoder();
 	googleshit.infowindow = new google.maps.InfoWindow();
-
+	googleshit.circle = new google.maps.Circle({ map: googleshit.map });
 }
 
 /**
@@ -1298,6 +1300,18 @@ function calcRoute(startPoint, endPoint, mode) {
  *
  */
 function searchNearby(loc, distance) {
+	const circleOptions = {
+        strokeColor: '#FF0000',
+        strokeOpacity: 0.1,
+        strokeWeight: 2,
+        fillColor: '#FF0000',
+		fillOpacity: 0.075,
+		center: loc,
+		radius: parseFloat(distance)
+	};
+	googleshit.circle.setOptions(circleOptions);
+	googleshit.map.fitBounds(googleshit.circle.getBounds());
+
 	googleshit.placesService.nearbySearch({
 		location: loc,
 		rankBy: google.maps.places.RankBy.DISTANCE,
@@ -1309,7 +1323,6 @@ function searchNearby(loc, distance) {
 		rankBy: google.maps.places.RankBy.DISTANCE,
 		type: ["bar"]
 	}, (results, status, pagination) => processResults(results, status, pagination, loc, distance));
-
 }
 
 /**
@@ -1319,13 +1332,21 @@ function searchNearby(loc, distance) {
  * @param {Object} status The status of the Google search.
  * @param {Object} pagination The search only shows 20 results per page so with the pagination
  *  we can get up to 60 results instead of the default 20 (Google's max is 3 pages).
+ * @param {Object} loc The location object, which has latitude and longitude.
+ * @param {number} distance The range for the search in meters.
  *
  */
 function processResults(results, status, pagination, loc, distanceLimit) {
 	if (status !== google.maps.places.PlacesServiceStatus.OK) return;
 	for (let i = 0; i < results.length; i++) {
 		const actualDistance = google.maps.geometry.spherical.computeDistanceBetween(loc, results[i].geometry.location);
-		if(actualDistance > distanceLimit) continue;
+		if(actualDistance > distanceLimit) {
+			continue;
+		};
+		if(!pagination.hasNextPage) {
+			console.log("done");
+			return;
+		}
 		setTimeout((function(i){
 			return function(){
 				if(globalVars.searchWithVars && globalLists.bars.indexOf(results[i].name) === -1) return;
