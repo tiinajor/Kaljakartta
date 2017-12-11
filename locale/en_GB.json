@@ -1,4 +1,5 @@
 const en_GB ={
+    "icon": "kgps_icons/locale_fi.svg",
     "menu": {
         "searchOptionButtons": {
             "tapButton": "Tap",
@@ -36,5 +37,16 @@ const en_GB ={
             "abv": "Abv",
             "price": "Price"
         }
+    },
+    "tutorial": {
+        "title": "What is kaljakartta?",
+        "checkbox": "Do not show again",
+        "body": "With Kaljakartta you can find just the right beers and bars for You and your wallet wherever you go."
+    },
+    "k18": {
+        "title": "Are you of legal age?",
+        "yesBtn": "Yes",
+        "noBtn": "No",
+        "body": "The website contains information about alcoholic beverages so it is only for people who are over 18."
     }
 }
