@@ -149,7 +149,7 @@ TODO LISTA:
 			const distance = distanceSlider.noUiSlider.get();
 			globalVars.searchWithVars = false;
 			textSearch(address, distance);
-			input.value = "";
+			searchbox.value = "";
 		}
 	});
 
@@ -170,7 +170,7 @@ TODO LISTA:
 		e.preventDefault();
 		if(e.keyCode === 13) {
 			globalVars.searchWithVars = true;
-			searchWithVars("https://cors-anywhere.herokuapp.com/http://188.166.162.144:130/findrestaurants", searchVars, distanceSlider.noUiSlider.get());
+			searchWithVars("http://188.166.162.144:130/findrestaurants", searchVars, distanceSlider.noUiSlider.get());
 		}
 	});
 
@@ -196,7 +196,7 @@ TODO LISTA:
 	menuButton.addEventListener("click", () => openMenu());
 
 	// hakee menuun oluttyypit
-	fetch("https://cors-anywhere.herokuapp.com/http://188.166.162.144:130/beveragetypes")
+	fetch("http://188.166.162.144:130/beveragetypes")
 		.then(response => { return response.text() })
 		.then(data => {
 			let beerTypes = data.slice(1, -1).split(",");
@@ -204,11 +204,11 @@ TODO LISTA:
 			createList(beerTypes, document.getElementById("type-list"), "types", searchVars);
 			console.log("beertypes loaded");
 		})
-		.catch(err => showErrorMessage("Fetch Error: " + err));
+		.catch(err => console.log("Fetch Error: " + err));
 
 	// hakee menuun olutmerkit
 	setTimeout(() => {
-		fetch("https://cors-anywhere.herokuapp.com/http://188.166.162.144:130/brands")
+		fetch("http://188.166.162.144:130/brands")
 			.then(response => {
 				return response.text();
 			})
@@ -218,7 +218,7 @@ TODO LISTA:
 				createList(beerBrands, document.getElementById("brand-list"), "brands", searchVars);
 				console.log("beer brands loaded");
 			})
-			.catch(err => showErrorMessage("Fetch Error: " + err));
+			.catch(err => console.log("Fetch Error: " + err));
 	}, 500);
 
 	// käyttäjän GPS paikannus
@@ -239,13 +239,13 @@ TODO LISTA:
 					searchNearby(pos, distance);
 				}
 			})
-			.catch(error => showErrorMessage("ERROR: " + error));
+			.catch(error => console.log("locateUserError: " + error));
 	});
 
 	// hae-nappi hakee baarit, joista löytyy hakukriteereitä vastaavia juomia
 	menuSearchButton.addEventListener('click', () => {
 		globalVars.searchWithVars = true;
-		searchWithVars("https://cors-anywhere.herokuapp.com/http://188.166.162.144:130/findrestaurants", searchVars, distanceSlider.noUiSlider.get());
+		searchWithVars("http://188.166.162.144:130/findrestaurants", searchVars, distanceSlider.noUiSlider.get());
 	});
 
 	// menun sulkeminen
@@ -316,7 +316,7 @@ TODO LISTA:
 			.then(startPoint => {
 				calcRoute(startPoint,endPoint,mode);
 			})
-			.catch(error => showErrorMessage("ERROR: " + error));
+			.catch(error => showErrorMessage("directionsError: " + error));
 		
 	}));
 
@@ -577,8 +577,8 @@ function capitalizeEveryWord(text) {
  * @returns {Object} Returns the beerlist as a JSON or return null if the request status is 500.
  */
 function getBarData(barName) {
-	const url = "https://cors-anywhere.herokuapp.com/http://188.166.162.144:130/restaurant?name=" + barName.toLowerCase();
-	return fetch(url).then(response => response.status !== 500 ? response.json() : null).catch(error => showErrorMessage("ERROR: " + error));
+	const url = "http://188.166.162.144:130/restaurant?name=" + barName.toLowerCase();
+	return fetch(url).then(response => response.status !== 500 ? response.json() : null).catch(error => showErrorMessage("getBarDataError: " + error));
 }
 
 /**
@@ -591,7 +591,7 @@ function getBarData(barName) {
  * @param {number} distance The max range from the address where the bars will be searched.
  */
 function searchWithVars(url, data, distance) {
-	fetch(url, {
+	fetch("https://cors-anywhere.herokuapp.com/"+url, {
 		method: "POST",
 		body: JSON.stringify(data),
 		headers: { "content-type": "application/json" },
@@ -619,14 +619,14 @@ function searchWithVars(url, data, distance) {
 				createMarker(pos, true, false);
 				searchNearby(pos, distance);
 			})
-			.catch(error => showErrorMessage("ERROR: " + error));
+			.catch(error => showErrorMessage("locateUserError: " + error));
 		} else {
 			textSearch(menuSearchbox.value, distance);
 			menuSearchbox.value = "";
 		}
 		closeMenu();
 	})
-	.catch(error => showErrorMessage("ERROR: " + error));
+	.catch(error => showErrorMessage("searchWithVarsError: " + error));
 }
 
 
@@ -654,7 +654,7 @@ function textSearch(address, distance) {
 			});
 		}
 	})
-	.catch(error => showErrorMessage("ERROR: " + error));	
+	.catch(error => showErrorMessage("textSearchError: " + error));	
 }
 
 /**
@@ -1010,6 +1010,7 @@ function renderBarInfo(place) {
 	const barPhoto = document.getElementById("bar-photo");
 	getBarData(place.name)
 		.then(data => {
+			console.log(data);
 			const body = document.querySelector("tbody");
 			if(data.length === 0){
 				body.textContent = "Ei listatietoja saatavilla.";
@@ -1021,7 +1022,7 @@ function renderBarInfo(place) {
 			}
 			globalLists.beerList = data;
 		})
-		.catch(error => showErrorMessage("ERROR: " + error));
+		.catch(error => console.log("getbardata " + error));
 	barName.innerHTML = place.name;
 	setRating(place.rating);
 	googleshit.placesService.getDetails({placeId: place.place_id},
@@ -1282,7 +1283,7 @@ function calcRoute(startPoint, endPoint, mode) {
 						openCard();
 					})
 				})
-				.catch(error => showErrorMessage("ERROR: " + error));
+				.catch(error => showErrorMessage("geocodeError: " + error));
 			createMarker(startPoint, false, false);
 			resizeElementHeights();
 			closeCard();
@@ -1300,17 +1301,9 @@ function calcRoute(startPoint, endPoint, mode) {
  *
  */
 function searchNearby(loc, distance) {
-	const circleOptions = {
-        strokeColor: '#FF0000',
-        strokeOpacity: 0.1,
-        strokeWeight: 2,
-        fillColor: '#FF0000',
-		fillOpacity: 0.075,
-		center: loc,
-		radius: parseFloat(distance)
-	};
-	googleshit.circle.setOptions(circleOptions);
-	googleshit.map.fitBounds(googleshit.circle.getBounds());
+	console.log("search start");
+	document.getElementById('loading').classList.add('visible');
+	showSearchRadius(loc, distance);
 
 	googleshit.placesService.nearbySearch({
 		location: loc,
@@ -1323,6 +1316,21 @@ function searchNearby(loc, distance) {
 		rankBy: google.maps.places.RankBy.DISTANCE,
 		type: ["bar"]
 	}, (results, status, pagination) => processResults(results, status, pagination, loc, distance));
+}
+
+
+function showSearchRadius(loc, distance) {
+	const circleOptions = {
+        strokeColor: '#FF0000',
+        strokeOpacity: 0.3,
+        strokeWeight: 6,
+        fillColor: '#000000',
+		fillOpacity: 0.06,
+		center: loc,
+		radius: parseFloat(distance)
+	};
+	googleshit.circle.setOptions(circleOptions);
+	googleshit.map.fitBounds(googleshit.circle.getBounds());
 }
 
 /**
@@ -1340,13 +1348,15 @@ function processResults(results, status, pagination, loc, distanceLimit) {
 	if (status !== google.maps.places.PlacesServiceStatus.OK) return;
 	for (let i = 0; i < results.length; i++) {
 		const actualDistance = google.maps.geometry.spherical.computeDistanceBetween(loc, results[i].geometry.location);
+		if(!pagination.hasNextPage) {
+			console.log("search over");
+			document.getElementById('loading').classList.remove('visible');
+			return;
+		}
 		if(actualDistance > distanceLimit) {
 			continue;
 		};
-		if(!pagination.hasNextPage) {
-			console.log("done");
-			return;
-		}
+		
 		setTimeout((function(i){
 			return function(){
 				if(globalVars.searchWithVars && globalLists.bars.indexOf(results[i].name) === -1) return;
