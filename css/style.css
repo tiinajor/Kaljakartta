@@ -50,6 +50,13 @@ body, html {
     position: absolute;
 }
 
+.blur {
+	filter: blur(5px);
+}
+
+.flag {
+	height: 35px;
+}
 
 /* ----- HEADER ----- */
 header {
@@ -68,7 +75,7 @@ header {
 
 .logo {
 	height: 36px;
-	padding-right: 5px;
+	padding-right: 2px;
 }
 
 .title-container {
@@ -85,9 +92,7 @@ header {
 }
 
 .title {
-	font-size: 2.9em;
 	height: 36px;
-	line-height: 36px;
 	display: -webkit-box;
 	display: -ms-flexbox;
 	display: flex;
@@ -95,16 +100,14 @@ header {
 	-webkit-box-align: center;
 	    -ms-flex-align: center;
 	        align-items: center;
-	letter-spacing: 2px;
 }
 
 .version {
-	font-size: 0.4em;
-	-ms-flex-item-align: start;
-	    align-self: flex-start;
-	-webkit-transform: translateY(-30%);
-	    -ms-transform: translateY(-30%);
-	        transform: translateY(-30%);
+	align-self: flex-start;
+	letter-spacing: 2px;
+	-webkit-transform: translateY(-50%);
+	    -ms-transform: translateY(-50%);
+	        transform: translateY(-50%);
 }
 
 .header-icon {
@@ -282,12 +285,12 @@ header {
 	    justify-content: space-around;
 }
 
-.button-cancel {
+.button-cancel, .button-no {
 	background-color: transparent;
 	border: 2px solid var(--secondary);
 }
 
-.button-submit {
+.button-submit, .button-yes {
 	/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#ffa600+1,e59b12+100 */
 	background: var(--secondary); /* Old browsers */ /* FF3.6-15 */
 	background: -webkit-linear-gradient(top, #ffa600 1%,#e59b12 100%); /* Chrome10-25,Safari5.1-6 */
@@ -322,7 +325,7 @@ header {
 	        justify-content: space-between;
 }
 
-.dropdown ul {
+.dropdown-list {
 	background-color: #a1a1a1;
 	border-top: none;
 	color: #101010;
@@ -334,6 +337,10 @@ header {
 	-webkit-transition: 0.5s;
 	-o-transition: 0.5s;
 	transition: 0.5s;
+}
+
+.dropdown-list.open {
+	height: 195px;
 }
 
 .dropdown ul::-webkit-scrollbar {
@@ -372,6 +379,10 @@ header {
 	z-index: 60;
 }
 
+.out-of-focus-area.visible {
+	width: 100%;
+}
+
 .noUi-horizontal.noUi-extended {
 	padding-right: 32px;
 }
@@ -407,6 +418,10 @@ header {
     z-index: 70;
 }
 
+#side-menu.visible {
+	left: 0;
+}
+
 #search-option-sliders {
 	margin: 10px auto 20px auto;
 }
@@ -440,24 +455,33 @@ header {
 	display: -webkit-box;
 	display: -ms-flexbox;
 	display: flex;
+	border: 1px solid #808080;
+	border-radius: 8px;
 	max-width: 250px;
-	-ms-flex-pack: distribute;
-	    justify-content: space-around;
+	overflow: hidden;
+	margin-right: 5px;
 }
 
 .directions-button {
-	margin-top: 8px;
-	width: 53px;
-	height: 35px;
-	display: -webkit-box;
-	display: -ms-flexbox;
-	display: flex;
-	-webkit-box-pack: center;
-	    -ms-flex-pack: center;
-	        justify-content: center;
-	-webkit-box-align: center;
-	    -ms-flex-align: center;
-	        align-items: center;
+	flex: 1;
+	padding: 5px;
+	border: none;
+	border-right: 1px solid #808080;
+	background: #ffffff;
+	background-image: -webkit-linear-gradient(top, #ffffff, #f3f3f3);
+	background-image: -moz-linear-gradient(top, #ffffff, #f3f3f3);
+	background-image: -ms-linear-gradient(top, #ffffff, #f3f3f3);
+	background-image: -o-linear-gradient(top, #ffffff, #f3f3f3);
+	background-image: linear-gradient(to bottom, #ffffff, #f3f3f3);
+}
+
+.directions-button:last-child {
+	border-right: none;
+}
+
+.directions-button:hover {
+	background-image: none;
+	background-color: #ddd;
 }
 
 .column {
@@ -694,6 +718,10 @@ header {
     z-index: 65;
 }
 
+#restaurant-card.visible {
+	right: 0;
+}
+
 /* ----- RESTAURANT CARD LOPPU -----*/
 
 
@@ -732,7 +760,6 @@ header {
 #searchbox {
 	border-radius: 5px;
 	border: 3px solid var(--bg-dark);
-	color: #9DBFAF;
 	float: left;
 	font-size: 24px;
 	height: 30px;
@@ -767,36 +794,35 @@ input[type="checkbox"] {
 	margin-right: 0.75em;
 }
 
-.modal-body, .modal-header, .modal-footer {
-	padding: 0 1em;
-}
-
 .modal-header {
 	background-color: var(--bg-dark);
 	border-top-left-radius: 0.75em;
 	border-top-right-radius: 0.75em;
-	height: 65px;
-	padding-right: 0;
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	align-self: center;
 }
 
 .modal-header h2 {
+	padding: 0.5em;
 	font: 2em 'Bebas Neue', sans-serif;
 	text-align: center;
 	letter-spacing: 1.5px;
 	color: var(--primary);
-	top: 50%;
-	position: relative;
-	-webkit-transform: translateY(-50%);
-	    -ms-transform: translateY(-50%);
-	        transform: translateY(-50%);
+	display: flex;
+	justify-content: center;
+	align-self: center;
 }
 
 .modal-body {
 	-webkit-box-flex: 1;
 	    -ms-flex: 1;
-	        flex: 1;
-	padding-top: 1em;
+			flex: 1;
+	padding: 0.5em 0.5em 1em 0.5em;
 	overflow-y: auto;
+	display: flex;
+	flex-direction: column;
 }
 
 .modal-body p {
@@ -811,12 +837,14 @@ input[type="checkbox"] {
 	display: -webkit-box;
 	display: -ms-flexbox;
 	display: flex;
+	justify-content: space-between;
+	padding: 0 1em;
 	-webkit-box-align: center;
 	    -ms-flex-align: center;
 	        align-items: center;
 }
 
-#modal {
+.modal {
 	max-width: 800px;
 	max-height: 600px;
 	font-family: 'Montserrat', sans-serif;
@@ -839,15 +867,32 @@ input[type="checkbox"] {
 	background-color: var(--bg-light);
 }
 
-#modal.visible {
+.modal.visible {
 	display: -webkit-box;
 	display: -ms-flexbox;
 	display: flex;
 }
 
+.k18-buttons {
+	display: flex;
+	justify-content: space-around;
+}
+
+.k18-body {
+	justify-content: space-between;
+}
+
+#k18 {
+	max-height: 300px;
+	max-width: 350px;
+	z-index: 60;
+}
+
 #modal-close-x {
 	background-color: transparent;
 	color: var(--bg-light);
+	position: fixed;
+	right: 0;
 }
 
 /* ----- TUTORIAL MODAL LOPPU ----- */
@@ -964,11 +1009,12 @@ input[type="checkbox"] {
 	}
 
 	.version {
-		vertical-align: middle;
+		font-size: 0.4em;
+		letter-spacing: 1px;
 	}
 
 	.rating-icon {
-		width: 30px;
+		width: 28px;
 	}
 
 	.header-icon {
