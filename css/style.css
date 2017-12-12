@@ -363,7 +363,8 @@ header {
 }
 
 .dropdown li:hover {
-	background-color: #dedede;
+	background-color: #e2e2e2;
+	background-image: none;
 }
 
 .dropdown-icon {
