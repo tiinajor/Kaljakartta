@@ -331,7 +331,6 @@ header {
 }
 
 .dropdown-list {
-	border: solid 1px #808080;
 	color: #101010;
 	height: 0px;
 	list-style-type: none;
@@ -352,13 +351,12 @@ header {
 }
 
 .dropdown li{
-	/* background: #ffffff;
+	background: #ffffff;
 	background-image: -webkit-linear-gradient(top, #ffffff, #f3f3f3);
 	background-image: -moz-linear-gradient(top, #ffffff, #f3f3f3);
 	background-image: -ms-linear-gradient(top, #ffffff, #f3f3f3);
 	background-image: -o-linear-gradient(top, #ffffff, #f3f3f3);
 	background-image: linear-gradient(to bottom, #ffffff, #f3f3f3);
-	*/
 	border-top: 1px solid #808080;
 	display: block;
 	padding: 5px 10px;
