@@ -5,7 +5,7 @@ TODO LISTA:
 - searchNearby ei poista duplikaatteja (eli marker osalle baareista tulee kahteen kertaan)
 - error tilanteet
 - loading spinner hakukriteerien kanssa tehtävään hakuun
-- 
+-
 */
 
 (function (window, document, noUiSlider, undefined) {
@@ -317,7 +317,7 @@ TODO LISTA:
 				calcRoute(startPoint,endPoint,mode);
 			})
 			.catch(error => showErrorMessage("directionsError: " + error));
-		
+
 	}));
 
 	//slaiderien luonti
@@ -557,7 +557,7 @@ function capitalize(string) {
 
 /**
  * Capitalizes the first letter of every word in the given text.
- * 
+ *
  * @param {string} text The text where every word needs to be capitalized.
  * @returns {String} The same text with every word capitalized.
  */
@@ -652,7 +652,7 @@ function textSearch(address, distance) {
 			});
 		}
 	})
-	.catch(error => showErrorMessage("textSearchError: " + error));	
+	.catch(error => showErrorMessage("textSearchError: " + error));
 }
 
 /**
@@ -1036,8 +1036,8 @@ function renderBarInfo(place) {
 			if(data.photos) {
 				const url = data.photos[0].getUrl({ "maxWidth": 600 });
 				barPhoto.style.backgroundSize = "cover";
-				barPhoto.style.backgroundImage = "url(" + url + ")";	
-			}		
+				barPhoto.style.backgroundImage = "url(" + url + ")";
+			}
 		}
 	);
 }
@@ -1191,14 +1191,14 @@ function locateUser() {
 			})
 		} else {
 			reject("Selaimesi ei valitettavasti tue paikannusta.");
-		}	
+		}
 	})
 }
 
 
 /**
  * Google geocoder.
- * Geocodes the given address into latitude and longitude coordinates. 
+ * Geocodes the given address into latitude and longitude coordinates.
  * Initially returns a promise and after the geocoder has finished it will resolve/reject the promise based on the geocoder's status.
  * @param {string} address The address/place that the user searched.
  * @returns {promise} Initially returns a promise and after the geocoder has finished it will resolve/reject the promise based on the geocoder's status.
@@ -1217,9 +1217,9 @@ function geocodeAddress(address) {
 }
 
 /**
- * If the user has made a text search for an address (map has a yellow marker) -> that will be the starting point. 
+ * If the user has made a text search for an address (map has a yellow marker) -> that will be the starting point.
  * Otherwise it will try to use geolocation to get the current location of the user.
- * @returns {promise} Initially returns a promise and after the starting point has been set it will resolve/reject the promise. 
+ * @returns {promise} Initially returns a promise and after the starting point has been set it will resolve/reject the promise.
  * Throws an error if no yellow markers were on the map and geolocation fails.
  *
  */
@@ -1277,7 +1277,7 @@ function calcRoute(startPoint, endPoint, mode) {
 			searchContainer.style.display = "none";
 			clearMarkers();
 			geocodeAddress(endPoint)
-				.then(results => {	
+				.then(results => {
 					const searchPos = results[0].geometry.location;
 					const endPointMarker = createMarker(searchPos, false);
 					google.maps.event.addListener(endPointMarker, "click", function() {
@@ -1356,7 +1356,7 @@ function processResults(results, status, pagination, loc, distanceLimit) {
 		if(actualDistance > distanceLimit) {
 			continue;
 		};
-		
+
 		setTimeout((function(i){
 			return function(){
 				if(globalVars.searchWithVars && globalLists.bars.indexOf(results[i].name) === -1) return;
@@ -1383,7 +1383,7 @@ function processResults(results, status, pagination, loc, distanceLimit) {
  *
  */
 function createMarker(location, animate = true, isBarMarker = true) {
-	const icon = isBarMarker ? "kgps_icons/kaljakartta_map_arrow.svg" : "kgps_icons/yellow-marker.png";
+	const icon = isBarMarker ? "kgps_icons/kaljakartta_map_arrow_50.svg" : "kgps_icons/yellow-marker.png";
 	const animation = animate ? google.maps.Animation.DROP : null;
 	const marker = new google.maps.Marker({
 		map: googleshit.map,
@@ -1437,5 +1437,5 @@ function loadScript(url, callback) {
 	document.querySelector('head').appendChild(script);
 }
 
-	
+
 })(window, document, noUiSlider);
