@@ -1,10 +1,11 @@
 /*
 TODO LISTA:
-- modaali ja käyttöohjeet
-- K18-vahvistus
+- käyttöohjeet
 - searchNearby ei poista duplikaatteja (eli marker osalle baareista tulee kahteen kertaan)
-- error tilanteet
-- loading spinner hakukriteerien kanssa tehtävään hakuun
+- error tilanteiden ilmoitukset käyttäjälle
+- loading palkki vain hakukriteerien kanssa
+- tyhjennä nappi
+- menun elementit järjestykseen
 - 
 */
 
@@ -40,6 +41,7 @@ TODO LISTA:
 	*/
 	const globalVars = {
 		searchWithVars: false,
+		lastSearch: '',
 		clickedPlace: null,
 		language: window.localStorage.getItem("language") || "fi"
 	}
@@ -149,11 +151,12 @@ TODO LISTA:
 			const distance = distanceSlider.noUiSlider.get();
 			globalVars.searchWithVars = false;
 			textSearch(address, distance);
+			globalVars.lastSearch = address;
 			searchbox.value = "";
 		}
 	});
 
-	// hakukentässä enterin painaminen käynnistää haun myös
+	// hakukentässä enterin painaminen käynnistää haun
 	searchbox.addEventListener("keyup", function(e) {
 		e.preventDefault();
 		const input = e.target;
@@ -162,15 +165,18 @@ TODO LISTA:
 			const distance = distanceSlider.noUiSlider.get();
 			globalVars.searchWithVars = false;
 			textSearch(address, distance);
+			globalVars.lastSearch = address;
 			this.value = "";
 		}
 	});
 
+	// menun hakukentässä enterin painaminen käynnistää haun
 	menuSearchbox.addEventListener("keyup", function(e) {
 		e.preventDefault();
 		if(e.keyCode === 13) {
 			globalVars.searchWithVars = true;
 			searchWithVars("http://188.166.162.144:130/findrestaurants", searchVars, distanceSlider.noUiSlider.get());
+			globalVars.lastSearch = this.value;
 		}
 	});
 
@@ -246,6 +252,7 @@ TODO LISTA:
 	menuSearchButton.addEventListener('click', () => {
 		globalVars.searchWithVars = true;
 		searchWithVars("http://188.166.162.144:130/findrestaurants", searchVars, distanceSlider.noUiSlider.get());
+		globalvars.lastSearch = menuSearchbox.value;
 	});
 
 	// menun sulkeminen
@@ -887,6 +894,7 @@ function rotateIcon(icon) {
 function openMenu() {
 	menuElement.classList.add('visible');
 	oof.classList.add('visible');
+	menuSearchbox.value = capitalize(globalVars.lastSearch);
 }
 
 /**
@@ -1303,7 +1311,7 @@ function calcRoute(startPoint, endPoint, mode) {
  *
  */
 function searchNearby(loc, distance) {
-	document.getElementById('loading').classList.add('visible');
+	//document.getElementById('loading').classList.add('visible');
 	showSearchRadius(loc, distance);
 
 	googleshit.placesService.nearbySearch({
@@ -1322,11 +1330,11 @@ function searchNearby(loc, distance) {
 
 function showSearchRadius(loc, distance) {
 	const circleOptions = {
-        strokeColor: '#FF0000',
+        strokeColor: '#1919ff',
         strokeOpacity: 0.3,
-        strokeWeight: 6,
+        strokeWeight: 3,
         fillColor: '#000000',
-		fillOpacity: 0.06,
+		fillOpacity: 0,
 		center: loc,
 		radius: parseFloat(distance)
 	};
