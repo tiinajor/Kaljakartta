@@ -4,7 +4,7 @@ window.onload = function() {
   var activityNumber = 2;
 
   // Select the add_activity button
-  var addButton = document.getElementById("add_activity");
+  var addButton = document.getElementById("add_beverage");
 
   // Select the table element
   var tracklistTable = document.getElementById("tracklist");
@@ -18,6 +18,36 @@ window.onload = function() {
     // Increment the activityNumber
     activityNumber += 1;
   }
+
+
+  //Populate brands-list
+  setTimeout(() => {
+    fetch("http://188.166.162.144:130/brands")
+      .then(response => {
+        return response.text();
+      })
+      .then(data => {
+        let beerBrands = data.slice(1, -1).split(",");
+        beerBrands = beerBrands.map(x => x.trim());
+
+        // Sort alpabetically *Basically magic*
+        beerBrands.sort( function( a, b ) {
+            a = a.toLowerCase();
+            b = b.toLowerCase();
+
+            return a < b ? -1 : a > b ? 1 : 0;
+        });
+
+        html = "<option disabled selected value>" + "Valitse Juoma" + "</option>";
+        for (var key in beerBrands){
+          html += "<option value=" + key  + ">" +beerBrands[key] + "</option>"
+        }
+        document.getElementById("datas").innerHTML = html;
+        // console.log(beerBrands);
+
+      })
+      .catch(err => console.log("Fetch Error: " + err));
+  }, 750);
 
   var deleteBev = document.getElementById('img');
 
