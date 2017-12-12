@@ -46,6 +46,10 @@ body, html {
 	color: #101010;
 }
 
+.right {
+	float: right;
+}
+
 .absolute {
     position: absolute;
 }
@@ -310,12 +314,12 @@ header {
 
 .dropdown {
 	overflow: hidden;
+	border: solid 1px #808080;
+	border-radius: 4px;
 }
 
-.dropdown div {
-	background-color: transparent;
-	border: solid 2px #808080;
-	border-bottom: none;
+.dropdown > div {
+	background-color: whitesmoke;
 	color: #444;
 	padding: 5px;
 	display: -webkit-box;
@@ -341,25 +345,21 @@ header {
 
 .dropdown-list.open {
 	height: 195px;
-
 }
 
 .dropdown ul::-webkit-scrollbar {
 	display: none;
 }
 
-.dropdown li:before {
-	content:"\2714\0020";
-}
-
 .dropdown li{
-	background: #ffffff;
+	/* background: #ffffff;
 	background-image: -webkit-linear-gradient(top, #ffffff, #f3f3f3);
 	background-image: -moz-linear-gradient(top, #ffffff, #f3f3f3);
 	background-image: -ms-linear-gradient(top, #ffffff, #f3f3f3);
 	background-image: -o-linear-gradient(top, #ffffff, #f3f3f3);
 	background-image: linear-gradient(to bottom, #ffffff, #f3f3f3);
-	border-bottom: 1px solid #808080;
+	*/
+	border-top: 1px solid #808080;
 	display: block;
 	padding: 5px 10px;
 }
@@ -412,6 +412,11 @@ header {
 }
 .noUi-horizontal.noUi-extended .noUi-origin  {
 	right: -32px;
+}
+
+#selectedBrands, #selectedTypes {
+	margin-right: 5px;
+	color: #999;
 }
 
 #side-menu {
