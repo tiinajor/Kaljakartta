@@ -43,7 +43,9 @@ TODO LISTA:
 		searchWithVars: false,
 		lastSearch: '',
 		clickedPlace: null,
-		language: window.localStorage.getItem("language") || "fi"
+		language: window.localStorage.getItem("language") || "fi",
+		selectedBrands: 0,
+		selectedTypes: 0
 	}
 	const k18yes = document.querySelector('.button-yes');
 	const k18no = document.querySelector('.button-no');
@@ -79,6 +81,8 @@ TODO LISTA:
 	const searchbox = document.getElementById("searchbox");
 	const menuSearchbox = document.getElementById("menu-searchbox");
 	const searchButton = document.getElementById("search-button");
+	const brandsCounterElement = document.getElementById('selectedBrands');
+	const typesCounterElement = document.getElementById('selectedTypes');
 	let headerHeight = headerElement.clientHeight;
 	let windowHeight = window.innerHeight;
 	let mouseDown = false;
@@ -183,7 +187,7 @@ TODO LISTA:
 	// avaa merkit-listan ja sulkee muut listat
 	brandList.addEventListener("click", function() {
 		let ul = document.getElementById("brands");
-		let icon = this.children[1];
+		let icon = this.querySelector('img');
 		toggleVisible(ul);
 		rotateIcon(icon);
 		closeList(document.getElementById("type-list"));
@@ -192,7 +196,7 @@ TODO LISTA:
 	// avaa oluttyypit-listan ja sulkee muut listat
 	typeList.addEventListener("click", function() {
 		let ul = document.getElementById("types");
-		let icon = this.children[1];
+		let icon = this.querySelector('img');
 		toggleVisible(ul);
 		rotateIcon(icon);
 		closeList(document.getElementById("brand-list"));
@@ -205,9 +209,11 @@ TODO LISTA:
 	fetch("http://188.166.162.144:130/beveragetypes")
 		.then(response => { return response.text() })
 		.then(data => {
+			console.log(data);
 			let beerTypes = data.slice(1, -1).split(",");
 			beerTypes = beerTypes.map(x => x.trim());
-			createList(beerTypes, document.getElementById("type-list"), "types", searchVars);
+			createList(beerTypes, document.getElementById("type-list"), "types");
+			
 			console.log("beertypes loaded");
 		})
 		.catch(err => console.log("Fetch Error: " + err));
@@ -221,7 +227,7 @@ TODO LISTA:
 			.then(data => {
 				let beerBrands = data.slice(1, -1).split(",");
 				beerBrands = beerBrands.map(x => x.trim());
-				createList(beerBrands, document.getElementById("brand-list"), "brands", searchVars);
+				createList(beerBrands, document.getElementById("brand-list"), "brands");
 				console.log("beer brands loaded");
 			})
 			.catch(err => console.log("Fetch Error: " + err));
@@ -251,7 +257,7 @@ TODO LISTA:
 	// hae-nappi hakee baarit, joista löytyy hakukriteereitä vastaavia juomia
 	menuSearchButton.addEventListener('click', () => {
 		globalVars.searchWithVars = true;
-		searchWithVars("http://188.166.162.144:130/findrestaurants", searchVars, distanceSlider.noUiSlider.get());
+		searchWithVars("http://188.166.162.144:130/findrestaurants", distanceSlider.noUiSlider.get());
 		globalvars.lastSearch = menuSearchbox.value;
 	});
 
@@ -681,7 +687,8 @@ function swapLanguage(language) {
  * @param {string} id The ID that will be given to the list element.
  * @param {Object} searchVars An object which contains the search variables.
  */
-function createList(list, parentDiv, id, searchVars) {
+function createList(list, parentDiv, id) {
+	
 	const ul = document.createElement("ul");
 	ul.classList.add("dropdown-list");
 	ul.id = id;
@@ -732,7 +739,7 @@ function createList(list, parentDiv, id, searchVars) {
 function closeList(div) {
 	const otherList = div.children[1];
 	const otherDiv = div.children[0];
-	const icon = otherDiv.children[1];
+	const icon = otherDiv.querySelector('img');
 	otherList.classList.remove('open');
 	icon.style.transform = "rotate(-90deg)";
 }
@@ -740,25 +747,34 @@ function closeList(div) {
 /**
  * Toggles the beer brands and types in the search variables as the user selects/deselects them.
  * @param {HTMLElement} li The list item that was clicked.
- * @param {Object} searchVars The search variables -object.
  */
-function toggleInSearch(li, searchVars) {
+function toggleInSearch(li) {
 	const parentID = li.parentElement.id;
 	li.classList.toggle("selected");
 	if(parentID === "brands") {
 		const text = li.textContent || li.innerText;
-		if (searchVars.brands.indexOf(text) >= 0) {
-			searchVars.brands.splice(searchVars.brands.indexOf(text), 1);
+		const brands = searchVars.brands;
+		if(brands.indexOf(text) >= 0) {
+			brands.splice(brands.indexOf(text), 1);
+			globalVars.selectedBrands--;
 		} else {
-			searchVars.brands.push(text);
+			brands.push(text);
+			globalVars.selectedBrands++;
 		}
-	} else if(parentID === "types") {
+		brandsCounterElement.textContent = globalVars.selectedBrands === 0 ? "" : "(" + globalVars.selectedBrands + ")";
+	}
+	
+	if(parentID === "types") {
 		const text = li.dataset.type;
-		if (searchVars.types.indexOf(text) >= 0) {
-			searchVars.types.splice(searchVars.types.indexOf(text), 1);
+		const types = searchVars.types;
+		if(types.indexOf(text) >= 0) {
+			types.splice(types.indexOf(text), 1);
+			globalVars.selectedTypes--;
 		} else {
-			searchVars.types.push(text);
+			types.push(text);
+			globalVars.selectedTypes++;
 		}
+		typesCounterElement.textContent = globalVars.selectedTypes === 0 ? "" : "(" + globalVars.selectedTypes + ")";
 	}
 }
 
@@ -771,13 +787,13 @@ function toggleServing(el) {
 	const clicked = el.classList.contains('serving-button') ? el : el.parentElement;
 	const parentElement = clicked.parentElement;
 	const buttons = parentElement.querySelectorAll('.serving-button');
-	buttons.forEach((button) => {
+	for(button of buttons) {
 		if(button === clicked) {
 			button.classList.add('serving-button-active');
 		} else {
 			button.classList.remove('serving-button-active');
 		}
-	})
+	}
 	return clicked.id;
 }
 
