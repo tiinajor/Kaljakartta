@@ -341,7 +341,7 @@ header {
 
 .dropdown-list.open {
 	height: 195px;
-	
+
 }
 
 .dropdown ul::-webkit-scrollbar {
@@ -780,9 +780,10 @@ header {
 }
 
 #menu-searchbox {
-	border-radius: 5px;
-	border: 2px solid var(--bg-dark);
-	color: #202020;
+	/*border-radius: 5px;*/
+	border: 1.5px solid #808080;);
+	color: #444;
+	background-color: #fff;
 	font-size: 1em;
 	width: calc(100% - 14px);
 	padding: 5px;
