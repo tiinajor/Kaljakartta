@@ -22,7 +22,7 @@ import com.tinkerpop.blueprints.impls.orient.OrientGraphNoTx;
 import com.tinkerpop.gremlin.Tokens.T;
 import com.tinkerpop.gremlin.java.GremlinPipeline;
 
-public class Dao {
+public class Dao implements DataAccessObject {
 
 	private static OrientGraphFactory factory;
 	private static OrientGraphNoTx graph;
@@ -35,13 +35,8 @@ public class Dao {
 
 	}
 
-	/**
-	 * 
-	 * Queries the database for all beverage brands.
-	 * 
-	 * @return An array containing a list of all beverage types found in the
-	 *         database
-	 */
+
+	@Override
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public ArrayList<String> getBrands() {
 
@@ -63,13 +58,8 @@ public class Dao {
 
 	}
 
-	/**
-	 * 
-	 * Queries the database for all beverage types.
-	 * 
-	 * @return An array containing a list of all beverage types found in the
-	 *         database
-	 */
+
+	@Override
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public ArrayList<String> getBeverageTypes() {
 
@@ -91,16 +81,8 @@ public class Dao {
 
 	}
 
-	/**
-	 * 
-	 * Takes in the name of the restaurant as parameter, and queries the beverages
-	 * from the database.
-	 * 
-	 * @param name
-	 *            - The name of the restaurant
-	 * @return An array containing the restaurants product list with beverages and
-	 *         details.
-	 */
+
+	@Override
 	@SuppressWarnings("unchecked")
 	public JSONArray getRestaurant(String name) {
 
@@ -213,13 +195,8 @@ public class Dao {
 
 	}
 
-	/**
-	 * 
-	 * Takes in a path to a .json file containing an array of beverages as
-	 * JSONObjects and writes them to the database if they do not already exist.
-	 * 
-	 * @param path
-	 */
+
+	@Override
 	public void parseBeverages(String path) {
 
 		try {
@@ -245,15 +222,8 @@ public class Dao {
 
 	}
 
-	/**
-	 * Takes in a path to a .json file containing an array of restaurants as
-	 * JSONObjects, which contain an array of beverages as JSONObjects as parameter,
-	 * and creates a record of each restaurant if needed and creates the relations
-	 * between the restaurants and beverages listed in the file.
-	 * 
-	 * @param path
-	 *            to .json file
-	 */
+
+	@Override
 	public void linkRestaurants(String path) {
 
 		JSONParser parser = new JSONParser();
@@ -333,17 +303,8 @@ public class Dao {
 
 	}
 
-	/**
-	 * 
-	 * Takes in a JSONObject map containing search parameters, queries the database
-	 * for restaurants that match the criteria and returns an array containing the
-	 * names of the matching restaurants.
-	 * 
-	 * @param params
-	 *            - Search parameters as a JSONObject, with keys: 'types', 'brands',
-	 *            'serving', 'abvMin', 'abvMax', 'price'.
-	 * @return - An array containing the names of matching restaurants.
-	 */
+
+	@Override
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public JSONArray findRestaurants(JSONObject params) {
 

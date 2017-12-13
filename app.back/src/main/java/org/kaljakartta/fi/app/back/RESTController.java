@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class RESTController {
 
-	private Dao dao = new Dao("remote:188.166.162.144:2424/KaljakarttaDB", "dao", "bakkiPassu");
+	private DataAccessObject dao = new Dao("remote:188.166.162.144:2424/KaljakarttaDB", "dao", "bakkiPassu");
 
 	@RequestMapping(value = "/restaurant", method = RequestMethod.GET)
 	public @ResponseBody String passRestaurants(@RequestParam String name) {
