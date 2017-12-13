@@ -213,7 +213,6 @@ TODO LISTA:
 			let beerTypes = data.slice(1, -1).split(",");
 			beerTypes = beerTypes.map(x => x.trim());
 			createList(beerTypes, document.getElementById("type-list"), "types");
-			
 			console.log("beertypes loaded");
 		})
 		.catch(err => console.log("Fetch Error: " + err));
@@ -257,8 +256,8 @@ TODO LISTA:
 	// hae-nappi hakee baarit, joista löytyy hakukriteereitä vastaavia juomia
 	menuSearchButton.addEventListener('click', () => {
 		globalVars.searchWithVars = true;
-		searchWithVars("http://188.166.162.144:130/findrestaurants", distanceSlider.noUiSlider.get());
-		globalvars.lastSearch = menuSearchbox.value;
+		searchWithVars("http://188.166.162.144:130/findrestaurants", searchVars, distanceSlider.noUiSlider.get());
+		globalVars.lastSearch = menuSearchbox.value;
 	});
 
 	// menun sulkeminen
@@ -602,6 +601,7 @@ function getBarData(barName) {
  * @param {number} distance The max range from the address where the bars will be searched.
  */
 function searchWithVars(url, data, distance) {
+
 	fetch("https://cors-anywhere.herokuapp.com/"+url, {
 		method: "POST",
 		body: JSON.stringify(data),
@@ -635,6 +635,7 @@ function searchWithVars(url, data, distance) {
 			textSearch(menuSearchbox.value, distance);
 			menuSearchbox.value = "";
 		}
+		document.getElementById('loading').classList.add('visible');
 		closeMenu();
 	})
 	.catch(error => showErrorMessage("searchWithVarsError: " + error));
@@ -711,7 +712,7 @@ function createList(list, parentDiv, id) {
 			const beerTypes = newList[i]
 							.split(",")
 							.map(item => item.trim());
-			const beerType = language === "fi" ? beerTypes[0] : beerTypes[1];
+			const beerType = language === "en" ? beerTypes[1] : beerTypes[0];
 			const content = document.createTextNode(beerType);
 			li.appendChild(content);
 			li.dataset.type = newList[i];
@@ -1034,9 +1035,11 @@ function renderBarInfo(place) {
 	const barName = document.getElementById("bar-name");
 	const barOpen = document.getElementById("bar-open");
 	const barPhoto = document.getElementById("bar-photo");
+	if(place.name === "Boothill") {
+		place.name = "Ravintola Boothill";
+	}
 	getBarData(place.name)
 		.then(data => {
-			console.log(data);
 			const body = document.querySelector("tbody");
 			if(data.length === 0){
 				body.textContent = "Ei listatietoja saatavilla.";
@@ -1327,9 +1330,7 @@ function calcRoute(startPoint, endPoint, mode) {
  *
  */
 function searchNearby(loc, distance) {
-	//document.getElementById('loading').classList.add('visible');
 	showSearchRadius(loc, distance);
-
 	googleshit.placesService.nearbySearch({
 		location: loc,
 		rankBy: google.maps.places.RankBy.DISTANCE,
