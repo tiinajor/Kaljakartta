@@ -319,8 +319,10 @@ header {
 }
 
 .dropdown > div {
-	background-color: whitesmoke;
-	color: #444;
+	background-color: var(--bg-dark);
+	letter-spacing: 1.5px;
+	font: 1.1em 'Bebas Neue', sans-serif;
+	color: var(--primary);
 	padding: 5px;
 	display: -webkit-box;
 	display: -ms-flexbox;

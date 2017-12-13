@@ -57,6 +57,7 @@ TODO LISTA:
 	const menuButton = document.getElementById("hamburger-menu");
 	const locateButton = document.getElementById('locate');
 	const menuSearchButton = document.querySelector('.button-submit');
+	const menuClearButton = document.querySelector('.button-cancel');
 	const menuCloseButton = document.getElementById("menu-close-x");
 	const cardCloseButton = document.getElementById("card-close-x");
 	const modalCloseButton = document.getElementById("modal-close-x");
@@ -258,6 +259,11 @@ TODO LISTA:
 		globalVars.searchWithVars = true;
 		searchWithVars("http://188.166.162.144:130/findrestaurants", searchVars, distanceSlider.noUiSlider.get());
 		globalVars.lastSearch = menuSearchbox.value;
+	});
+
+	menuClearButton.addEventListener('click', () => {
+		resetMenuSearch();
+		resetSearchVars();
 	});
 
 	// menun sulkeminen
@@ -601,7 +607,8 @@ function getBarData(barName) {
  * @param {number} distance The max range from the address where the bars will be searched.
  */
 function searchWithVars(url, data, distance) {
-
+	document.getElementById('loading').classList.add('visible');
+	closeMenu();
 	fetch("https://cors-anywhere.herokuapp.com/"+url, {
 		method: "POST",
 		body: JSON.stringify(data),
@@ -611,11 +618,13 @@ function searchWithVars(url, data, distance) {
 		if (response.ok) {
 			console.log('Status: ' + response.statusText);
 		} else {
+			document.getElementById('loading').classList.remove('visible');
 			console.log('Request failed. Returned status of ' + response.status);
 		}
 		return response.json();
 	})
 	.then(data => {
+		
 		globalLists.bars = data;
 		routeContainer.style.height = 0 + "px";
 		searchContainer.style.position = "absolute";
@@ -635,10 +644,12 @@ function searchWithVars(url, data, distance) {
 			textSearch(menuSearchbox.value, distance);
 			menuSearchbox.value = "";
 		}
-		document.getElementById('loading').classList.add('visible');
-		closeMenu();
+		
 	})
-	.catch(error => showErrorMessage("searchWithVarsError: " + error));
+	.catch(error => {
+		showErrorMessage("searchWithVarsError: " + error);
+		document.getElementById('loading').classList.remove('visible');
+	});
 }
 
 
@@ -1020,6 +1031,41 @@ function closeK18() {
 	searchContainer.classList.remove('blur');
 	headerElement.classList.remove('blur');
 	k18.classList.remove('visible');
+}
+
+/**
+ * Resets the menu search criteria back to defaults. 
+ * Bottle&tap, max price, max ABV, 1000m range, 0 brands, 0 types and clear searchbox.
+ */
+function resetMenuSearch() {
+	const listItems = document.querySelectorAll('.dropdown-list li');
+	for (item of listItems) {
+		if (item.classList.contains('selected')) {
+			item.classList.remove('selected');
+		}
+	}
+	distanceSlider.noUiSlider.set(1000);
+	priceSlider.noUiSlider.set(25.0);
+	alcoholSlider.noUiSlider.set([0.0,12.0]);
+	menuSearchbox.value = '';
+	brandsCounterElement.textContent = '';
+	typesCounterElement.textContent = '';
+	globalVars.selectedBrands = 0;
+	globalVars.selectedTypes = 0;
+}
+
+
+/**
+ * Resets the searchVars back to defaults.
+ */
+function resetSearchVars() {
+	const bothButton = document.getElementById('both');
+	searchVars.serving = toggleServing(both);
+	searchVars.price = 25,
+	searchVars.abvMin = 0,
+	searchVars.abvMax = 12,
+	searchVars.brands = [],
+	searchVars.types = []
 }
 
 /**
