@@ -484,14 +484,14 @@ header {
 	display: flex;
 	border: 1px solid #808080;
 	border-radius: 8px;
-	max-width: 250px;
+	max-width: 235px;
 	overflow: hidden;
 	margin-right: 5px;
 }
 
 .directions-button {
 	flex: 1;
-	padding: 5px;
+	padding-top: 4px;
 	border: none;
 	border-right: 1px solid #808080;
 	background: #ffffff;
@@ -687,8 +687,8 @@ header {
 }
 
 #bar-open {
-	margin: 12px auto 0 auto;
 	font-size: 1.1em;
+	text-align: right;
 }
 
 #card-content {
@@ -1019,28 +1019,6 @@ input[type="checkbox"] {
 		padding-right: 0;
 	}
 
-	.directions-buttons {
-		display: -webkit-box;
-		display: -ms-flexbox;
-		display: flex;
-		-ms-flex-pack: distribute;
-		    justify-content: space-around;
-	}
-
-	.directions-button {
-		width: 40px;
-		height: 35px;
-		display: -webkit-box;
-		display: -ms-flexbox;
-		display: flex;
-		-webkit-box-pack: center;
-		    -ms-flex-pack: center;
-		        justify-content: center;
-		-webkit-box-align: center;
-		    -ms-flex-align: center;
-		        align-items: center;
-	}
-
 	.title {
 		font-size: 2.2em;
 		height: 27px;
@@ -1055,8 +1033,8 @@ input[type="checkbox"] {
 	        	transform: translateY(-30%);
 	}
 
-	.rating-icon {
-		width: 28px;
+	.transit-icon {
+		height: 18px;
 	}
 
 	.header-icon {
@@ -1073,6 +1051,11 @@ input[type="checkbox"] {
 
 	header {
 		height: 45px;
+	}
+
+	#bar-open {
+		display: flex;
+		flex-direction: column;
 	}
 
 	#card-content {
@@ -1113,6 +1096,10 @@ input[type="checkbox"] {
 @media only screen and (max-width: 450px) {
 	.column-m {
 		display: none;
+	}
+
+	.rating-icon {
+		width: 28px;
 	}
 }
 

@@ -249,6 +249,7 @@ TODO LISTA:
 					createMarker(pos, true, false);
 					globalLists.bars = globalLists.bars.map(name => capitalizeEveryWord(name));
 					searchNearby(pos, distance);
+					showSearchRadius(pos, parseFloat(distance));
 				}
 			})
 			.catch(error => console.log("locateUserError: " + error));
@@ -329,7 +330,7 @@ TODO LISTA:
 		const endPoint = document.getElementById("bar-address").textContent;
 		const barName = document.getElementById("bar-name").textContent;
 		const mode = el.id.toUpperCase();
-		googleshit.circle.setOptions({fillOpacity: 0, strokeOpacity: 0});
+		hideSearchRadius();
 		defineStartingPoint()
 			.then(startPoint => {
 				calcRoute(startPoint,endPoint,mode);
@@ -624,7 +625,6 @@ function searchWithVars(url, data, distance) {
 		return response.json();
 	})
 	.then(data => {
-		
 		globalLists.bars = data;
 		routeContainer.style.height = 0 + "px";
 		searchContainer.style.position = "absolute";
@@ -638,6 +638,7 @@ function searchWithVars(url, data, distance) {
 				googleshit.map.panTo(pos);
 				createMarker(pos, true, false);
 				searchNearby(pos, distance);
+				showSearchRadius(pos, parseFloat(distance));
 			})
 			.catch(error => showErrorMessage("locateUserError: " + error));
 		} else {
@@ -668,8 +669,10 @@ function textSearch(address, distance) {
 		// jos etsitty paikka on baari/yökerho -> näyttää vain sen markerin, muuten etsii baarit lähistöltä normaalisti
 		if (results[0].types.filter(type => type === "bar" || type === "night_club").length > 0) {
 			searchNearby(searchPos, 1);
+			hideSearchRadius();
 		} else {
 			searchNearby(searchPos, distance);
+			showSearchRadius(searchPos, parseFloat(distance));
 			const marker = createMarker(searchPos, false, false);
 			googleshit.infowindow.setContent(results[0].formatted_address);
 			google.maps.event.addListener(marker, "click", function() {
@@ -1105,7 +1108,7 @@ function renderBarInfo(place) {
 			if(status !== google.maps.places.PlacesServiceStatus.OK) return;
 			const address = data.formatted_address;
 			barAddress.innerHTML = address.split(",",2).join();
-			barOpen.innerHTML = data.opening_hours ? capitalize(data.opening_hours.weekday_text[weekday]) : "Aukioloajat ei tiedossa";
+			barOpen.innerHTML = data.opening_hours ? formatOpenHours(data.opening_hours.weekday_text[weekday]) : "Aukioloajat ei tiedossa";
 			if(data.photos) {
 				const url = data.photos[0].getUrl({ "maxWidth": 600 });
 				barPhoto.style.backgroundSize = "cover";
@@ -1113,6 +1116,13 @@ function renderBarInfo(place) {
 			}
 		}
 	);
+}
+
+function formatOpenHours(openHours) {
+	const parts = openHours.split(':');
+	const html = `<span>${capitalize(parts[0])}:</span>
+				<span>${parts[1]}</span>`;
+	return html;
 }
 
 /**
@@ -1376,7 +1386,6 @@ function calcRoute(startPoint, endPoint, mode) {
  *
  */
 function searchNearby(loc, distance) {
-	showSearchRadius(loc, distance);
 	googleshit.placesService.nearbySearch({
 		location: loc,
 		rankBy: google.maps.places.RankBy.DISTANCE,
@@ -1391,7 +1400,12 @@ function searchNearby(loc, distance) {
 }
 
 
-function showSearchRadius(loc, distance) {
+/**
+ * Shows the range of the search with a google maps circle and zooms the map to fit the whole circle.
+ * @param {Object} loc Midpoint for the circle.
+ * @param {number} radius The radius of the circle.
+ */
+function showSearchRadius(loc, radius) {
 	const circleOptions = {
         strokeColor: '#1919ff',
         strokeOpacity: 0.3,
@@ -1399,10 +1413,18 @@ function showSearchRadius(loc, distance) {
         fillColor: '#000000',
 		fillOpacity: 0,
 		center: loc,
-		radius: parseFloat(distance)
+		radius: radius
 	};
 	googleshit.circle.setOptions(circleOptions);
 	googleshit.map.fitBounds(googleshit.circle.getBounds());
+}
+
+/**
+ * Hides the google maps circle by lowering it's opacity to 0.
+ * 
+ */
+function hideSearchRadius() {
+	googleshit.circle.setOptions({ fillOpacity: 0, strokeOpacity: 0 });
 }
 
 /**
@@ -1507,6 +1529,5 @@ function loadScript(url, callback) {
 		: "https://maps.googleapis.com/maps/api/js?key=AIzaSyDuIpE10xbisU_de-Mg_xR4-OpmOVl3BxA&libraries=places&language=fi&region=FI";
 	document.querySelector('head').appendChild(script);
 }
-
 
 })(window, document, noUiSlider);
