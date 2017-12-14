@@ -202,7 +202,7 @@ TODO LISTA:
 	menuButton.addEventListener("click", openMenu);
 
 	// hakee menuun oluttyypit
-	fetch("http://188.166.162.144:130/beveragetypes")
+	fetch("https://cors-anywhere.herokuapp.com/http://188.166.162.144:130/beveragetypes")
 		.then(response => { return response.text() })
 		.then(data => {
 			let beerTypes = data.slice(1, -1).split(",");
@@ -214,7 +214,7 @@ TODO LISTA:
 
 	// hakee menuun olutmerkit
 	setTimeout(() => {
-		fetch("http://188.166.162.144:130/brands")
+		fetch("https://cors-anywhere.herokuapp.com/http://188.166.162.144:130/brands")
 			.then(response => {
 				return response.text();
 			})
@@ -252,7 +252,7 @@ TODO LISTA:
 	// hae-nappi hakee baarit, joista löytyy hakukriteereitä vastaavia juomia
 	menuSearchButton.addEventListener('click', () => {
 		globalVars.searchWithVars = true;
-		searchWithVars("http://188.166.162.144:130/findrestaurants", searchVars, distanceSlider.noUiSlider.get());
+		searchWithVars("https://cors-anywhere.herokuapp.com/http://188.166.162.144:130/findrestaurants", searchVars, distanceSlider.noUiSlider.get());
 		globalVars.lastSearch = menuSearchbox.value;
 	});
 
