@@ -588,7 +588,7 @@ function capitalizeEveryWord(text) {
  * @returns {Object} Returns the beerlist as a JSON or return null if the request status is 500.
  */
 function getBarData(barName) {
-	const url = "http://188.166.162.144:130/restaurant?name=" + barName.toLowerCase();
+	const url = "https://cors-anywhere.herokuapp.com/http://188.166.162.144:130/restaurant?name=" + barName.toLowerCase();
 	return fetch(url).then(response => response.status !== 500 ? response.json() : null).catch(error => showErrorMessage("getBarDataError: " + error));
 }
 
