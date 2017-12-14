@@ -10,17 +10,16 @@
 	<meta name="google-site-verification" content="QKSQah6iJ5sLUY5k7yJdmTt7oqf2WIUzThs8buFcsuQ" />
 	<meta name="apple-mobile-web-app-capable" content="yes">
 	<meta name="mobile-web-app-capable" content="yes">
+	<link rel="manifest" href="">
 	<link rel="stylesheet" href="css/reset.css">
 	<link rel="stylesheet" href="css/style.css">
 	<link rel="stylesheet" href="css/nouislider.min.css">
-	<link rel="icon" type="image/png" sizes="32x32" href="kgps_icons/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="48x48 72x72 96x96 144x144 168x168 192x192" href="kgps_icons/homescreen48.png">
 	<script src="locale/fi_FI.json"></script>
 	<script src="locale/en_GB.json"></script>
 	<script src="js/wNumb.js"></script>
 	<script src="js/nouislider.min.js"></script>
 	<script async defer src="js/script.js"></script>
-	
-
 </head>
 <body>
 
@@ -33,6 +32,7 @@
 				<span id="both" class="serving-button clickable serving-button-active middle"><label id="bothButtonText">Molemmat</label></span>
 				<span id="bottle" class="serving-button clickable"><label id="bottleButtonText">Pullot</label></span>
 			</div>
+
 
 			<div id="search-option-sliders" class="centered menu-block">
 				<div class="slider-container">
@@ -54,25 +54,33 @@
 				</div>
 			</div>
 
-			<div class="menu-block centered">
-				<input id="menu-searchbox" type="text" placeholder="Rajaa alue...">
+
+			<div class="menu-block centered" >
+				<input id="menu-searchbox" type="text" placeholder="">
 			</div>
 
 			<div class="lists-container menu-block centered">
-				<div id="brand-list" class="dropdown button">
-					<div>
-						<span id="brandListText">Olutmerkki</span>
-						<img class="dropdown-icon right" src="kgps_icons/sort-down.svg" alt="nuoli-alas">
+					<div id="brand-list" class="dropdown button">
+						<div>
+							<span id="brandListText">Olutmerkki</span>
+							<div>
+								<span id="selectedBrands"></span>
+								<img class="dropdown-icon right" src="kgps_icons/sort-down-white.svg" alt="nuoli-alas">
+							</div>
+						</div>
+					</div>
+	
+					<div id="type-list" class="dropdown button">
+						<div>
+							<span id="typeListText">Oluttyyppi</span>
+							<div>
+								<span id="selectedTypes"></span>
+								<img class="dropdown-icon right" src="kgps_icons/sort-down-white.svg" alt="nuoli-alas">
+							</div>
+						</div>
 					</div>
 				</div>
 
-				<div id="type-list" class="dropdown button">
-					<div>
-						<span id="typeListText">Oluttyyppi</span>
-						<img class="dropdown-icon right" src="kgps_icons/sort-down.svg" alt="nuoli-alas">
-					</div>
-				</div>
-			</div>
 		</div>
 
 		<div class="menu-buttons">
@@ -131,9 +139,12 @@
 					<input type="checkbox" name="noMoreInstructions">
 					<span>Älä näytä ohjeita enää uudelleen.</span>
 				</label>
-				<img class="flag clickable" src="kgps_icons/locale_fi.svg">
 			</div>
 		</div>
+	</div>
+
+	<div id="loading" class="out-of-focus-area light">
+		<img src="kgps_icons/load3.svg">
 	</div>
 
 	<div id="k18" class="modal">
@@ -144,6 +155,7 @@
 			<p>Sivusto sisältää tietoa alkoholipitoisista juomista ja on tarkoitettu ainoastaan 18 vuotta täyttäneille henkilöille.</p>
 			<div class="k18-buttons">
 				<button class="button menu-button button-no">En</button>
+				<img class="clickable" src="kgps_icons/locale_pint_fi.svg">
 				<button class=" button menu-button button-yes">Kyllä</button>
 			</div>
 		</div>
@@ -157,10 +169,9 @@
 			<div class="title">
 				<img class="logo" src="kgps_icons/title.png" alt="Kaljakartta">
 			</div>
-			
+
 			<div class="locale">
-				<img id="fi" src="kgps_icons/locale_fi.svg">
-				<img id="en" src="kgps_icons/locale_en.svg">
+				<img class="clickable" src="kgps_icons/locale_pint_fi.svg">
 			</div>
 
 		</div>
@@ -177,7 +188,6 @@
 		<a id="route-close-x" class="closebtn button">x</a>
 		<div id="route">
 		</div>
-
 	</div>
 
 	<div id="search-container">

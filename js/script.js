@@ -1,10 +1,11 @@
 /*
 TODO LISTA:
-- modaali ja käyttöohjeet
-- K18-vahvistus
+- käyttöohjeet
 - searchNearby ei poista duplikaatteja (eli marker osalle baareista tulee kahteen kertaan)
-- error tilanteet
-- loading spinner hakukriteerien kanssa tehtävään hakuun
+- error tilanteiden ilmoitukset käyttäjälle
+- loading palkki vain hakukriteerien kanssa
+- tyhjennä nappi
+- menun elementit järjestykseen
 - 
 */
 
@@ -40,19 +41,23 @@ TODO LISTA:
 	*/
 	const globalVars = {
 		searchWithVars: false,
+		lastSearch: '',
 		clickedPlace: null,
-		language: window.localStorage.getItem("language") || "fi"
+		language: window.localStorage.getItem("language") || "fi",
+		selectedBrands: 0,
+		selectedTypes: 0
 	}
 	const k18yes = document.querySelector('.button-yes');
 	const k18no = document.querySelector('.button-no');
-	const fiFlag = document.getElementById("fi");
-	const enFlag = document.getElementById("en");
+	const k18Flag = document.querySelector('.k18-buttons img');
+	const localeFlag = document.querySelector('.locale img')
 	const title = document.querySelector(".title");
 	const typeList = document.querySelector("#type-list div");
 	const brandList = document.querySelector("#brand-list div");
 	const menuButton = document.getElementById("hamburger-menu");
 	const locateButton = document.getElementById('locate');
 	const menuSearchButton = document.querySelector('.button-submit');
+	const menuClearButton = document.querySelector('.button-cancel');
 	const menuCloseButton = document.getElementById("menu-close-x");
 	const cardCloseButton = document.getElementById("card-close-x");
 	const modalCloseButton = document.getElementById("modal-close-x");
@@ -73,10 +78,11 @@ TODO LISTA:
 	const servingButtons = document.querySelectorAll('.serving-button');
 	const routeContainer = document.getElementById('route-container');
 	const searchContainer = document.getElementById('search-container');
-	const modalFlag = document.querySelector('#tutorial .flag');
 	const searchbox = document.getElementById("searchbox");
 	const menuSearchbox = document.getElementById("menu-searchbox");
 	const searchButton = document.getElementById("search-button");
+	const brandsCounterElement = document.getElementById('selectedBrands');
+	const typesCounterElement = document.getElementById('selectedTypes');
 	let headerHeight = headerElement.clientHeight;
 	let windowHeight = window.innerHeight;
 	let mouseDown = false;
@@ -122,12 +128,8 @@ TODO LISTA:
 	title.addEventListener("click", () => {window.location.reload(true)});
 
 	// lippujen klikkaaminen vaihtaa sivuston kielen kyseiseen kieleen
-	fiFlag.addEventListener("click", (e) => swapLanguage(e.target.id));
-	enFlag.addEventListener("click", (e) => swapLanguage(e.target.id));
-	modalFlag.addEventListener("click", () => {
-		const newLanguage = window.localStorage.getItem('language') === "en" ? "fi" : "en";
-		swapLanguage(newLanguage);
-	});
+	localeFlag.addEventListener("click", swapLanguage);
+	k18Flag.addEventListener('click', swapLanguage);
 
 	k18no.addEventListener('click', () => window.close());
 	k18yes.addEventListener('click', () => {
@@ -149,11 +151,12 @@ TODO LISTA:
 			const distance = distanceSlider.noUiSlider.get();
 			globalVars.searchWithVars = false;
 			textSearch(address, distance);
-			input.value = "";
+			globalVars.lastSearch = address;
+			searchbox.value = "";
 		}
 	});
 
-	// hakukentässä enterin painaminen käynnistää haun myös
+	// hakukentässä enterin painaminen käynnistää haun
 	searchbox.addEventListener("keyup", function(e) {
 		e.preventDefault();
 		const input = e.target;
@@ -162,22 +165,25 @@ TODO LISTA:
 			const distance = distanceSlider.noUiSlider.get();
 			globalVars.searchWithVars = false;
 			textSearch(address, distance);
+			globalVars.lastSearch = address;
 			this.value = "";
 		}
 	});
 
+	// menun hakukentässä enterin painaminen käynnistää haun
 	menuSearchbox.addEventListener("keyup", function(e) {
 		e.preventDefault();
 		if(e.keyCode === 13) {
 			globalVars.searchWithVars = true;
-			searchWithVars("https://cors-anywhere.herokuapp.com/http://188.166.162.144:130/findrestaurants", searchVars, distanceSlider.noUiSlider.get());
+			searchWithVars("http://188.166.162.144:130/findrestaurants", searchVars, distanceSlider.noUiSlider.get());
+			globalVars.lastSearch = this.value;
 		}
 	});
 
 	// avaa merkit-listan ja sulkee muut listat
 	brandList.addEventListener("click", function() {
 		let ul = document.getElementById("brands");
-		let icon = this.children[1];
+		let icon = this.querySelector('img');
 		toggleVisible(ul);
 		rotateIcon(icon);
 		closeList(document.getElementById("type-list"));
@@ -186,40 +192,40 @@ TODO LISTA:
 	// avaa oluttyypit-listan ja sulkee muut listat
 	typeList.addEventListener("click", function() {
 		let ul = document.getElementById("types");
-		let icon = this.children[1];
+		let icon = this.querySelector('img');
 		toggleVisible(ul);
 		rotateIcon(icon);
 		closeList(document.getElementById("brand-list"));
 	});
 
 	// menun avaus
-	menuButton.addEventListener("click", () => openMenu());
+	menuButton.addEventListener("click", openMenu);
 
 	// hakee menuun oluttyypit
-	fetch("https://cors-anywhere.herokuapp.com/http://188.166.162.144:130/beveragetypes")
+	fetch("http://188.166.162.144:130/beveragetypes")
 		.then(response => { return response.text() })
 		.then(data => {
 			let beerTypes = data.slice(1, -1).split(",");
 			beerTypes = beerTypes.map(x => x.trim());
-			createList(beerTypes, document.getElementById("type-list"), "types", searchVars);
+			createList(beerTypes, document.getElementById("type-list"), "types");
 			console.log("beertypes loaded");
 		})
-		.catch(err => showErrorMessage("Fetch Error: " + err));
+		.catch(err => console.log("Fetch Error: " + err));
 
 	// hakee menuun olutmerkit
 	setTimeout(() => {
-		fetch("https://cors-anywhere.herokuapp.com/http://188.166.162.144:130/brands")
+		fetch("http://188.166.162.144:130/brands")
 			.then(response => {
 				return response.text();
 			})
 			.then(data => {
 				let beerBrands = data.slice(1, -1).split(",");
 				beerBrands = beerBrands.map(x => x.trim());
-				createList(beerBrands, document.getElementById("brand-list"), "brands", searchVars);
+				createList(beerBrands, document.getElementById("brand-list"), "brands");
 				console.log("beer brands loaded");
 			})
-			.catch(err => showErrorMessage("Fetch Error: " + err));
-	}, 500);
+			.catch(err => console.log("Fetch Error: " + err));
+	}, 750);
 
 	// käyttäjän GPS paikannus
 	locateButton.addEventListener('click', () => {
@@ -237,15 +243,22 @@ TODO LISTA:
 					createMarker(pos, true, false);
 					globalLists.bars = globalLists.bars.map(name => capitalizeEveryWord(name));
 					searchNearby(pos, distance);
+					showSearchRadius(pos, parseFloat(distance));
 				}
 			})
-			.catch(error => showErrorMessage("ERROR: " + error));
+			.catch(error => console.log("locateUserError: " + error));
 	});
 
 	// hae-nappi hakee baarit, joista löytyy hakukriteereitä vastaavia juomia
 	menuSearchButton.addEventListener('click', () => {
 		globalVars.searchWithVars = true;
-		searchWithVars("https://cors-anywhere.herokuapp.com/http://188.166.162.144:130/findrestaurants", searchVars, distanceSlider.noUiSlider.get());
+		searchWithVars("http://188.166.162.144:130/findrestaurants", searchVars, distanceSlider.noUiSlider.get());
+		globalVars.lastSearch = menuSearchbox.value;
+	});
+
+	menuClearButton.addEventListener('click', () => {
+		resetMenuSearch();
+		resetSearchVars();
 	});
 
 	// menun sulkeminen
@@ -311,13 +324,13 @@ TODO LISTA:
 		const endPoint = document.getElementById("bar-address").textContent;
 		const barName = document.getElementById("bar-name").textContent;
 		const mode = el.id.toUpperCase();
-		googleshit.circle.setOptions({fillOpacity: 0, strokeOpacity: 0});
+		hideSearchRadius();
 		defineStartingPoint()
 			.then(startPoint => {
 				calcRoute(startPoint,endPoint,mode);
 			})
-			.catch(error => showErrorMessage("ERROR: " + error));
-		
+			.catch(error => showErrorMessage("directionsError: " + error));
+
 	}));
 
 	//slaiderien luonti
@@ -537,8 +550,6 @@ function sortBy(col, ascendingOrder=true) {
 	return function(a, b) {
 		let x = a[col];
 		let y = b[col];
-		if(x === 0) x = 999;
-		if(y === 0) y = 999;
 		if(typeof x === "string" && typeof y === "string") {
 			return ascendingOrder ? x.localeCompare(y) : y.localeCompare(x);
 		} else {
@@ -559,7 +570,7 @@ function capitalize(string) {
 
 /**
  * Capitalizes the first letter of every word in the given text.
- * 
+ *
  * @param {string} text The text where every word needs to be capitalized.
  * @returns {String} The same text with every word capitalized.
  */
@@ -577,8 +588,8 @@ function capitalizeEveryWord(text) {
  * @returns {Object} Returns the beerlist as a JSON or return null if the request status is 500.
  */
 function getBarData(barName) {
-	const url = "https://cors-anywhere.herokuapp.com/http://188.166.162.144:130/restaurant?name=" + barName.toLowerCase();
-	return fetch(url).then(response => response.status !== 500 ? response.json() : null).catch(error => showErrorMessage("ERROR: " + error));
+	const url = "http://188.166.162.144:130/restaurant?name=" + barName.toLowerCase();
+	return fetch(url).then(response => response.status !== 500 ? response.json() : null).catch(error => showErrorMessage("getBarDataError: " + error));
 }
 
 /**
@@ -591,7 +602,9 @@ function getBarData(barName) {
  * @param {number} distance The max range from the address where the bars will be searched.
  */
 function searchWithVars(url, data, distance) {
-	fetch(url, {
+	document.getElementById('loading').classList.add('visible');
+	closeMenu();
+	fetch("https://cors-anywhere.herokuapp.com/"+url, {
 		method: "POST",
 		body: JSON.stringify(data),
 		headers: { "content-type": "application/json" },
@@ -600,6 +613,7 @@ function searchWithVars(url, data, distance) {
 		if (response.ok) {
 			console.log('Status: ' + response.statusText);
 		} else {
+			document.getElementById('loading').classList.remove('visible');
 			console.log('Request failed. Returned status of ' + response.status);
 		}
 		return response.json();
@@ -618,15 +632,19 @@ function searchWithVars(url, data, distance) {
 				googleshit.map.panTo(pos);
 				createMarker(pos, true, false);
 				searchNearby(pos, distance);
+				showSearchRadius(pos, parseFloat(distance));
 			})
-			.catch(error => showErrorMessage("ERROR: " + error));
+			.catch(error => showErrorMessage("locateUserError: " + error));
 		} else {
 			textSearch(menuSearchbox.value, distance);
 			menuSearchbox.value = "";
 		}
-		closeMenu();
+		
 	})
-	.catch(error => showErrorMessage("ERROR: " + error));
+	.catch(error => {
+		showErrorMessage("searchWithVarsError: " + error);
+		document.getElementById('loading').classList.remove('visible');
+	});
 }
 
 
@@ -645,8 +663,10 @@ function textSearch(address, distance) {
 		// jos etsitty paikka on baari/yökerho -> näyttää vain sen markerin, muuten etsii baarit lähistöltä normaalisti
 		if (results[0].types.filter(type => type === "bar" || type === "night_club").length > 0) {
 			searchNearby(searchPos, 1);
+			hideSearchRadius();
 		} else {
 			searchNearby(searchPos, distance);
+			showSearchRadius(searchPos, parseFloat(distance));
 			const marker = createMarker(searchPos, false, false);
 			googleshit.infowindow.setContent(results[0].formatted_address);
 			google.maps.event.addListener(marker, "click", function() {
@@ -654,18 +674,17 @@ function textSearch(address, distance) {
 			});
 		}
 	})
-	.catch(error => showErrorMessage("ERROR: " + error));	
+	.catch(error => showErrorMessage("textSearchError: " + error));
 }
 
 /**
  * Saves the websites language to localStorage so that the user's choice is saved even when the browser is closed.
  * @param {string} language The language to be saved in localStorage.
  */
-function swapLanguage(language) {
-	if(window.localStorage.getItem('language') !== language) {
-		window.localStorage.setItem("language", language);
-		window.location.reload();
-	}
+function swapLanguage() {
+	const newLanguage = window.localStorage.getItem('language') === "en" ? "fi" : "en";
+	window.localStorage.setItem("language", newLanguage);
+	window.location.reload();
 }
 
 /**
@@ -676,7 +695,8 @@ function swapLanguage(language) {
  * @param {string} id The ID that will be given to the list element.
  * @param {Object} searchVars An object which contains the search variables.
  */
-function createList(list, parentDiv, id, searchVars) {
+function createList(list, parentDiv, id) {
+	
 	const ul = document.createElement("ul");
 	ul.classList.add("dropdown-list");
 	ul.id = id;
@@ -686,6 +706,8 @@ function createList(list, parentDiv, id, searchVars) {
 
 	if(id === "types") {
 		let newList = [];
+		const language = window.localStorage.getItem('language');
+
 		for (let i = 0; i < list.length; i++) {
 			const type = list[i] + "," + list[i+1];
 			newList.push(type);
@@ -693,10 +715,12 @@ function createList(list, parentDiv, id, searchVars) {
 		}
 		newList = newList.sort();
 		for (let i = 0; i<newList.length; i++) {
-			let li = document.createElement("li");
-			let locale = newList[i].split(",");
-			locale = locale.map(x => x.trim());
-			let content = document.createTextNode(locale[0]);
+			const li = document.createElement("li");
+			const beerTypes = newList[i]
+							.split(",")
+							.map(item => item.trim());
+			const beerType = language === "en" ? beerTypes[1] : beerTypes[0];
+			const content = document.createTextNode(beerType);
 			li.appendChild(content);
 			li.dataset.type = newList[i];
 			li.addEventListener("click", () => toggleInSearch(li, searchVars));
@@ -706,8 +730,8 @@ function createList(list, parentDiv, id, searchVars) {
 		list = removeDuplicates(list);
 		list = list.sort();
 		for (let i = 0; i < list.length; i++) {
-			let li = document.createElement("li");
-			let content = document.createTextNode(list[i]);
+			const li = document.createElement("li");
+			const content = document.createTextNode(list[i]);
 			li.appendChild(content);
 			li.addEventListener("click", () => toggleInSearch(li, searchVars));
 			ul.appendChild(li);
@@ -723,7 +747,7 @@ function createList(list, parentDiv, id, searchVars) {
 function closeList(div) {
 	const otherList = div.children[1];
 	const otherDiv = div.children[0];
-	const icon = otherDiv.children[1];
+	const icon = otherDiv.querySelector('img');
 	otherList.classList.remove('open');
 	icon.style.transform = "rotate(-90deg)";
 }
@@ -731,25 +755,34 @@ function closeList(div) {
 /**
  * Toggles the beer brands and types in the search variables as the user selects/deselects them.
  * @param {HTMLElement} li The list item that was clicked.
- * @param {Object} searchVars The search variables -object.
  */
-function toggleInSearch(li, searchVars) {
+function toggleInSearch(li) {
 	const parentID = li.parentElement.id;
 	li.classList.toggle("selected");
 	if(parentID === "brands") {
 		const text = li.textContent || li.innerText;
-		if (searchVars.brands.indexOf(text) >= 0) {
-			searchVars.brands.splice(searchVars.brands.indexOf(text), 1);
+		const brands = searchVars.brands;
+		if(brands.indexOf(text) >= 0) {
+			brands.splice(brands.indexOf(text), 1);
+			globalVars.selectedBrands--;
 		} else {
-			searchVars.brands.push(text);
+			brands.push(text);
+			globalVars.selectedBrands++;
 		}
-	} else if(parentID === "types") {
+		brandsCounterElement.textContent = globalVars.selectedBrands === 0 ? "" : "[" + globalVars.selectedBrands + "]";
+	}
+	
+	if(parentID === "types") {
 		const text = li.dataset.type;
-		if (searchVars.types.indexOf(text) >= 0) {
-			searchVars.types.splice(searchVars.types.indexOf(text), 1);
+		const types = searchVars.types;
+		if(types.indexOf(text) >= 0) {
+			types.splice(types.indexOf(text), 1);
+			globalVars.selectedTypes--;
 		} else {
-			searchVars.types.push(text);
+			types.push(text);
+			globalVars.selectedTypes++;
 		}
+		typesCounterElement.textContent = globalVars.selectedTypes === 0 ? "" : "[" + globalVars.selectedTypes + "]";
 	}
 }
 
@@ -762,13 +795,13 @@ function toggleServing(el) {
 	const clicked = el.classList.contains('serving-button') ? el : el.parentElement;
 	const parentElement = clicked.parentElement;
 	const buttons = parentElement.querySelectorAll('.serving-button');
-	buttons.forEach((button) => {
+	for(button of buttons) {
 		if(button === clicked) {
 			button.classList.add('serving-button-active');
 		} else {
 			button.classList.remove('serving-button-active');
 		}
-	})
+	}
 	return clicked.id;
 }
 
@@ -885,6 +918,7 @@ function rotateIcon(icon) {
 function openMenu() {
 	menuElement.classList.add('visible');
 	oof.classList.add('visible');
+	menuSearchbox.value = capitalize(globalVars.lastSearch);
 }
 
 /**
@@ -996,6 +1030,41 @@ function closeK18() {
 }
 
 /**
+ * Resets the menu search criteria back to defaults. 
+ * Bottle&tap, max price, max ABV, 1000m range, 0 brands, 0 types and clear searchbox.
+ */
+function resetMenuSearch() {
+	const listItems = document.querySelectorAll('.dropdown-list li');
+	for (item of listItems) {
+		if (item.classList.contains('selected')) {
+			item.classList.remove('selected');
+		}
+	}
+	distanceSlider.noUiSlider.set(1000);
+	priceSlider.noUiSlider.set(25.0);
+	alcoholSlider.noUiSlider.set([0.0,12.0]);
+	menuSearchbox.value = '';
+	brandsCounterElement.textContent = '';
+	typesCounterElement.textContent = '';
+	globalVars.selectedBrands = 0;
+	globalVars.selectedTypes = 0;
+}
+
+
+/**
+ * Resets the searchVars back to defaults.
+ */
+function resetSearchVars() {
+	const bothButton = document.getElementById('both');
+	searchVars.serving = toggleServing(both);
+	searchVars.price = 25,
+	searchVars.abvMin = 0,
+	searchVars.abvMax = 12,
+	searchVars.brands = [],
+	searchVars.types = []
+}
+
+/**
  * Adds the restaurants name, address, open hours for the current day and a photo of the bar from google.
  * Gets the beverage list of the bar from our DB and shows it.
  * @param {Object} place The bar object from Google's search.
@@ -1008,6 +1077,9 @@ function renderBarInfo(place) {
 	const barName = document.getElementById("bar-name");
 	const barOpen = document.getElementById("bar-open");
 	const barPhoto = document.getElementById("bar-photo");
+	if(place.name === "Boothill") {
+		place.name = "Ravintola Boothill";
+	}
 	getBarData(place.name)
 		.then(data => {
 			const body = document.querySelector("tbody");
@@ -1021,7 +1093,7 @@ function renderBarInfo(place) {
 			}
 			globalLists.beerList = data;
 		})
-		.catch(error => showErrorMessage("ERROR: " + error));
+		.catch(error => console.log("getbardata " + error));
 	barName.innerHTML = place.name;
 	setRating(place.rating);
 	googleshit.placesService.getDetails({placeId: place.place_id},
@@ -1029,14 +1101,21 @@ function renderBarInfo(place) {
 			if(status !== google.maps.places.PlacesServiceStatus.OK) return;
 			const address = data.formatted_address;
 			barAddress.innerHTML = address.split(",",2).join();
-			barOpen.innerHTML = data.opening_hours ? capitalize(data.opening_hours.weekday_text[weekday]) : "Aukioloajat ei tiedossa";
+			barOpen.innerHTML = data.opening_hours ? formatOpenHours(data.opening_hours.weekday_text[weekday]) : "Aukioloajat ei tiedossa";
 			if(data.photos) {
 				const url = data.photos[0].getUrl({ "maxWidth": 600 });
 				barPhoto.style.backgroundSize = "cover";
-				barPhoto.style.backgroundImage = "url(" + url + ")";	
-			}		
+				barPhoto.style.backgroundImage = "url(" + url + ")";
+			}
 		}
 	);
+}
+
+function formatOpenHours(openHours) {
+	const parts = openHours.split(':');
+	const html = `<span>${capitalize(parts[0])}:</span>
+				<span>${parts[1]}</span>`;
+	return html;
 }
 
 /**
@@ -1066,6 +1145,7 @@ function setRating(rating) {
  */
 function localizeContent(language) {
 	const locale = language === "en" ? en_GB : fi_FI;
+	menuSearchbox.placeholder = locale.menu.menuSearchBox;
 	document.getElementById("tapButtonText").textContent = locale.menu.searchOptionButtons.tapButton;
 	document.getElementById("bothButtonText").textContent = locale.menu.searchOptionButtons.bothButton;
 	document.getElementById("bottleButtonText").textContent = locale.menu.searchOptionButtons.bottleButton;
@@ -1089,10 +1169,11 @@ function localizeContent(language) {
 	document.querySelector('.button-no').textContent = locale.k18.noBtn;
 	document.querySelector('.button-yes').textContent = locale.k18.yesBtn;
 	document.querySelector('.k18-body p').textContent = locale.k18.body;
+	document.querySelector('.k18-buttons img').src = locale.icon;
 	document.querySelector('#tutorial h2').textContent = locale.tutorial.title;
 	document.querySelector('#tutorial .modal-body').textContent = locale.tutorial.body;
 	document.querySelector('#tutorial label span').textContent = locale.tutorial.checkbox;
-	modalFlag.src = locale.icon;
+	document.querySelector('.locale img').src = locale.icon;
 }
 
 /**
@@ -1188,14 +1269,14 @@ function locateUser() {
 			})
 		} else {
 			reject("Selaimesi ei valitettavasti tue paikannusta.");
-		}	
+		}
 	})
 }
 
 
 /**
  * Google geocoder.
- * Geocodes the given address into latitude and longitude coordinates. 
+ * Geocodes the given address into latitude and longitude coordinates.
  * Initially returns a promise and after the geocoder has finished it will resolve/reject the promise based on the geocoder's status.
  * @param {string} address The address/place that the user searched.
  * @returns {promise} Initially returns a promise and after the geocoder has finished it will resolve/reject the promise based on the geocoder's status.
@@ -1214,9 +1295,9 @@ function geocodeAddress(address) {
 }
 
 /**
- * If the user has made a text search for an address (map has a yellow marker) -> that will be the starting point. 
+ * If the user has made a text search for an address (map has a yellow marker) -> that will be the starting point.
  * Otherwise it will try to use geolocation to get the current location of the user.
- * @returns {promise} Initially returns a promise and after the starting point has been set it will resolve/reject the promise. 
+ * @returns {promise} Initially returns a promise and after the starting point has been set it will resolve/reject the promise.
  * Throws an error if no yellow markers were on the map and geolocation fails.
  *
  */
@@ -1274,7 +1355,7 @@ function calcRoute(startPoint, endPoint, mode) {
 			searchContainer.style.display = "none";
 			clearMarkers();
 			geocodeAddress(endPoint)
-				.then(results => {	
+				.then(results => {
 					const searchPos = results[0].geometry.location;
 					const endPointMarker = createMarker(searchPos, false);
 					google.maps.event.addListener(endPointMarker, "click", function() {
@@ -1282,7 +1363,7 @@ function calcRoute(startPoint, endPoint, mode) {
 						openCard();
 					})
 				})
-				.catch(error => showErrorMessage("ERROR: " + error));
+				.catch(error => showErrorMessage("geocodeError: " + error));
 			createMarker(startPoint, false, false);
 			resizeElementHeights();
 			closeCard();
@@ -1300,18 +1381,6 @@ function calcRoute(startPoint, endPoint, mode) {
  *
  */
 function searchNearby(loc, distance) {
-	const circleOptions = {
-        strokeColor: '#FF0000',
-        strokeOpacity: 0.1,
-        strokeWeight: 2,
-        fillColor: '#FF0000',
-		fillOpacity: 0.075,
-		center: loc,
-		radius: parseFloat(distance)
-	};
-	googleshit.circle.setOptions(circleOptions);
-	googleshit.map.fitBounds(googleshit.circle.getBounds());
-
 	googleshit.placesService.nearbySearch({
 		location: loc,
 		rankBy: google.maps.places.RankBy.DISTANCE,
@@ -1323,6 +1392,34 @@ function searchNearby(loc, distance) {
 		rankBy: google.maps.places.RankBy.DISTANCE,
 		type: ["bar"]
 	}, (results, status, pagination) => processResults(results, status, pagination, loc, distance));
+}
+
+
+/**
+ * Shows the range of the search with a google maps circle and zooms the map to fit the whole circle.
+ * @param {Object} loc Midpoint for the circle.
+ * @param {number} radius The radius of the circle.
+ */
+function showSearchRadius(loc, radius) {
+	const circleOptions = {
+        strokeColor: '#1919ff',
+        strokeOpacity: 0.3,
+        strokeWeight: 3,
+        fillColor: '#000000',
+		fillOpacity: 0,
+		center: loc,
+		radius: radius
+	};
+	googleshit.circle.setOptions(circleOptions);
+	googleshit.map.fitBounds(googleshit.circle.getBounds());
+}
+
+/**
+ * Hides the google maps circle by lowering it's opacity to 0.
+ * 
+ */
+function hideSearchRadius() {
+	googleshit.circle.setOptions({ fillOpacity: 0, strokeOpacity: 0 });
 }
 
 /**
@@ -1340,13 +1437,14 @@ function processResults(results, status, pagination, loc, distanceLimit) {
 	if (status !== google.maps.places.PlacesServiceStatus.OK) return;
 	for (let i = 0; i < results.length; i++) {
 		const actualDistance = google.maps.geometry.spherical.computeDistanceBetween(loc, results[i].geometry.location);
+		if(!pagination.hasNextPage) {
+			document.getElementById('loading').classList.remove('visible');
+			return;
+		}
 		if(actualDistance > distanceLimit) {
 			continue;
 		};
-		if(!pagination.hasNextPage) {
-			console.log("done");
-			return;
-		}
+
 		setTimeout((function(i){
 			return function(){
 				if(globalVars.searchWithVars && globalLists.bars.indexOf(results[i].name) === -1) return;
@@ -1373,7 +1471,7 @@ function processResults(results, status, pagination, loc, distanceLimit) {
  *
  */
 function createMarker(location, animate = true, isBarMarker = true) {
-	const icon = isBarMarker ? "kgps_icons/kaljakartta_map_arrow.svg" : "kgps_icons/yellow-marker.png";
+	const icon = isBarMarker ? "kgps_icons/kaljakartta_map_arrow_50.svg" : "kgps_icons/yellow-marker.png";
 	const animation = animate ? google.maps.Animation.DROP : null;
 	const marker = new google.maps.Marker({
 		map: googleshit.map,
@@ -1427,5 +1525,4 @@ function loadScript(url, callback) {
 	document.querySelector('head').appendChild(script);
 }
 
-	
 })(window, document, noUiSlider);

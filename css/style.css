@@ -1,7 +1,7 @@
 :root {
 	--primary: #fbda3a;
 	--secondary: #FFC107;
-	--bg-light: #ececec;
+	--bg-light: #f5f5f5;
 	--bg-neutral: #9E9E9E;
 	--bg-dark: #404040;
 	--bg-darker: #303030;
@@ -44,6 +44,10 @@ body, html {
 .closebtn:hover {
 	background-color: var(--bg-neutral);
 	color: #101010;
+}
+
+.right {
+	float: right;
 }
 
 .absolute {
@@ -116,7 +120,7 @@ header {
 }
 
 .locale {
-	display: none;
+	display: flex;
 	-webkit-box-orient: vertical;
 	-webkit-box-direction: normal;
 	    -ms-flex-direction: column;
@@ -127,7 +131,7 @@ header {
 }
 
 .locale img {
-	height: 20px;
+	height: 38px;
 }
 
 .header-button {
@@ -310,12 +314,15 @@ header {
 
 .dropdown {
 	overflow: hidden;
+	border: solid 1px #808080;
+	border-radius: 4px;
 }
 
-.dropdown div {
-	background-color: var(--bg-neutral);
-	border: 2px solid #bbb;
-	color: #101010;
+.dropdown > div {
+	background-color: var(--bg-dark);
+	letter-spacing: 1.5px;
+	font: 1.1em 'Bebas Neue', sans-serif;
+	color: var(--primary);
 	padding: 5px;
 	display: -webkit-box;
 	display: -ms-flexbox;
@@ -326,8 +333,6 @@ header {
 }
 
 .dropdown-list {
-	background-color: #a1a1a1;
-	border-top: none;
 	color: #101010;
 	height: 0px;
 	list-style-type: none;
@@ -347,20 +352,27 @@ header {
 	display: none;
 }
 
-/* checkmarks
-.dropdown li:before {
-	content:"\2714\0020";
-}
-*/
-
 .dropdown li{
-	border-bottom: 1px solid #808080;
+	background: #ffffff;
+	background-image: -webkit-linear-gradient(top, #ffffff, #f3f3f3);
+	background-image: -moz-linear-gradient(top, #ffffff, #f3f3f3);
+	background-image: -ms-linear-gradient(top, #ffffff, #f3f3f3);
+	background-image: -o-linear-gradient(top, #ffffff, #f3f3f3);
+	background-image: linear-gradient(to bottom, #ffffff, #f3f3f3);
+	border-top: 1px solid #808080;
+	color: #444;
 	display: block;
+	font-size: 0.9em;
 	padding: 5px 10px;
 }
 
 .dropdown li:hover {
-	background-color: #dedede;
+	background-color: #e2e2e2;
+	background-image: none;
+}
+
+.dropdown li.selected {
+	color: var(--secondary);
 }
 
 .dropdown-icon {
@@ -379,8 +391,24 @@ header {
 	z-index: 60;
 }
 
+.out-of-focus-area img {
+	display: none;
+}
+
+.out-of-focus-area.light {
+	background-color: rgba(0,0,0, 0.2);
+	height: 100vh;
+	position: absolute;
+	width: 0;
+	z-index: 60;
+}
+
 .out-of-focus-area.visible {
 	width: 100%;
+}
+
+.out-of-focus-area.visible img {
+	display: block;
 }
 
 .noUi-horizontal.noUi-extended {
@@ -391,6 +419,11 @@ header {
 }
 .noUi-horizontal.noUi-extended .noUi-origin  {
 	right: -32px;
+}
+
+#selectedBrands, #selectedTypes {
+	margin-right: 5px;
+	color: #999;
 }
 
 #side-menu {
@@ -457,14 +490,14 @@ header {
 	display: flex;
 	border: 1px solid #808080;
 	border-radius: 8px;
-	max-width: 250px;
+	max-width: 235px;
 	overflow: hidden;
 	margin-right: 5px;
 }
 
 .directions-button {
 	flex: 1;
-	padding: 5px;
+	padding-top: 4px;
 	border: none;
 	border-right: 1px solid #808080;
 	background: #ffffff;
@@ -660,8 +693,8 @@ header {
 }
 
 #bar-open {
-	margin: 12px auto 0 auto;
 	font-size: 1.1em;
+	text-align: right;
 }
 
 #card-content {
@@ -736,6 +769,17 @@ header {
 /* ----- KARTTA LOPPU----- */
 
 
+/* ----- LOADER ----- */
+
+#loading {
+	z-index: 100;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+/* ----- LOADER ----- */
+
 
 /* ----- KARTAN HAKUKENTTÄ ----- */
 #search-container {
@@ -748,9 +792,10 @@ header {
 }
 
 #menu-searchbox {
-	border-radius: 5px;
-	border: 2px solid var(--bg-dark);
-	color: #202020;
+	/*border-radius: 5px;*/
+	border: 1.5px solid #808080;);
+	color: #444;
+	background-color: #fff;
 	font-size: 1em;
 	width: calc(100% - 14px);
 	padding: 5px;
@@ -878,6 +923,10 @@ input[type="checkbox"] {
 	justify-content: space-around;
 }
 
+.k18-buttons img {
+	height: 42px;
+}
+
 .k18-body {
 	justify-content: space-between;
 }
@@ -960,10 +1009,6 @@ input[type="checkbox"] {
 
 /* ----- ROUTE/NAVIGATION/DIRECTIONS LOPPU ----- */
 
-.selected {
-	color: var(--secondary);
-}
-
 @media only screen and (min-width: 768px) and (max-width: 1280px) {
 	#search-container {
 		bottom: 20px;
@@ -975,31 +1020,9 @@ input[type="checkbox"] {
 }
 
 @media only screen and (max-width: 767px){
-	.logo {
+	.logo, .locale img{
 		height: 27px;
 		padding-right: 0;
-	}
-
-	.directions-buttons {
-		display: -webkit-box;
-		display: -ms-flexbox;
-		display: flex;
-		-ms-flex-pack: distribute;
-		    justify-content: space-around;
-	}
-
-	.directions-button {
-		width: 40px;
-		height: 35px;
-		display: -webkit-box;
-		display: -ms-flexbox;
-		display: flex;
-		-webkit-box-pack: center;
-		    -ms-flex-pack: center;
-		        justify-content: center;
-		-webkit-box-align: center;
-		    -ms-flex-align: center;
-		        align-items: center;
 	}
 
 	.title {
@@ -1016,8 +1039,8 @@ input[type="checkbox"] {
 	        	transform: translateY(-30%);
 	}
 
-	.rating-icon {
-		width: 28px;
+	.transit-icon {
+		height: 18px;
 	}
 
 	.header-icon {
@@ -1034,6 +1057,11 @@ input[type="checkbox"] {
 
 	header {
 		height: 45px;
+	}
+
+	#bar-open {
+		display: flex;
+		flex-direction: column;
 	}
 
 	#card-content {
@@ -1074,6 +1102,10 @@ input[type="checkbox"] {
 @media only screen and (max-width: 450px) {
 	.column-m {
 		display: none;
+	}
+
+	.rating-icon {
+		width: 28px;
 	}
 }
 
