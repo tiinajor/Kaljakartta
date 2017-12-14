@@ -195,18 +195,8 @@ public class Dao implements DataAccessObject {
 
 	}
 
-<<<<<<< HEAD
-	/**
-	 * 
-	 * Takes in a path to a .json file containing an array of beverages as
-	 * JSONObjects and writes them to the database if they do not already exist.
-	 * 
-	 * @param path to .json file
-	 */
-=======
 
 	@Override
->>>>>>> new_back
 	public void parseBeverages(String path) {
 
 		try {
