@@ -202,7 +202,7 @@ TODO LISTA:
 	menuButton.addEventListener("click", openMenu);
 
 	// hakee menuun oluttyypit
-	fetch("http://188.166.162.144:130/beveragetypes")
+	fetch("https://cors-anywhere.herokuapp.com/http://188.166.162.144:130/beveragetypes")
 		.then(response => { return response.text() })
 		.then(data => {
 			let beerTypes = data.slice(1, -1).split(",");
@@ -214,7 +214,7 @@ TODO LISTA:
 
 	// hakee menuun olutmerkit
 	setTimeout(() => {
-		fetch("http://188.166.162.144:130/brands")
+		fetch("https://cors-anywhere.herokuapp.com/http://188.166.162.144:130/brands")
 			.then(response => {
 				return response.text();
 			})
@@ -252,7 +252,7 @@ TODO LISTA:
 	// hae-nappi hakee baarit, joista löytyy hakukriteereitä vastaavia juomia
 	menuSearchButton.addEventListener('click', () => {
 		globalVars.searchWithVars = true;
-		searchWithVars("http://188.166.162.144:130/findrestaurants", searchVars, distanceSlider.noUiSlider.get());
+		searchWithVars("https://cors-anywhere.herokuapp.com/http://188.166.162.144:130/findrestaurants", searchVars, distanceSlider.noUiSlider.get());
 		globalVars.lastSearch = menuSearchbox.value;
 	});
 
@@ -588,7 +588,7 @@ function capitalizeEveryWord(text) {
  * @returns {Object} Returns the beerlist as a JSON or return null if the request status is 500.
  */
 function getBarData(barName) {
-	const url = "http://188.166.162.144:130/restaurant?name=" + barName.toLowerCase();
+	const url = "https://cors-anywhere.herokuapp.com/http://188.166.162.144:130/restaurant?name=" + barName.toLowerCase();
 	return fetch(url).then(response => response.status !== 500 ? response.json() : null).catch(error => showErrorMessage("getBarDataError: " + error));
 }
 
@@ -1009,7 +1009,7 @@ function closeTutorial() {
  */
 function showK18() {
 	const checkedAge = sessionStorage.getItem('checkedAge');
-	if(checkedAge) return showTutorial();
+	//if(checkedAge) return showTutorial();
 	oof.classList.add('visible');
 	map.classList.add('blur');
 	searchContainer.classList.add('blur');
@@ -1101,7 +1101,7 @@ function renderBarInfo(place) {
 			if(status !== google.maps.places.PlacesServiceStatus.OK) return;
 			const address = data.formatted_address;
 			barAddress.innerHTML = address.split(",",2).join();
-			barOpen.innerHTML = data.opening_hours ? formatOpenHours(data.opening_hours.weekday_text[weekday]) : "Aukioloajat ei tiedossa";
+			barOpen.innerHTML = data.opening_hours ? data.opening_hours.weekday_text[weekday] : "Aukioloajat ei tiedossa";
 			if(data.photos) {
 				const url = data.photos[0].getUrl({ "maxWidth": 600 });
 				barPhoto.style.backgroundSize = "cover";
