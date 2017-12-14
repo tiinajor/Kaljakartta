@@ -1,7 +1,7 @@
 {
-  "name": "kgps",
+  "name": "Kaljakartta",
   "version": "1.0.0",
-  "description": "kaljakartta.fi",
+  "description": "Huurteisten hinnastot samasta paikasta.",
   "main": "script.js",
   "scripts": {
     "test": "jasmine"
