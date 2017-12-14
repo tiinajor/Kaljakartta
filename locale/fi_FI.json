@@ -1,5 +1,5 @@
 const fi_FI = {
-    "icon": "kgps_icons/locale_en.svg",
+    "icon": "kgps_icons/locale_pint_en.svg",
     "menu": {
         "searchOptionButtons": {
             "tapButton": "Hanat",
@@ -11,6 +11,7 @@ const fi_FI = {
             "abvText": "Vahvuus",
             "distanceText": "Etäisyys"
         },
+        "menuSearchBox": "Rajaa hakualue...",
         "listsContainer": {
             "brandListText": "Olutmerkki",
             "typeListText": "Oluttyyppi"
@@ -18,7 +19,7 @@ const fi_FI = {
         "menuButtons": {
             "buttonCancel": "Tyhjennä",
             "buttonSubmit": "Hae"
-        }
+        },
     },
     "searchContainer": {
         "searchbox": "Haku..."

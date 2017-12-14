@@ -49,8 +49,7 @@ TODO LISTA:
 	}
 	const k18yes = document.querySelector('.button-yes');
 	const k18no = document.querySelector('.button-no');
-	const fiFlag = document.getElementById("fi");
-	const enFlag = document.getElementById("en");
+	const localeFlag = document.querySelector('.locale img')
 	const title = document.querySelector(".title");
 	const typeList = document.querySelector("#type-list div");
 	const brandList = document.querySelector("#brand-list div");
@@ -129,12 +128,8 @@ TODO LISTA:
 	title.addEventListener("click", () => {window.location.reload(true)});
 
 	// lippujen klikkaaminen vaihtaa sivuston kielen kyseiseen kieleen
-	fiFlag.addEventListener("click", (e) => swapLanguage(e.target.id));
-	enFlag.addEventListener("click", (e) => swapLanguage(e.target.id));
-	modalFlag.addEventListener("click", () => {
-		const newLanguage = window.localStorage.getItem('language') === "en" ? "fi" : "en";
-		swapLanguage(newLanguage);
-	});
+	localeFlag.addEventListener("click", swapLanguage);
+	modalFlag.addEventListener("click", swapLanguage);
 
 	k18no.addEventListener('click', () => window.close());
 	k18yes.addEventListener('click', () => {
@@ -210,7 +205,6 @@ TODO LISTA:
 	fetch("http://188.166.162.144:130/beveragetypes")
 		.then(response => { return response.text() })
 		.then(data => {
-			console.log(data);
 			let beerTypes = data.slice(1, -1).split(",");
 			beerTypes = beerTypes.map(x => x.trim());
 			createList(beerTypes, document.getElementById("type-list"), "types");
@@ -687,11 +681,10 @@ function textSearch(address, distance) {
  * Saves the websites language to localStorage so that the user's choice is saved even when the browser is closed.
  * @param {string} language The language to be saved in localStorage.
  */
-function swapLanguage(language) {
-	if(window.localStorage.getItem('language') !== language) {
-		window.localStorage.setItem("language", language);
-		window.location.reload();
-	}
+function swapLanguage() {
+	const newLanguage = window.localStorage.getItem('language') === "en" ? "fi" : "en";
+	window.localStorage.setItem("language", newLanguage);
+	window.location.reload();
 }
 
 /**
@@ -776,7 +769,7 @@ function toggleInSearch(li) {
 			brands.push(text);
 			globalVars.selectedBrands++;
 		}
-		brandsCounterElement.textContent = globalVars.selectedBrands === 0 ? "" : "(" + globalVars.selectedBrands + ")";
+		brandsCounterElement.textContent = globalVars.selectedBrands === 0 ? "" : "[" + globalVars.selectedBrands + "]";
 	}
 	
 	if(parentID === "types") {
@@ -789,7 +782,7 @@ function toggleInSearch(li) {
 			types.push(text);
 			globalVars.selectedTypes++;
 		}
-		typesCounterElement.textContent = globalVars.selectedTypes === 0 ? "" : "(" + globalVars.selectedTypes + ")";
+		typesCounterElement.textContent = globalVars.selectedTypes === 0 ? "" : "[" + globalVars.selectedTypes + "]";
 	}
 }
 
@@ -1152,6 +1145,7 @@ function setRating(rating) {
  */
 function localizeContent(language) {
 	const locale = language === "en" ? en_GB : fi_FI;
+	menuSearchbox.placeholder = locale.menu.menuSearchBox;
 	document.getElementById("tapButtonText").textContent = locale.menu.searchOptionButtons.tapButton;
 	document.getElementById("bothButtonText").textContent = locale.menu.searchOptionButtons.bothButton;
 	document.getElementById("bottleButtonText").textContent = locale.menu.searchOptionButtons.bottleButton;
@@ -1178,6 +1172,7 @@ function localizeContent(language) {
 	document.querySelector('#tutorial h2').textContent = locale.tutorial.title;
 	document.querySelector('#tutorial .modal-body').textContent = locale.tutorial.body;
 	document.querySelector('#tutorial label span').textContent = locale.tutorial.checkbox;
+	document.querySelector('.locale img').src = locale.icon;
 	modalFlag.src = locale.icon;
 }
 

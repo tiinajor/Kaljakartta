@@ -120,7 +120,7 @@ header {
 }
 
 .locale {
-	display: none;
+	display: flex;
 	-webkit-box-orient: vertical;
 	-webkit-box-direction: normal;
 	    -ms-flex-direction: column;
@@ -131,7 +131,7 @@ header {
 }
 
 .locale img {
-	height: 20px;
+	height: 38px;
 }
 
 .header-button {
@@ -360,13 +360,19 @@ header {
 	background-image: -o-linear-gradient(top, #ffffff, #f3f3f3);
 	background-image: linear-gradient(to bottom, #ffffff, #f3f3f3);
 	border-top: 1px solid #808080;
+	color: #444;
 	display: block;
+	font-size: 0.9em;
 	padding: 5px 10px;
 }
 
 .dropdown li:hover {
 	background-color: #e2e2e2;
 	background-image: none;
+}
+
+.dropdown li.selected {
+	color: var(--secondary);
 }
 
 .dropdown-icon {
@@ -999,10 +1005,6 @@ input[type="checkbox"] {
 
 /* ----- ROUTE/NAVIGATION/DIRECTIONS LOPPU ----- */
 
-.selected {
-	color: var(--secondary);
-}
-
 @media only screen and (min-width: 768px) and (max-width: 1280px) {
 	#search-container {
 		bottom: 20px;
@@ -1014,7 +1016,7 @@ input[type="checkbox"] {
 }
 
 @media only screen and (max-width: 767px){
-	.logo {
+	.logo, .locale img{
 		height: 27px;
 		padding-right: 0;
 	}
