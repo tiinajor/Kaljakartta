@@ -1009,7 +1009,7 @@ function closeTutorial() {
  */
 function showK18() {
 	const checkedAge = sessionStorage.getItem('checkedAge');
-	if(checkedAge) return showTutorial();
+	//if(checkedAge) return showTutorial();
 	oof.classList.add('visible');
 	map.classList.add('blur');
 	searchContainer.classList.add('blur');
