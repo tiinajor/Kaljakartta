@@ -49,6 +49,7 @@ TODO LISTA:
 	}
 	const k18yes = document.querySelector('.button-yes');
 	const k18no = document.querySelector('.button-no');
+	const k18Flag = document.querySelector('.k18-buttons img');
 	const localeFlag = document.querySelector('.locale img')
 	const title = document.querySelector(".title");
 	const typeList = document.querySelector("#type-list div");
@@ -77,7 +78,6 @@ TODO LISTA:
 	const servingButtons = document.querySelectorAll('.serving-button');
 	const routeContainer = document.getElementById('route-container');
 	const searchContainer = document.getElementById('search-container');
-	const modalFlag = document.querySelector('#tutorial .flag');
 	const searchbox = document.getElementById("searchbox");
 	const menuSearchbox = document.getElementById("menu-searchbox");
 	const searchButton = document.getElementById("search-button");
@@ -129,7 +129,7 @@ TODO LISTA:
 
 	// lippujen klikkaaminen vaihtaa sivuston kielen kyseiseen kieleen
 	localeFlag.addEventListener("click", swapLanguage);
-	modalFlag.addEventListener("click", swapLanguage);
+	k18Flag.addEventListener('click', swapLanguage);
 
 	k18no.addEventListener('click', () => window.close());
 	k18yes.addEventListener('click', () => {
@@ -1169,11 +1169,11 @@ function localizeContent(language) {
 	document.querySelector('.button-no').textContent = locale.k18.noBtn;
 	document.querySelector('.button-yes').textContent = locale.k18.yesBtn;
 	document.querySelector('.k18-body p').textContent = locale.k18.body;
+	document.querySelector('.k18-buttons img').src = locale.icon;
 	document.querySelector('#tutorial h2').textContent = locale.tutorial.title;
 	document.querySelector('#tutorial .modal-body').textContent = locale.tutorial.body;
 	document.querySelector('#tutorial label span').textContent = locale.tutorial.checkbox;
 	document.querySelector('.locale img').src = locale.icon;
-	modalFlag.src = locale.icon;
 }
 
 /**

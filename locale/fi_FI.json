@@ -22,7 +22,7 @@ const fi_FI = {
         },
     },
     "searchContainer": {
-        "searchbox": "Haku..."
+        "searchbox": "Hae alueelta..."
     },
     "restaurantCard": {
         "directionsButtons": {

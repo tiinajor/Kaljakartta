@@ -923,6 +923,10 @@ input[type="checkbox"] {
 	justify-content: space-around;
 }
 
+.k18-buttons img {
+	height: 42px;
+}
+
 .k18-body {
 	justify-content: space-between;
 }

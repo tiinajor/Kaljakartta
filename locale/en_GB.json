@@ -22,7 +22,7 @@ const en_GB ={
         }
     },
     "searchContainer": {
-        "searchbox": "Search..."
+        "searchbox": "Search from..."
     },
     "restaurantCard": {
         "directionsButtons": {
