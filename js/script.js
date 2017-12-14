@@ -1101,7 +1101,7 @@ function renderBarInfo(place) {
 			if(status !== google.maps.places.PlacesServiceStatus.OK) return;
 			const address = data.formatted_address;
 			barAddress.innerHTML = address.split(",",2).join();
-			barOpen.innerHTML = data.opening_hours ? formatOpenHours(data.opening_hours.weekday_text[weekday]) : "Aukioloajat ei tiedossa";
+			barOpen.innerHTML = data.opening_hours ? data.opening_hours.weekday_text[weekday] : "Aukioloajat ei tiedossa";
 			if(data.photos) {
 				const url = data.photos[0].getUrl({ "maxWidth": 600 });
 				barPhoto.style.backgroundSize = "cover";
