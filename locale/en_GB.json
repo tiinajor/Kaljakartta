@@ -1,5 +1,5 @@
 const en_GB ={
-    "icon": "kgps_icons/locale_fi.svg",
+    "icon": "kgps_icons/locale_pint_fi.svg",
     "menu": {
         "searchOptionButtons": {
             "tapButton": "Tap",
@@ -11,6 +11,7 @@ const en_GB ={
             "abvText": "Abv",
             "distanceText": "Distance"
         },
+        "menuSearchBox": "Restrict search to...",
         "listsContainer": {
             "brandListText": "Brand",
             "typeListText": "Type"
@@ -21,7 +22,7 @@ const en_GB ={
         }
     },
     "searchContainer": {
-        "searchbox": "Search..."
+        "searchbox": "Search from..."
     },
     "restaurantCard": {
         "directionsButtons": {
