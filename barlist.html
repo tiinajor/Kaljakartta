@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="x-ua-compatible" content="ie=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+	<title>Kaljakartta - Bar List</title>
+	<link rel="stylesheet" href="css/reset.css">
+	<link rel="stylesheet" href="css/barlist.css">
+	<link rel="icon" type="image/png" sizes="32x32" href="kgps_icons/favicon-32x32.png">
+	<script src="js/barlist.js"></script>
+
+</head>
+<body>
+	<header>
+	<p>Kaljakartta.fi</p>
+	</header>
+
+	<div class="modal">
+
+		<div class="title">
+		<p>Lisää tai poista tuotteita</p>
+		</div>
+		<div class="content">
+			<ol>
+				<div>
+					<select id="selectBrand">
+
+					</select>
+					<input type="text" placeholder="Syötä hinta">
+					<input type="text" placeholder="Syötä koko">
+					<span class="selectServing">
+						<input type="radio" name="serving" value="tap" id="tap" checked>
+						<label class="clickable" for="tap">Hana</label>
+						<input type="radio" name="serving" value="bottle" id="bottle">
+						<label class="clickable" for="bottle">Pullo</label>
+					</span>
+					
+				</div>
+			</ol>
+		</div>
+	</div>
+</body>
+</html>
