@@ -8,37 +8,23 @@
 	<link rel="stylesheet" href="css/reset.css">
 	<link rel="stylesheet" href="css/barlist.css">
 	<link rel="icon" type="image/png" sizes="32x32" href="kgps_icons/favicon-32x32.png">
-	<script src="js/barlist.js"></script>
+	<script async defer src="js/barlist.js"></script>
 
 </head>
 <body>
 	<header>
-	<p>Kaljakartta.fi</p>
+	<h1>Kaljakartta.fi</h1>
 	</header>
 
-	<div class="modal">
+	<main>
 
 		<div class="title">
 		<p>Lisää tai poista tuotteita</p>
 		</div>
 		<div class="content">
-			<ol>
-				<div>
-					<select id="selectBrand">
-
-					</select>
-					<input type="text" placeholder="Syötä hinta">
-					<input type="text" placeholder="Syötä koko">
-					<span class="selectServing">
-						<input type="radio" name="serving" value="tap" id="tap" checked>
-						<label class="clickable" for="tap">Hana</label>
-						<input type="radio" name="serving" value="bottle" id="bottle">
-						<label class="clickable" for="bottle">Pullo</label>
-					</span>
-					
-				</div>
-			</ol>
+			<ol></ol>
+			<button class="addRow">+</button>
 		</div>
-	</div>
+	</main>
 </body>
 </html>

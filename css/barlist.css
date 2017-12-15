@@ -10,17 +10,19 @@
 html {
  	height: 100%;
 	background-color: whitesmoke;
+	font-family: sans-serif;
 }
 
-form{
-	display:inline-block;
-}
-
-img{
-	width:15px;
-	height:15px;
-	padding: 0 6px 0 10px;
-	transform: translateY(4px);
+main {
+	width: 30%;
+	min-width: 600px;
+	max-width: 90%;
+	height: 100%;
+	margin: 5vh auto 0 auto;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
 }
 
 header {
@@ -28,15 +30,23 @@ header {
 	width: 100%;
 	height: 60px;
 	justify-content: center;
+	display: flex;
+	align-items: center;
 }
 
-header p{
-	text-align: center;
+header h1{
 	color: var(--primary);
 	font-family: 'Bebas Neue', sans-serif;
-	padding-top:7px;
 	font-size: 2.8em;
 	letter-spacing: 2px;
+}
+
+ol {
+	list-style-type: decimal;
+}
+
+ol li {
+	margin: 6px 0;
 }
 
 .title{
@@ -75,6 +85,8 @@ select {
 }
 
 .selectServing {
+	border-radius: 4px;
+	display: inline-flex;
 	overflow: hidden;
 	height: 25px;
 }
@@ -84,7 +96,11 @@ select {
 }
 
 .selectServing label {
-	padding: 5px;
+	font-family: 'Bebas Neue', sans-serif;
+	letter-spacing: 1.4px;
+	padding: 3px 8px;
+	color: #909090;
+	background-color: #fcfcfc;
 }
 
 .selectServing input:checked + label {
@@ -95,6 +111,30 @@ select {
 .clickable {
 	cursor: pointer;
 }
+
+.deleteItem {
+	background-color: transparent;
+	border: none;
+	outline: none;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	margin-left: 5px;
+}
+
+.deleteItem img {
+	height: 11px;
+}
+
+.disable-select {
+	-webkit-user-select: none;  
+	-moz-user-select: none;    
+	-ms-user-select: none;      
+	user-select: none;
+}
+
+
+
 
 .add_btn{
 	background-color: var(--primary);
@@ -144,24 +184,13 @@ select {
 	font-size: 1.3em;
 }
 
-.modal {
-	width: 30%;
-	min-width: 600px;
-	max-width: 90%;
-	height: 100%;
-	margin: 5vh auto 0 auto;
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
-}
-
 .content {
 	height: calc(100% - 50px);
 	width: 100%;
 	padding:0.5em 0;
 	display: flex;
-	justify-content: center;
+	flex-direction: column;
+	align-items: center;
 	background-color: #ccc;
 	border-bottom-right-radius: 0.5em;
 	border-bottom-left-radius: 0.5em;
