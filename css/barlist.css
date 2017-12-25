@@ -103,7 +103,7 @@ select {
 }
 
 .column-s {
-	width: 55px;
+	width: 60px;
 }
 
 .column-s.edit, .column-s.delete, .column-s.save {
