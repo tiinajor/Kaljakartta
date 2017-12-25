@@ -41,12 +41,85 @@ header h1{
 	letter-spacing: 2px;
 }
 
-ol {
-	list-style-type: decimal;
+input {
+	height:20px;
+	width: 100%;
+	padding: 0 3px;
+	border: 0;
+	outline: none;
+	text-align:left;
+	background-color: transparent;
+	font-size: 0.9em;
 }
 
-ol li {
-	margin: 6px 0;
+input.editable {
+	width: calc(100% - 10px);
+	background-color: #fff;
+}
+
+select {
+	height: 25px;
+	border: none;
+	width: calc(100% - 5px);
+}
+
+.beverages {
+	width: 95%;
+	display: flex;
+	justify-content: center;
+	flex-direction: column;
+}
+
+.beverages thead {
+	margin-bottom: 5px;
+	padding-bottom: 5px;
+	border-bottom: 1px solid #404040;
+}
+
+.odd-row {
+	background-color: #dfdfdf;
+}
+
+.beverages th {
+	text-align: start;
+}
+
+.beverages tr {
+	display: flex;
+	align-items: center;
+}
+
+.beverages tr td.edit {
+	visibility: hidden;
+}
+
+.beverages tr:hover td.edit {
+	visibility: visible;
+}
+
+.column-xs {
+	width: 20px;
+	padding-right: 8px;
+}
+
+.column-s {
+	width: 55px;
+}
+
+.column-s.edit, .column-s.delete, .column-s.save {
+	width: 20px;
+}
+
+.column-m {
+	width: 105px;
+}
+
+.column-l {
+	flex: 1;
+}
+
+.hidden {
+	display: none;
 }
 
 .title{
@@ -67,21 +140,11 @@ ol li {
 	letter-spacing: 2px;
 }
 
-
-input {
-	width:100px;
-	height:25px;
-	padding: 0 3px;
-	border: 0;
-	outline: 1px solid #ccc;
-	outline: none;
-	text-align:left;
-}
-
-select {
-	width: 120px;
-	height: 25px;
-	border: none;
+.logout {
+	position: absolute;
+	right: 1em;
+	top: 1;
+	padding: 0.5em;
 }
 
 .selectServing {
@@ -112,17 +175,21 @@ select {
 	cursor: pointer;
 }
 
-.deleteItem {
-	background-color: transparent;
-	border: none;
-	outline: none;
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	margin-left: 5px;
+.edit img {
+	height: 18px;
 }
 
-.deleteItem img {
+.save img {
+	height: 15px;
+}
+
+.delete {
+	display: inline-flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.delete img {
 	height: 11px;
 }
 
@@ -132,6 +199,8 @@ select {
 	-ms-user-select: none;      
 	user-select: none;
 }
+
+
 
 
 
