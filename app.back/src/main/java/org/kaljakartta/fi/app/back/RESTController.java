@@ -69,6 +69,21 @@ public class RESTController {
 		return ret;
 
 	}
+	
+	/**
+	 * 
+	 * Returns beverage names by request.
+	 * 
+	 * @return An array containing a list of all beverage names found in the database
+	 */
+	@Async
+	@RequestMapping(value = "/beveragenames", method = RequestMethod.GET)
+	public @ResponseBody String passNames() {
+
+		String ret = dao.getNames().toString();
+		return ret;
+
+	}
 
 	/**
 	 * 
