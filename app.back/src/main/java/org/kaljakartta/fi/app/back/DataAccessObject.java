@@ -18,6 +18,15 @@ public interface DataAccessObject {
 
 	/**
 	 * 
+	 * Queries the database for all beverage names.
+	 * 
+	 * @return An array containing a list of all beverage names found in the
+	 *         database
+	 */
+	ArrayList<String> getNames();
+
+	/**
+	 * 
 	 * Queries the database for all beverage types.
 	 * 
 	 * @return An array containing a list of all beverage types found in the

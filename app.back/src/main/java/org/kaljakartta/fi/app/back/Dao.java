@@ -58,6 +58,28 @@ public class Dao implements DataAccessObject {
 
 	}
 
+	@Override
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public ArrayList<String> getNames() {
+
+		ArrayList<String> names = new ArrayList();
+
+		List<Vertex> beers = new GremlinPipeline(graph.getVertices("Beer.beer", true)).toList();
+
+		for (Vertex v : beers) {
+
+			if (!names.contains(v.getProperty("name"))) {
+
+				names.add(v.getProperty("name").toString());
+
+			}
+
+		}
+
+		return names;
+
+	}
+
 
 	@Override
 	@SuppressWarnings({ "rawtypes", "unchecked" })
