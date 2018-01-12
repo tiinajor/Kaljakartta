@@ -29,8 +29,8 @@
 
 
 function createInputRow() {
-	const body = document.querySelector("tbody");
-	const addRowButton = document.createElement('td');
+	const body = table.querySelector('tbody');
+	const saveRowButton = document.createElement('td');
 	const row = document.createElement('tr');
 	row.innerHTML = `
 		<td class="column-xs"><img src="kgps_icons/beer-bottle.svg"></td>
@@ -39,11 +39,17 @@ function createInputRow() {
 		<td class="column-s"><input class="editable" type="number" placeholder="Koko"></td>
 		<td class="column-s"><input class="editable" type="number" placeholder="Alk-%"></td>
 		<td class="column-s"><input class="editable" type="number" placeholder="Hinta"></td>`;
-	addRowButton.innerHTML = `<img src="kgps_icons/save.svg" alt="Lisää Tuote">`;
-	addRowButton.classList.add('column-s', 'save', 'clickable');
-	addRowButton.addEventListener('click', (e) => addRow(e.target));
-	row.appendChild(addRowButton);
+	saveRowButton.innerHTML = `<img src="kgps_icons/save.svg" alt="Lisää Tuote">`;
+	saveRowButton.classList.add('column-s', 'save', 'clickable');
+	saveRowButton.addEventListener('click', (e) => toggleEditMode(getRowElement(e.target)));
+	row.appendChild(saveRowButton);
+	if(evenRow()) {
+		row.classList.add('odd-row');
+	}
 	body.appendChild(row);
+
+
+	console.log(row);
 }
 
 function createOptions(beverageNames, id) {
@@ -88,11 +94,10 @@ function createBeerTableBody(tableBody, beers) {
 		const tapIcon = "kgps_icons/beer-tap.svg";
 		const icon = beer.serving === "tap" ? tapIcon : bottleIcon;
 		const iconAlt = beer.serving === "tap" ? 'Hana' : 'Pullo';
-		
 		const editButton = document.createElement('td');
 		editButton.innerHTML = `<img src="kgps_icons/edit.svg" alt="Muokkaa">`;
 		editButton.classList.add('column-s', 'edit', 'clickable');
-		editButton.addEventListener('click', (e) => editRow(e.target));
+		editButton.addEventListener('click', (e) => toggleEditMode(getRowElement(e.target)));
 
 		if(beer.price === Number.MAX_VALUE) {
 			beer.price = '';
@@ -110,7 +115,6 @@ function createBeerTableBody(tableBody, beers) {
 		tableBody.appendChild(row);
 	}
 	
-	
 	const rows = document.getElementsByTagName("tr");
 	for (let i=0; i<rows.length; i++) {
 		if(i % 2 !== 0) {
@@ -119,43 +123,46 @@ function createBeerTableBody(tableBody, beers) {
 	}
 }
 
-function addRow(element) {
-	const clicked = element.classList.contains('add') ? element : element.parentNode;
-	const newRow = clicked.parentNode;
-	const table = document.querySelector('table');
-	console.log(newRow);
-	table.appendChild(newRow);
-	console.log(table);
-
-}
-
-function deleteRow(element) {
-	const clicked = element.classList.contains('delete') ? element : element.parentNode;
+function getRowElement(element) {
+	const clicked = element.classList.contains('edit') || element.classList.contains('save') || element.classList.contains('delete') ? element : element.parentNode;
 	const currentRow = clicked.parentNode;
-	currentRow.parentNode.removeChild(currentRow);
+	return currentRow;
 }
 
-function editRow(element) {
-	const clicked = element.classList.contains('edit') ? element : element.classList.contains('save') ? element : element.parentNode;
-	const currentRow = clicked.parentNode;
-	const cells = currentRow.querySelectorAll('td');
-	const editSaveButton = currentRow.lastChild;
-	const icon = editSaveButton.firstChild;
-	toggleInputs(cells);	
-	editSaveButton.classList.toggle('edit');
-	editSaveButton.classList.toggle('save');
-	icon.src = icon.src.includes("edit.svg") ? "kgps_icons/save.svg" : "kgps_icons/edit.svg";
-	icon.alt = icon.alt === "Muokkaa" ? "Tallenna muutokset" : "Muokkaa";
+function deleteRow(rowElement) {
+	rowElement.parentNode.removeChild(rowElement);
 }
 
-function toggleInputs(cells) {
+function toggleEditMode(row) {
+	const cells = row.querySelectorAll('td');
+	const lastIndex = cells.length - 1;
+	const saveEditButton = cells[lastIndex];
+	const icon = saveEditButton.querySelector('img');
+	const serving = cells[0];
+	serving.addEventListener('click', (e) => toggleServing(e.target));
 	for (let i=1; i<cells.length-1;i++) {
 		const input = cells[i].querySelector('input') || null;
 		input.readOnly = !input.readOnly;
 		input.classList.toggle('editable');
 	}
+
+	saveEditButton.classList.toggle('edit');
+	saveEditButton.classList.toggle('save');
+	icon.src = icon.src.includes("edit.svg") ? "kgps_icons/save.svg" : "kgps_icons/edit.svg";
+	icon.alt = icon.alt === "Muokkaa" ? "Tallenna muutokset" : "Muokkaa";
 }
 
+
+function evenRow() {
+	const tbody = document.querySelector('tbody');
+	const rows = tbody.querySelectorAll('tr').length;
+	console.log(rows % 2);
+	return rows % 2;
+}
+
+function toggleServing(clicked) {
+	console.log(clicked);
+}
 
 function logOut() {
 	window.location.replace('login.html');
@@ -163,7 +170,7 @@ function logOut() {
 
 
 function capitalize(string) {
-return string.charAt(0).toUpperCase() + string.slice(1);
+	return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
 })(window, document);

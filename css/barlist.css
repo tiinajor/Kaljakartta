@@ -52,9 +52,17 @@ input {
 	font-size: 0.9em;
 }
 
+input::placeholder {
+	font-style: italic;
+}
+
 input.editable {
 	width: calc(100% - 10px);
 	background-color: #fff;
+}
+
+input.editable::placeholder {
+	font-style: normal;
 }
 
 select {
