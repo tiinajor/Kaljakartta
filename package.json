@@ -15,13 +15,16 @@
     "kalja",
     "kartta"
   ],
-  "author": "Mirko Nowak, Aki Saastamoinen, Ville Sutinen, Kimi Talvitie",
-  "license": "ISC",
+  "author": "Mirko Nowak & Aki Saastamoinen",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/Microwawe/KGPS/issues"
   },
   "homepage": "https://github.com/Microwawe/KGPS#readme",
   "devDependencies": {
     "jsdoc": "^3.5.5"
+  },
+  "dependencies": {
+    "nouislider": "^11.0.3"
   }
 }

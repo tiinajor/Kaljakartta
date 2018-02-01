@@ -1,14 +1,3 @@
-/*
-TODO LISTA:
-- käyttöohjeet
-- searchNearby ei poista duplikaatteja (eli marker osalle baareista tulee kahteen kertaan)
-- error tilanteiden ilmoitukset käyttäjälle
-- loading palkki vain hakukriteerien kanssa
-- tyhjennä nappi
-- menun elementit järjestykseen
-- 
-*/
-
 (function (window, document, noUiSlider, undefined) {
 
 	/**
