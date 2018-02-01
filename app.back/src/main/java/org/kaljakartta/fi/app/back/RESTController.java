@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class RESTController {
 
-	private DataAccessObject dao = new Dao("remote:188.166.162.144:2424/KaljakarttaDB", "dao", "bakkiPassu");
+	private DataAccessObject dao = new Dao("address", "user", "password");
 
 	/**
 	 * 
