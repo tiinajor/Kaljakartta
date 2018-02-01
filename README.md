@@ -18,6 +18,7 @@ The project backend is built using Maven as a .jar file that is run on a Ubuntu 
 
 - [ ] A login page for the bars.
 - [ ] A page to let the bar owners update their own price lists. Currently we have to do it manually for each bar.
+- [ ] Re-do the frontend with angular/react/vue.
 
 
 ### Authors
